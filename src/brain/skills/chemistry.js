@@ -100,14 +100,15 @@ export default {
       return { score: 0.6, text: profile(element) }
     }
 
+    const detail = profile(element)
     if (/\bsymbol\b/.test(s)) {
-      return { score: 0.95, text: `The chemical symbol of **${element.name}** is **${element.symbol}**.` }
+      return { score: 0.95, detail, text: `The chemical symbol of **${element.name}** is **${element.symbol}**.` }
     }
     if (/\batomic number\b|\bnumber\b/.test(s)) {
-      return { score: 0.95, text: `**${element.name} (${element.symbol})** has atomic number **${element.number}**.` }
+      return { score: 0.95, detail, text: `**${element.name} (${element.symbol})** has atomic number **${element.number}**.` }
     }
     if (/\b(atomic )?(mass|weight)\b/.test(s)) {
-      return { score: 0.95, text: `The atomic mass of **${element.name}** is **${fmtNumber(element.mass)}**.` }
+      return { score: 0.95, detail, text: `The atomic mass of **${element.name}** is **${fmtNumber(element.mass)}**.` }
     }
 
     return { score: element.byNumber ? 0.96 : 0.9, subject: element.name, text: profile(element) }

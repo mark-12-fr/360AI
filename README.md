@@ -2,7 +2,7 @@
 
 Your own AI. It runs **entirely on your own device** — phone, tablet or computer —
 and it is written in **plain JavaScript**, so there is no provider, no API key, no
-account, no server, and **no model to download**. The whole app is about 275 KB.
+account, no server, and **no model to download**. The whole app is about 345 KB.
 Open it once and it works forever, with the internet switched off.
 
 ## What it actually is
@@ -38,6 +38,9 @@ which is the point.
 | **Conversions** | length, mass, volume, temperature, data, speed, area, time | `5 km to miles` · `30 C to F` · `2.5 kg to lbs` |
 | **Dates** | today, weekdays, countdowns, ages, date arithmetic | `how many days until Christmas` · `age if born May 4, 1998` |
 | **Text tools** | summarise, count, keywords, case, sort, dedupe, slugify | `summarize: <long text>` · `count words: …` |
+| **Senior high strands** | 10 strands across 4 tracks — specialised subjects, the shared core and applied subjects, where each leads | `what is the STEM strand` · `subjects in ABM` · `HUMSS leads to what course` |
+| **Philippine law** | 30 topics — the Constitution, Bill of Rights, labour, family, criminal law, procedure, by RA number or by topic | `what is RA 9262` · `13th month pay` · `my rights when arrested` · `small claims` |
+| **Code** | 18 languages x 12 tasks — Python, JavaScript, TypeScript, Java, C, C++, C#, PHP, Ruby, Go, Rust, Swift, Kotlin, Dart, SQL, Bash, HTML, CSS | `python for loop` · `how do I read a file in Java` · `show me C++ basics` |
 | **Dice and picks** | coin, dice, random pick, password generator | `flip a coin` · `roll 2d6` · `password 16` |
 
 It answers in **English**. It still understands questions written in Taglish —
@@ -67,6 +70,20 @@ capital of phillipines      ← typo, still resolves
 
 It also follows the thread. Ask `capital of France`, then just `and its currency?`
 and it knows you still mean France.
+
+## Answer length
+
+Say **shorter** and it trims every answer to the point; say **elaborate** and it gives the
+fuller version, including anything extra it holds on the subject. Either one also
+re-answers the question you just asked, at the new length. **normal** puts it back.
+
+```
+> what is BSIT
+[the full program overview]
+> shorter
+**Bachelor of Science in Information Technology** (BSIT)
+*(shortened — say "elaborate" for the rest)*
+```
 
 ## Teaching it
 
@@ -106,9 +123,12 @@ src/
       countries.js   195 countries
       elements.js    118 elements
       courses.js     45 college programs + the shared GE core
+      strands.js     10 SHS strands + the core and applied subjects
+      law.js         30 Philippine law topics
+      code.js        18 languages x 12 tasks
       reference.js   the definitions glossary and reference lists
     skills/        knowledge · math · units · datetime · geography · chemistry
-                   academics · define · text · chance · smalltalk
+                   academics · strands · law · code · define · text · chance · smalltalk
   backends/brain.js  adapter between the chat UI and the brain
   db.js            IndexedDB: chats, settings, and the facts you teach
   ui.js            markdown rendering and message bubbles

@@ -18,12 +18,15 @@
 import academics from './skills/academics.js'
 import chance from './skills/chance.js'
 import chemistry from './skills/chemistry.js'
+import code from './skills/code.js'
 import datetime from './skills/datetime.js'
 import define from './skills/define.js'
 import geography from './skills/geography.js'
 import knowledge from './skills/knowledge.js'
+import law from './skills/law.js'
 import math from './skills/math.js'
 import smalltalk from './skills/smalltalk.js'
+import strands from './skills/strands.js'
 import text from './skills/text.js'
 import units from './skills/units.js'
 
@@ -35,6 +38,9 @@ export const SKILLS = [
   geography,
   chemistry,
   academics,
+  strands,
+  law,
+  code,
   define,
   text,
   chance,
@@ -52,6 +58,76 @@ const FOLLOW_UP =
   /^(?:and|what about|how about|ok(?:ay)?|then)?[,\s]*(?:what(?:'s| is| are)\s+)?(?:its|it's|their|the|his|her)?\s*(?:capital|currency|language|population|area|continent|symbol|atomic number|atomic mass|subjects?|majors?|minors?|careers?|years?|meaning|definition)\s*[?.!]*$/i
 
 const PRONOUN_ONLY = /^\s*(and|what about|how about)?\s*(it|that|this|there|them|those)\s*[?.!]*\s*$/i
+
+/* --------------------------------------------------------- answer length */
+
+const SHORTER =
+  /^(shorter|make it short(er)?|too long|be brief|briefly|in short|short(er)? version|tl;?dr|summari[sz]e (it|that|this)|condense|shorten (it|that|this)?)\s*[?.!]*$/i
+
+const LONGER =
+  /^(elaborate|expand( on (it|that|this))?|explain( it| that| this)?( more| further| in detail)?|more (details?|info(rmation)?)|in detail|longer|tell me more|go deeper|full( version| answer)?)\s*[?.!]*$/i
+
+const NORMAL_LENGTH = /^(normal|default|reset|medium)( length| answers?| replies)?\s*[?.!]*$/i
+
+const isHeading = (p) => /^\*{2}[^*]+\*{2}$/.test(p.trim())
+const isListLine = (l) => /^\s*([-*]|\d+\.)\s/.test(l)
+
+/**
+ * Trims an answer to its point: the headline, the paragraph that carries the
+ * substance, and at most three items of any list. Whatever is dropped is
+ * announced, so a shortened answer never passes for the whole of what is known.
+ */
+function condense(text) {
+  // A fenced code block often contains blank lines, so paragraphs inside one
+  // are merged back together — cutting between them would leave the fence
+  // unclosed and swallow whatever came after it.
+  const paragraphs = []
+  let openFence = false
+  for (const part of text.split(/\n{2,}/)) {
+    const piece = part.trim()
+    if (!piece) continue
+    if (openFence) paragraphs[paragraphs.length - 1] += `\n\n${piece}`
+    else paragraphs.push(piece)
+    if ((piece.match(/```/g) ?? []).length % 2 === 1) openFence = !openFence
+  }
+
+  const kept = []
+  let index = 0
+  // A heading alone says nothing, so it never counts as the answer.
+  if (paragraphs[index] && isHeading(paragraphs[index])) kept.push(paragraphs[index++])
+  if (paragraphs[index]) kept.push(paragraphs[index++])
+
+  let trimmed = index < paragraphs.length
+
+  const last = kept.length - 1
+  if (last >= 0) {
+    const lines = kept[last].split('\n')
+    if (lines.filter(isListLine).length > 3) {
+      kept[last] = lines.slice(0, 3).join('\n')
+      trimmed = true
+    }
+  }
+
+  const body = kept.join('\n\n')
+  return trimmed ? `${body}\n\n*(shortened — say "elaborate" for the rest)*` : body
+}
+
+/**
+ * `explicit` marks the turn where the user actually asked to elaborate. Later
+ * answers still run long, but without the "that is everything" footer, which
+ * would be noise on every message.
+ */
+function expand(result, explicit) {
+  if (result.detail) return `${result.text}\n\n${result.detail}`
+  return explicit ? `${result.text}\n\n*That is everything I have on this one.*` : result.text
+}
+
+function applyVerbosity(result, verbosity, explicit) {
+  if (!result?.text || result.skill === 'fallback') return result
+  if (verbosity === 'short') return { ...result, text: condense(result.text) }
+  if (verbosity === 'detailed') return { ...result, text: expand(result, explicit) }
+  return result
+}
 
 /** The capability list, built from the skills themselves so it cannot go stale. */
 export function skillList() {
@@ -93,11 +169,31 @@ export function answer(input, options = {}) {
 
   const context = options.context ?? {}
   let question = raw
+  let verbosity = options.verbosity ?? context.verbosity ?? 'normal'
+
+  // "shorter" / "elaborate" are not questions — they re-answer the last one at
+  // a different length, and the choice sticks until it is changed again.
+  const lengthCommand = SHORTER.test(raw) || LONGER.test(raw) || NORMAL_LENGTH.test(raw)
+  if (lengthCommand) {
+    verbosity = SHORTER.test(raw) ? 'short' : LONGER.test(raw) ? 'detailed' : 'normal'
+    context.verbosity = verbosity
+    if (!context.lastQuestion) {
+      const promise = {
+        short: 'I will keep answers short from now on.',
+        detailed: 'I will give the fuller version from now on.',
+        normal: 'Back to normal-length answers.',
+      }[verbosity]
+      return { skill: 'verbosity', score: 1, text: `${promise} Ask me something.` }
+    }
+    question = context.lastQuestion
+  } else {
+    context.lastQuestion = raw
+  }
 
   // Re-attach the previous subject to a question that has none of its own.
-  const bare = FOLLOW_UP.test(raw) || PRONOUN_ONLY.test(raw)
+  const bare = FOLLOW_UP.test(question) || PRONOUN_ONLY.test(question)
   if (bare && context.subject) {
-    question = PRONOUN_ONLY.test(raw) ? context.subject : `${raw} of ${context.subject}`
+    question = PRONOUN_ONLY.test(question) ? context.subject : `${question} of ${context.subject}`
   }
 
   const ctx = {
@@ -128,5 +224,5 @@ export function answer(input, options = {}) {
   if (best.subject) context.subject = best.subject
   else if (!bare) context.subject = raw
 
-  return best
+  return applyVerbosity(best, verbosity, lengthCommand)
 }

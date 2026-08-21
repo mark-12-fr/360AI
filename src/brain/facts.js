@@ -50,6 +50,16 @@ export const FACTS = [
       'Ask **what do you know** to see everything you have taught me, and **forget: <question>** to remove one.',
   },
   {
+    q: [
+      'answer length', 'make it shorter', 'shorter answers', 'too long', 'elaborate',
+      'longer answers', 'control the length',
+    ],
+    a:
+      'Say **shorter** and I will trim my answers to the point; say **elaborate** and I will give ' +
+      'the fuller version, including anything extra I hold on the subject. Either one also ' +
+      're-answers the question you just asked, at the new length. Say **normal** to go back.',
+  },
+  {
     q: ['is my data private', 'private bala', 'ligtas ba ang data ko', 'where are my chats stored'],
     a:
       "Your chats live in this browser's IndexedDB, on this device only. There is no server to " +

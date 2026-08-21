@@ -82,7 +82,7 @@ export default {
         .join('\n\n')
 
       return {
-        score: 0.94,
+        score: 0.9,
         text:
           `**${pool.length} programs I know${field ? ` in ${field}` : ''}**\n\n${body}\n\n` +
           `*Ask about any one of them — for example "subjects in BSIT".*`,
@@ -105,10 +105,13 @@ export default {
     if (!course) return null
 
     const confident = 0.93
+    // "elaborate" on any single fact gives the whole program overview.
+    const detail = overview(course)
 
     if (/\byears\b|\bhow long\b|\blength\b/.test(s)) {
       return {
         score: confident,
+        detail,
         text: `**${course.name}** normally takes **${course.years} years**.${
           course.code === 'MD' || course.code === 'JD'
             ? ' It is a graduate program — you need a bachelor\'s degree first.'
@@ -129,6 +132,7 @@ export default {
     if (/\bsubject\b|\bmajor\b|\bstudy\b|\bcurriculum\b|\btake\b/.test(s)) {
       return {
         score: confident,
+        detail,
         text:
           `**Major subjects in ${course.name}** *(typical — schools vary)*\n\n${list(course.majors)}\n\n` +
           `Plus the general-education core taken by every program: ${GENERAL_EDUCATION.slice(0, 4).join(', ')}, and others.`,
@@ -138,6 +142,7 @@ export default {
     if (/\bcareer\b|\bafter graduation\b|\bwhere.*lead\b|\bemploy\b/.test(s)) {
       return {
         score: confident,
+        detail,
         text: `**After ${course.name}** you can work as: ${course.careers.join(', ')}.`,
       }
     }

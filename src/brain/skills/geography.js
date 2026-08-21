@@ -114,27 +114,30 @@ export default {
 
     /* ------------------------------------------------------ one attribute */
     const confident = 0.93
+    // Every single-fact answer can expand into the country's whole profile.
+    const detail = profile(country)
     if (/\bcapital\b/.test(s)) {
-      return { score: confident, subject: country.name, text: `The capital of **${country.name}** is **${country.capital}**.` }
+      return { score: confident, subject: country.name, detail, text: `The capital of **${country.name}** is **${country.capital}**.` }
     }
     if (/\bcurrency\b/.test(s)) {
-      return { score: confident, subject: country.name, text: `**${country.name}** uses the **${country.currency}**.` }
+      return { score: confident, subject: country.name, detail, text: `**${country.name}** uses the **${country.currency}**.` }
     }
     if (/\blanguage\b/.test(s)) {
-      return { score: confident, subject: country.name, text: `The main language of **${country.name}** is **${country.language}**.` }
+      return { score: confident, subject: country.name, detail, text: `The main language of **${country.name}** is **${country.language}**.` }
     }
     if (/\bpopulation\b/.test(s)) {
       return {
         score: confident,
         subject: country.name,
+        detail,
         text: `**${country.name}** has about **${fmtPop(country.population)}** people *(estimate — populations change every year)*.`,
       }
     }
     if (/\barea\b|\bkm2\b|\bsquare (kilometers|kilometres)\b/.test(s)) {
-      return { score: confident, subject: country.name, text: `**${country.name}** covers **${fmtNumber(country.area)} km²**.` }
+      return { score: confident, subject: country.name, detail, text: `**${country.name}** covers **${fmtNumber(country.area)} km²**.` }
     }
     if (/\bcontinent\b|\bwhere is\b|\blocated\b/.test(s)) {
-      return { score: confident, subject: country.name, text: `**${country.name}** is in **${country.continent}**.` }
+      return { score: confident, subject: country.name, detail, text: `**${country.name}** is in **${country.continent}**.` }
     }
 
     // The country is named but the fact asked for is not one we hold. Only
