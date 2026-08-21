@@ -1,0 +1,605 @@
+/* Dark is the default palette; `data-theme` on <html> switches it. "system"
+   defers to the OS via the media query at the bottom of this block. */
+:root,
+:root[data-theme='dark'] {
+  --bg: #0b0d12;
+  --bg-2: #12151d;
+  --bg-3: #1a1f2b;
+  --bg-code: #0d1017;
+  --bg-think: #0f1219;
+  --line: #262c3a;
+  --fg: #e6e9ef;
+  --fg-dim: #98a1b3;
+  --accent: #6d5efc;
+  --accent-2: #8b7cff;
+  --danger: #e5484d;
+  --ok: #3dd68c;
+  --warn: #f5a524;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='light'] {
+  --bg: #ffffff;
+  --bg-2: #f6f7fa;
+  --bg-3: #ebedf2;
+  --bg-code: #f3f4f8;
+  --bg-think: #f3f4f8;
+  --line: #d9dde5;
+  --fg: #161a22;
+  --fg-dim: #5b6474;
+  --accent: #5a4ae3;
+  --accent-2: #7565ff;
+  --danger: #d32f36;
+  --ok: #14893f;
+  --warn: #a8620a;
+  --shadow: rgba(20, 25, 40, 0.18);
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme='system'] {
+    --bg: #ffffff;
+    --bg-2: #f6f7fa;
+    --bg-3: #ebedf2;
+    --bg-code: #f3f4f8;
+    --bg-think: #f3f4f8;
+    --line: #d9dde5;
+    --fg: #161a22;
+    --fg-dim: #5b6474;
+    --accent: #5a4ae3;
+    --accent-2: #7565ff;
+    --danger: #d32f36;
+    --ok: #14893f;
+    --warn: #a8620a;
+    --shadow: rgba(20, 25, 40, 0.18);
+  }
+}
+
+:root {
+  --radius: 12px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'Cascadia Code', 'Consolas', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#app { display: flex; height: 100dvh; overflow: hidden; }
+
+/* ------------------------------------------------------------- sidebar */
+
+.sidebar {
+  width: 260px;
+  flex: 0 0 260px;
+  background: var(--bg-2);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Backdrop behind the overlay sidebar. Only ever shown at phone widths — the
+   media query below is what un-hides it. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.sidebar-head, .sidebar-foot { padding: 12px; }
+.sidebar-head { display: grid; gap: 8px; }
+.sidebar-foot { border-top: 1px solid var(--line); display: grid; gap: 6px; }
+
+.search-input { font-size: 13px; padding: 7px 10px; }
+
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 8px;
+  display: grid;
+  /* minmax(0,…) rather than the default `auto`: without it a long chat title
+     sets the column's max-content width and the sidebar scrolls sideways
+     instead of letting the title ellipsise. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  align-content: start;
+}
+.list-empty { padding: 8px 10px; margin: 0; }
+
+.chat-row {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  min-width: 0;
+}
+.chat-row:hover { background: var(--bg-3); }
+.chat-row.active { background: var(--bg-3); box-shadow: inset 2px 0 0 var(--accent); }
+
+.chat-open {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: var(--fg);
+  padding: 9px 10px;
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-del {
+  background: none;
+  border: 0;
+  color: var(--fg-dim);
+  font-size: 19px;
+  line-height: 1;
+  padding: 4px 10px;
+  cursor: pointer;
+  opacity: 0;
+}
+.chat-row:hover .chat-del, .chat-del:focus-visible { opacity: 1; }
+.chat-del:hover { color: var(--danger); }
+
+.net-status { font-size: 12px; color: var(--fg-dim); padding: 2px 4px; }
+.net-status.on { color: var(--ok); }
+.net-status.off { color: var(--warn); }
+
+/* ---------------------------------------------------------------- main */
+
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.topbar-title { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.topbar-title strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+  border-radius: 6px;
+  padding: 1px 4px;
+  margin-left: -4px;
+}
+.topbar-title strong:hover { background: var(--bg-3); }
+
+.title-input {
+  flex: 1;
+  min-width: 0;
+  max-width: 340px;
+  background: var(--bg-3);
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font: inherit;
+  font-weight: 700;
+}
+.title-input:focus { outline: none; }
+
+.badge {
+  flex: none;
+  font-size: 11.5px;
+  color: var(--fg-dim);
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.messages-wrap { flex: 1; min-height: 0; position: relative; display: flex; }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-behavior: smooth;
+}
+
+.scroll-bottom {
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-3);
+  color: var(--fg);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--shadow);
+}
+.scroll-bottom:hover { border-color: var(--accent); }
+
+/* --------------------------------------------------------- empty state */
+
+/* Centre the welcome panel and let any system note sit directly under it,
+   rather than being pushed to the bottom of the scroll area. `safe` keeps the
+   top reachable when the panel is taller than a short/landscape viewport —
+   plain `center` would overflow both edges and strand it. */
+.messages:has(.empty-state) { justify-content: safe center; }
+
+.empty-state {
+  margin: 0 auto;
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+}
+.empty-state h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.02em; }
+.empty-state > p { margin: 0 0 22px; color: var(--fg-dim); font-size: 14px; }
+
+.suggestions { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.suggestion {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 11px 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.suggestion:hover { border-color: var(--accent); color: var(--fg); }
+
+/* ------------------------------------------------------------ messages */
+
+.msg { max-width: 780px; width: 100%; margin: 0 auto; min-width: 0; }
+/* Long URLs and unbroken code-ish tokens are common in model output and would
+   otherwise push the whole page sideways on a phone. */
+.msg-body { overflow-wrap: anywhere; }
+.msg-role { font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 6px; }
+.msg-user .msg-body {
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+.msg-body > :first-child { margin-top: 0; }
+.msg-body > :last-child { margin-bottom: 0; }
+
+.msg.streaming .msg-body::after {
+  content: '▌';
+  color: var(--accent-2);
+  animation: blink 1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.msg-meta { font-size: 11.5px; color: var(--fg-dim); margin-top: 6px; }
+
+.msg-actions { display: flex; gap: 4px; margin-top: 6px; opacity: 0; transition: opacity 0.12s; }
+.msg:hover .msg-actions, .msg-actions:focus-within { opacity: 1; }
+.msg-action {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 11.5px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.msg-action:hover { color: var(--fg); border-color: var(--line); background: var(--bg-3); }
+
+.thinking {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  background: var(--bg-think);
+}
+.thinking summary { cursor: pointer; font-size: 12.5px; color: var(--fg-dim); }
+.thinking-body { font-size: 13px; color: var(--fg-dim); white-space: pre-wrap; margin-top: 6px; }
+
+.system-note {
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--fg-dim);
+}
+.system-note p { margin: 0.3em 0; }
+
+/* code */
+.msg-body pre {
+  position: relative;
+  background: var(--bg-code);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  overflow-x: auto;
+}
+.msg-body code { font-family: var(--mono); font-size: 13px; }
+.msg-body :not(pre) > code {
+  background: var(--bg-3);
+  padding: 1.5px 5px;
+  border-radius: 5px;
+}
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 11.5px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+.copy-btn:hover { color: var(--fg); }
+
+.msg-body table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+.msg-body th, .msg-body td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+.msg-body a { color: var(--accent-2); }
+
+/* ------------------------------------------------------------ composer */
+
+.composer-wrap { border-top: 1px solid var(--line); background: var(--bg-2); padding: 12px 16px 10px; }
+
+.composer { max-width: 780px; margin: 0 auto; display: flex; gap: 8px; align-items: flex-end; }
+
+.input {
+  flex: 1;
+  resize: none;
+  background: var(--bg-3);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font: inherit;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+.input:disabled { opacity: 0.6; }
+
+.disclaimer {
+  max-width: 780px;
+  margin: 8px auto 0;
+  font-size: 11.5px;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+.load-bar { max-width: 780px; margin: 0 auto 10px; }
+.load-bar-fill { height: 5px; background: var(--bg-3); border-radius: 999px; overflow: hidden; }
+.load-bar-fill i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.25s ease; }
+.load-text { display: block; font-size: 11.5px; color: var(--fg-dim); margin-top: 5px; }
+
+/* -------------------------------------------------------------- buttons */
+
+.btn {
+  background: var(--bg-3);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-2); }
+.btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn-ghost { background: transparent; text-align: left; }
+.btn-block { width: 100%; display: block; }
+.btn-icon { padding: 7px 11px; display: none; }
+.btn-send { flex: none; }
+
+/* -------------------------------------------------------------- dialogs */
+
+.dialog {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-2);
+  color: var(--fg);
+  padding: 0;
+  max-width: 620px;
+  width: calc(100% - 32px);
+  max-height: 85dvh;
+  /* .dialog-inner owns the scrolling; without this both boxes get a bar. */
+  overflow: hidden;
+}
+.dialog::backdrop { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(3px); }
+.dialog-inner { padding: 22px; overflow-y: auto; max-height: 85dvh; }
+.dialog h2 { margin: 0 0 4px; font-size: 19px; }
+.dialog h3 { margin: 0 0 4px; font-size: 15px; }
+.dialog hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+.dialog-actions { display: flex; justify-content: flex-end; padding: 0; margin: 20px 0 0; }
+
+.muted { color: var(--fg-dim); font-size: 13px; }
+
+.field { display: grid; gap: 6px; margin-bottom: 16px; font-size: 13.5px; }
+.field-check { grid-template-columns: auto 1fr; align-items: start; gap: 9px; }
+.field-check input { margin-top: 4px; accent-color: var(--accent); }
+
+.text-input {
+  background: var(--bg-3);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 13.5px;
+  width: 100%;
+  resize: vertical;
+}
+.text-input:focus { outline: none; border-color: var(--accent); }
+select.text-input { resize: none; }
+input[type='range'] { accent-color: var(--accent); width: 100%; }
+
+.row { display: flex; gap: 8px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+/* flex-basis rather than min-width: on a 320px screen a hard 200px minimum
+   plus the button's width overflows the dialog instead of wrapping. */
+.row > .text-input { flex: 1 1 200px; min-width: 0; }
+
+.model-list { display: grid; gap: 8px; margin-top: 12px; }
+.model-card {
+  text-align: left;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+.model-card:hover:not(:disabled) { border-color: var(--accent); }
+.model-card:disabled { opacity: 0.45; cursor: not-allowed; }
+.model-card.active { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok) inset; }
+.model-card.heavy { opacity: 0.75; }
+.model-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.model-name { font-weight: 600; }
+.model-tag { font-size: 11.5px; color: var(--accent-2); white-space: nowrap; }
+.model-blurb { margin: 4px 0 6px; font-size: 13px; color: var(--fg-dim); }
+.model-size { font-size: 11.5px; color: var(--fg-dim); font-family: var(--mono); }
+
+/* ----------------------------------------------------------- responsive */
+
+/* Tablets and small laptops: the full 260px rail costs too much of the
+   reading column, but an overlay would be a regression at this size. */
+@media (max-width: 1024px) {
+  .sidebar { width: 216px; flex-basis: 216px; }
+  .messages { padding: 20px 14px 8px; }
+}
+
+/* Phones and narrow windows: the sidebar becomes an overlay over the chat. */
+@media (max-width: 760px) {
+  .btn-icon { display: block; }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    width: min(300px, 84vw);
+    flex-basis: auto;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 40px var(--shadow);
+    padding-left: env(safe-area-inset-left);
+  }
+  .sidebar.open { transform: none; }
+  .scrim:not([hidden]) { display: block; }
+
+  .topbar {
+    padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+    gap: 8px;
+  }
+  /* The engine name is a nicety; the chat title is not. Let the badge give up
+     its space first, and cap it so a long Ollama tag cannot squeeze the title
+     out entirely. */
+  .badge { max-width: 40%; }
+
+  .messages { padding: 16px max(12px, env(safe-area-inset-left)) 8px; }
+  .composer-wrap {
+    padding: 10px max(12px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
+  }
+
+  .suggestions { grid-template-columns: 1fr; }
+  .empty-state h1 { font-size: 26px; }
+  .disclaimer { font-size: 11px; }
+
+  .scroll-bottom { right: 14px; bottom: 12px; }
+
+  /* Dialogs become bottom sheets — reachable one-handed, and no wasted
+     margin on a small screen. */
+  .dialog {
+    width: 100%;
+    max-width: none;
+    max-height: 92dvh;
+    margin: auto auto 0;
+    border-radius: 16px 16px 0 0;
+    border-bottom: 0;
+  }
+  .dialog-inner {
+    padding: 18px max(18px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom))
+      max(18px, env(safe-area-inset-left));
+    max-height: 92dvh;
+  }
+}
+
+/* Small phones (iPhone SE and below, foldables shut). */
+@media (max-width: 400px) {
+  .topbar-title { gap: 6px; }
+  .btn { padding: 9px 12px; }
+  .empty-state h1 { font-size: 23px; }
+  .empty-state > p { font-size: 13px; margin-bottom: 16px; }
+  .msg-user .msg-body { padding: 9px 11px; }
+}
+
+/* Narrower than this the model badge and the chat title cannot share the
+   topbar; the title wins, and the Model dialog still shows what is loaded. */
+@media (max-width: 360px) {
+  .badge { display: none; }
+}
+
+/* Landscape phones and other short viewports: vertical space is the scarce
+   resource, so trim the chrome rather than the conversation. */
+@media (max-height: 520px) and (min-width: 481px) {
+  .topbar { padding-block: 6px; }
+  .empty-state { padding: 8px; }
+  .empty-state h1 { font-size: 20px; margin-bottom: 2px; }
+  .empty-state > p { margin-bottom: 12px; }
+  .suggestions { grid-template-columns: 1fr 1fr; }
+  .suggestion { padding: 8px 10px; }
+  /* Shrunk, never hidden — it is the "this can be wrong" warning. */
+  .disclaimer { font-size: 10.5px; margin-top: 4px; line-height: 1.35; }
+  .composer-wrap { padding-top: 8px; }
+}
+
+/* Touch devices: hover is not available, so anything revealed by :hover has to
+   be visible by default, and tap targets need to clear ~44px. */
+@media (hover: none) {
+  .chat-del { opacity: 1; padding: 10px 12px; }
+  .msg-actions { opacity: 1; }
+  .msg-action { padding: 6px 10px; }
+  .chat-open { padding: 12px 10px; }
+  .copy-btn { padding: 6px 11px; }
+  /* iOS zooms the page when a focused field is under 16px. */
+  .input, .text-input, .search-input { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .messages { scroll-behavior: auto; }
+}

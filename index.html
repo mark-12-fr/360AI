@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d12" id="theme-color" />
+    <meta name="description" content="Offline AI assistant that runs entirely on your own device. No internet, no accounts, no cost." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <title>Bulig AI — Offline</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="scrim" class="scrim" hidden></div>
+      <aside id="sidebar" class="sidebar" aria-label="Chats">
+        <div class="sidebar-head">
+          <button id="new-chat" type="button" class="btn btn-primary btn-block">+ New chat</button>
+          <input
+            id="chat-search"
+            class="text-input search-input"
+            type="search"
+            placeholder="Search chats…  (Ctrl+K)"
+            autocomplete="off"
+          />
+        </div>
+        <nav id="chat-list" class="chat-list"></nav>
+        <div class="sidebar-foot">
+          <button id="open-settings" type="button" class="btn btn-ghost btn-block">Settings</button>
+          <button id="install-app" type="button" class="btn btn-ghost btn-block" hidden>Install app</button>
+          <div id="net-status" class="net-status"></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button
+            id="toggle-sidebar"
+            type="button"
+            class="btn btn-icon"
+            aria-label="Toggle chat list"
+            aria-controls="sidebar"
+            aria-expanded="false"
+          >☰</button>
+          <div class="topbar-title">
+            <strong id="chat-title" title="Click to rename" tabindex="0" role="button">New chat</strong>
+            <input id="chat-title-input" class="title-input" hidden aria-label="Chat name" />
+            <span id="engine-badge" class="badge">no model loaded</span>
+          </div>
+          <button id="open-models" type="button" class="btn btn-ghost">Model</button>
+        </header>
+
+        <div class="messages-wrap">
+          <div id="messages" class="messages" aria-live="polite"></div>
+          <button id="scroll-bottom" type="button" class="scroll-bottom" hidden aria-label="Scroll to latest">↓</button>
+        </div>
+
+        <div class="composer-wrap">
+          <div id="load-bar" class="load-bar" hidden>
+            <div class="load-bar-fill"><i id="load-fill"></i></div>
+            <span id="load-text" class="load-text"></span>
+          </div>
+          <form id="composer" class="composer">
+            <textarea
+              id="input"
+              class="input"
+              rows="1"
+              placeholder="Ask anything…  (Enter to send, Shift+Enter for a new line)"
+              autocomplete="off"
+            ></textarea>
+            <button id="send" class="btn btn-primary btn-send" type="submit">Send</button>
+            <button id="stop" class="btn btn-danger btn-send" type="button" hidden>Stop</button>
+          </form>
+          <p class="disclaimer">
+            This AI runs on your device and <b>never sends anything over the internet</b>. It
+            can be wrong or make things up. Don't rely on it for medical, legal, financial, or
+            breaking-news questions.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <dialog id="models-dialog" class="dialog">
+      <form method="dialog" class="dialog-inner">
+        <h2>Choose a model</h2>
+        <p class="muted" id="gpu-note">Checking your GPU…</p>
+        <div id="model-list" class="model-list"></div>
+        <hr />
+        <h3>Turbo mode (optional)</h3>
+        <p class="muted">
+          If you have <b>Ollama</b> installed on this PC, you can use much larger and smarter
+          models. Still completely offline.
+        </p>
+        <div class="row">
+          <input id="ollama-url" class="text-input" value="http://127.0.0.1:11434" />
+          <button id="ollama-check" class="btn" type="button">Check</button>
+        </div>
+        <div id="ollama-result" class="muted"></div>
+        <menu class="dialog-actions"><button class="btn" value="close">Close</button></menu>
+      </form>
+    </dialog>
+
+    <dialog id="settings-dialog" class="dialog">
+      <form method="dialog" class="dialog-inner">
+        <h2>Settings</h2>
+        <label class="field">
+          <span>System prompt (the AI's personality)</span>
+          <textarea id="sys-prompt" rows="5" class="text-input"></textarea>
+        </label>
+        <label class="field">
+          <span>Temperature — <b id="temp-val">0.7</b> <i class="muted">(low = precise, high = creative)</i></span>
+          <input id="temp" type="range" min="0" max="1.5" step="0.05" value="0.7" />
+        </label>
+        <label class="field">
+          <span>Context sent to the model — <b id="ctx-val">10</b> messages</span>
+          <input id="ctx" type="range" min="2" max="30" step="2" value="10" />
+        </label>
+        <label class="field">
+          <span>Appearance</span>
+          <select id="theme" class="text-input">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="system">Match system</option>
+          </select>
+        </label>
+        <label class="field field-check">
+          <input id="auto-load" type="checkbox" />
+          <span>Load the last used model automatically on start <i class="muted">(only when it is already downloaded)</i></span>
+        </label>
+        <hr />
+        <div class="row">
+          <button id="export-chats" class="btn" type="button">Export everything (JSON)</button>
+          <button id="import-chats" class="btn" type="button">Import</button>
+          <input id="import-file" type="file" accept="application/json" hidden />
+        </div>
+        <div class="row">
+          <button id="clear-models" class="btn btn-danger" type="button">Delete downloaded models</button>
+        </div>
+        <div id="storage-info" class="muted"></div>
+        <menu class="dialog-actions"><button class="btn" value="close">Close</button></menu>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
