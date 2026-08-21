@@ -149,6 +149,17 @@ html,
 body {
   margin: 0;
   height: 100%;
+  /**
+   * The app is fixed to the viewport and has no canvas or map to inspect, so
+   * pinch-zoom only ever left people stranded at an offset scale with the
+   * toolbar off-screen. `pan-x pan-y` permits every scroll the app uses and
+   * nothing else, which also drops double-tap zoom and the tap delay with it.
+   * iOS needs the gesture events blocked as well; main.js does that.
+   */
+  touch-action: pan-x pan-y;
+  /* Stops iOS inflating text on rotation, which broke the toolbar layout. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   background: var(--ink);
   color: var(--fg);
   font-family: var(--sans);
@@ -247,6 +258,9 @@ body {
 
 .btn-icon {
   display: none;
+  /* Grid rather than block so the glyph stays centred once a minimum tap
+     size is imposed on touch devices — see the (hover: none) block. */
+  place-items: center;
   background: none;
   border: 1px solid transparent;
   color: var(--fg-dim);
@@ -996,7 +1010,7 @@ body {
 }
 .dialog-head > div { flex: 1; min-width: 0; }
 .dialog-sub { margin: 0; }
-.dialog-x { display: block; flex: none; font-size: 22px; margin: -6px -6px 0 0; }
+.dialog-x { display: grid; flex: none; font-size: 22px; margin: -6px -6px 0 0; }
 
 .dialog-foot {
   display: flex;
@@ -1425,7 +1439,7 @@ body {
 @media (max-width: 900px) {
   :root { --gutter: 16px; }
 
-  .btn-icon { display: block; }
+  .btn-icon { display: grid; }
 
   .sidebar {
     position: fixed;
@@ -1442,7 +1456,7 @@ body {
 
   /* The overlay has a "closed" state, so it needs a way back to it that is
      not a tap on the scrim - which is invisible as an affordance. */
-  .brand-close { display: block; }
+  .brand-close { display: grid; }
 }
 
 @media (max-width: 720px) {
@@ -1543,6 +1557,15 @@ body {
 /* Touch devices: hover is not available, so anything revealed by :hover has to
    be visible by default, and tap targets need to clear ~44px. */
 @media (hover: none) {
+  /**
+   * Apple asks for 44x44 and is right to. The toolbar icons were 37x33, which
+   * on an iPhone put the menu button both under the minimum and hard against
+   * the top of the screen — the two together made it genuinely hard to hit.
+   */
+  .btn-icon { min-width: 44px; min-height: 44px; padding: 4px; }
+  .btn-compact { min-height: 40px; }
+  .chip { min-height: 38px; }
+
   .chat-del { opacity: 1; padding: 10px 12px; }
   .msg-actions { opacity: 1; }
   .msg-action { padding: 6px 10px; }

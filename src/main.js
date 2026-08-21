@@ -1446,6 +1446,18 @@ function guardDownload(on) {
   else window.removeEventListener('beforeunload', warnBeforeLeaving)
 }
 
+/**
+ * Holds the page at 1x.
+ *
+ * `user-scalable=no` in the viewport meta covers Android and an installed iOS
+ * app, but Safari has ignored it in a normal tab since iOS 10 — there, the
+ * pinch arrives as a `gesture*` event and has to be refused directly. Between
+ * this and `touch-action` in the stylesheet, the layout stays put on both.
+ */
+for (const type of ['gesturestart', 'gesturechange', 'gestureend']) {
+  document.addEventListener(type, (e) => e.preventDefault(), { passive: false })
+}
+
 navigator.storage?.persist?.().catch(() => {})
 
 boot()
