@@ -27,7 +27,7 @@ export class BrainBackend {
   constructor(memory) {
     this.kind = 'brain'
     this.modelId = '360-brain'
-    this.label = '360 Brain · JS'
+    this.label = '360 Brain'
     this.memory = memory
     this.aborted = false
     // Carries the last subject between turns so "and its capital?" resolves.
@@ -56,6 +56,10 @@ export class BrainBackend {
       memory: this.memory,
       context: this.context,
       now: new Date(),
+      // The app owns the answer-length preference, so it is handed in rather
+      // than remembered here; saying "shorter" mid-chat writes back through
+      // the stats below and moves the control in Settings.
+      verbosity: options.verbosity,
     })
 
     // Side effects (teaching, forgetting) are the app's to carry out.
@@ -98,6 +102,7 @@ export class BrainBackend {
       stats: {
         ms: elapsed,
         skill: result.skill,
+        verbosity: this.context.verbosity,
         note: `${elapsed < 1 ? '<1' : elapsed.toFixed(0)} ms · ${result.skill}`,
       },
     }

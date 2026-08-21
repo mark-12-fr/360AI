@@ -1,31 +1,63 @@
 # 360AI
 
-Your own AI. It runs **entirely on your own device** — phone, tablet or computer —
-and it is written in **plain JavaScript**, so there is no provider, no API key, no
-account, no server, and **no model to download**. The whole app is about 345 KB.
-Open it once and it works forever, with the internet switched off.
+Your own AI, running **entirely on your own device** — phone, tablet or computer.
+No provider, no API key, no account, no server. Open it once and it works forever,
+with the internet switched off.
 
-## What it actually is
+There are two engines, and you choose between them at any time from **Answering
+with → Change** in the sidebar.
 
-Most "offline AI" apps still make you download a 2–7 GB model. 360AI does not,
-because it is not a large language model — it is a **rules engine with a knowledge
-base**. It works out what you are asking, computes the answer, and looks things up
-in the data that ships with the app or that you teach it.
+## 1. 360 Brain — nothing to download
 
-The trade is honest and worth stating plainly:
+The default. A **rules engine with a knowledge base**, written in plain JavaScript
+and shipped inside the app: about 380 KB, no WebGPU, no memory floor. It works out
+what you are asking, computes the answer, and looks things up in the data that
+ships with it or that you teach it. When it does not know something it says so — it
+has no way to invent an answer, which is the point.
 
-| | 360AI | A local LLM |
+## 2. A free language model — downloaded once
+
+For everything a rules engine cannot do — writing, explaining, open conversation —
+pick one of eight free, openly licensed models. It downloads **once** over Wi-Fi,
+straight from the MLC CDN, and then lives in your browser's Cache Storage on that
+device. From then on it runs on your own GPU through WebGPU, offline, and nothing
+you type ever leaves the machine. The picker groups them by what your device can
+actually run and shows the real download size for each:
+
+| Model | Download | Good at |
 | --- | --- | --- |
-| Download | **none** | 2–7 GB |
+| SmolLM2 — 360M | 198 MB | the smallest thing here that still talks |
+| **Llama 3.2 — 1B** | **672 MB** | **the phone pick — small but genuinely useful** |
+| Qwen 2.5 Coder — 1.5B | 840 MB | code |
+| Qwen 3 — 1.7B | 939 MB | reasoning, and it shows its working |
+| Gemma 2 — 2B | 1.4 GB | writing and explaining |
+| Llama 3.2 — 3B | 1.7 GB | the balanced choice on a computer |
+| **Qwen 3 — 4B** | **2.1 GB** | **the desktop pick — reasoning and code** |
+| Llama 3.1 — 8B | 4.2 GB | the most capable that fits in a browser |
+
+Sizes are the real repository figures. The memory a model needs to *run* is larger
+than its download and differs between the half- and full-precision builds; 360AI
+probes the GPU, picks the build it can actually use, and warns you when a model
+looks too big for the device rather than failing halfway through.
+
+The WebLLM runtime is six megabytes of JavaScript and is **not** part of the app
+bundle or its offline precache — it is fetched the first time you choose a model,
+so anyone who only ever uses 360 Brain never pays for it.
+
+## Which to use
+
+| | 360 Brain | A downloaded model |
+| --- | --- | --- |
+| Download | **none** | 198 MB – 4.2 GB, once |
 | Answer speed | **instant (1–30 ms)** | seconds |
-| Runs on old phones | **yes** | no — needs WebGPU and 2 GB+ of VRAM |
-| Knows the whole world | **no — see below** | mostly |
+| Runs on old phones | **yes** | needs WebGPU and the memory for it |
+| Knows the whole world | no — see below | mostly |
 | Makes things up | **never** | sometimes |
+| Writes an essay for you | no | **yes** |
 
-When 360AI does not know something, it says so. It has no way to invent an answer,
-which is the point.
+Both are offline. Neither sends anything anywhere.
 
-## What it knows
+## What 360 Brain knows
 
 | Area | Coverage | Ask it |
 | --- | --- | --- |
@@ -47,10 +79,10 @@ It answers in **English**. It still understands questions written in Taglish —
 `ano ang kapital ng japan` gets the same answer as `what is the capital of Japan`.
 
 **What it does not know:** anything not in the lists above — current events, people,
-prices, sports results, or the endless long tail of the world. That needs a trained
-model, and a trained model needs the multi-gigabyte download this app exists to
-avoid. Ask it something outside its knowledge and it will tell you so, and often
-suggest the closest thing it does have.
+prices, sports results, or the endless long tail of the world. Ask it something
+outside its knowledge and it will tell you so, and often suggest the closest thing
+it does have. That is the moment to switch to a downloaded model, which is exactly
+why the choice exists.
 
 ## However you phrase it
 
@@ -101,9 +133,15 @@ it to.
 
 ## Devices
 
-Any browser from the last few years, on anything: Android, iPhone, iPad, Windows,
-Mac, Linux. No WebGPU requirement and no memory floor, so a five-year-old phone runs
-it exactly as well as a desktop.
+**360 Brain** runs in any browser from the last few years, on anything: Android,
+iPhone, iPad, Windows, Mac, Linux. No WebGPU requirement and no memory floor, so a
+five-year-old phone runs it exactly as well as a desktop.
+
+**Downloaded models** need WebGPU: Chrome or Edge 113+ on Android and desktop, or
+Safari 18+ on iOS. Where it is missing, the picker says so plainly and 360 Brain
+keeps working. Storage matters too — the browser can evict a cached model when the
+device runs short of space, so 360AI checks on every launch and falls back to the
+brain rather than silently re-downloading gigabytes.
 
 Install it as an app:
 
@@ -129,9 +167,13 @@ src/
       reference.js   the definitions glossary and reference lists
     skills/        knowledge · math · units · datetime · geography · chemistry
                    academics · strands · law · code · define · text · chance · smalltalk
-  backends/brain.js  adapter between the chat UI and the brain
+  backends/
+    brain.js       adapter between the chat UI and the brain
+    webllm.js      the downloaded-model backend: load, stream, cancel
+  llm-worker.js    hosts the model off the main thread, so the UI stays live
+  models.js        the catalogue, the WebGPU probe, and the download cache
   db.js            IndexedDB: chats, settings, and the facts you teach
-  ui.js            markdown rendering and message bubbles
+  ui.js            markdown, message bubbles, toasts, confirm sheets
 ```
 
 **To add knowledge**, edit the matching file in `data/` — a row in `countries.js`,
@@ -165,10 +207,16 @@ Any static host works — there is no backend to deploy.
 
 ## Privacy
 
-There is no server, no telemetry, and no network request after the page loads. Your
-chats and taught facts live in IndexedDB on the device; **Settings → Export
+There is no server and no telemetry. With 360 Brain there is no network request
+after the page loads, at all. Downloading a model is the single exception in the
+app's life: it fetches weights from the MLC CDN, once, and sends nothing but the
+request for them. After that the model runs on your own GPU and the network is
+never touched again.
+
+Your chats and taught facts live in IndexedDB on the device; **Settings → Export
 everything** writes them to a JSON file if you want a backup or want to carry them
-to another device.
+to another device. **Choose your AI → Remove** deletes a downloaded model and frees
+the space.
 
 ## Licence
 

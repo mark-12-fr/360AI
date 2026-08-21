@@ -15,7 +15,22 @@ export default defineConfig({
   // the brain needs no secure context, so plain http:// over the LAN is fine.
   // Installing it as an app still wants the deployed HTTPS build.
   server: { port: 5173, host: '0.0.0.0' },
-  build: { target: 'esnext' },
+  build: {
+    target: 'esnext',
+    // The WebLLM runtime is one large chunk by design; warning about it on
+    // every build is noise.
+    chunkSizeWarningLimit: 8000,
+    rollupOptions: {
+      output: {
+        // Pinning the runtime to its own named chunk is what lets the service
+        // worker treat it differently from the app: see the workbox config
+        // below, where it is kept out of the precache.
+        manualChunks: (id) => (id.includes('@mlc-ai/web-llm') ? 'webllm' : undefined),
+      },
+    },
+  },
+  // The model runs in a module worker, which needs the ES output format.
+  worker: { format: 'es' },
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -49,7 +64,28 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2,wasm}'],
+        /**
+         * The WebLLM runtime is six megabytes of JavaScript, and most people
+         * here will only ever use 360 Brain. Precaching it would make the
+         * install a 12 MB download for everyone, which is exactly the cost
+         * this app exists to avoid — so it is excluded from the precache and
+         * cached at runtime instead, on the first occasion a model is used.
+         * That occasion is by definition online, because it is a download.
+         */
+        globIgnores: ['**/webllm-*.js', '**/llm-worker-*.js'],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+        runtimeCaching: [
+          {
+            urlPattern: /\/assets\/(webllm|llm-worker)-[\w-]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: '360ai-runtime',
+              expiration: { maxEntries: 6 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         navigateFallback: 'index.html',

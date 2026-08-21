@@ -1,28 +1,46 @@
 import './styles.css'
 import { BrainBackend } from './backends/brain.js'
-import { SKILLS, skillList } from './brain/index.js'
+import { SKILLS } from './brain/index.js'
 import { detectDevice, installHelp } from './device.js'
 import {
-  clearFacts, createChat, deleteChat, deleteFact, deriveTitle, exportAll, getChat,
-  getSettings, importAll, latestChat, listChats, listFacts, saveChat, saveFact, setSetting,
+  BUILT_IN, MODELS, TIERS, deleteDownload, downloadSize, findModel, fitsDevice, fmtSize,
+  listDownloaded, probeGPU, ramFor, suggestFor,
+} from './models.js'
+
+import {
+  DEFAULT_SETTINGS, clearFacts, createChat, deleteChat, deleteFact, deriveTitle, exportAll,
+  getChat, getSettings, importAll, latestChat, listChats, listFacts, saveChat, saveFact,
+  setSetting,
 } from './db.js'
 import {
-  addAction, createBubble, decorateCodeBlocks, fmtBytes, renderMarkdown, splitThinking,
+  addAction, confirmSheet, createBubble, decorateCodeBlocks, fmtBytes, groupChats,
+  renderMarkdown, splitThinking, toast,
 } from './ui.js'
 
 const $ = (sel) => document.querySelector(sel)
 
-const SUGGESTIONS = [
-  'What is the capital of Japan?',
-  'Major subjects in BSIT',
-  'How many days until Christmas?',
-  'remember: my wifi password = ...',
+/**
+ * Opening examples. 360 Brain answers a narrow, exact set of things, so its
+ * examples are the map of what it knows; a downloaded model is open-ended, so
+ * its examples are prompts rather than a menu.
+ */
+const BRAIN_SUGGESTIONS = [
+  ['Work it out', ['17% of 4,850', '5 km to miles', 'How many days until Christmas?']],
+  ['Look it up', ['What is the capital of Japan?', 'Major subjects in BSIT', 'What is RA 9262?']],
+  ['Write code', ['python for loop', 'Show me C++ basics']],
+  ['Teach it', ['remember: my wifi password = ...', 'What do you know?']],
+]
+
+const MODEL_SUGGESTIONS = [
+  ['Write', ['Write a short thank-you letter to my teacher', 'Rewrite this to sound friendlier']],
+  ['Explain', ['Explain photosynthesis to a 10-year-old', 'Why is the sky blue?']],
+  ['Code', ['Write a Python script that renames files', 'What does this error mean?']],
+  ['Think', ['Help me plan a 3-day trip on a small budget', 'Give me 5 ideas for a science project']],
 ]
 
 const state = {
   settings: null,
   chat: null,
-  backend: null,
   busy: false,
   device: detectDevice(),
   // What the user has taught the brain. Kept in memory so a question costs no
@@ -31,6 +49,17 @@ const state = {
   chats: [],
   filter: '',
   autoScroll: true,
+
+  /* --- engines --- */
+  brain: null,
+  llm: null,
+  /** 'brain', or the catalogue id of a downloaded model. */
+  engineId: 'brain',
+  /** Catalogue id currently downloading/loading, or null. */
+  loadingId: null,
+  gpu: null,
+  downloaded: new Set(),
+  storageBlocked: false,
 }
 
 /**
@@ -56,6 +85,60 @@ function createMemory() {
   }
 }
 
+/* ---------------------------------------------------------------- engines */
+
+/**
+ * The WebLLM backend lives behind a dynamic import for the same reason the
+ * runtime does: a 360 Brain user must never download a megabyte they will not
+ * use. This resolves the first time a model is chosen and is cached after.
+ */
+let llmModulePromise = null
+function loadLLMModule() {
+  llmModulePromise ??= import('./backends/webllm.js')
+  return llmModulePromise
+}
+
+/** The engine that will answer the next question. */
+function backend() {
+  return state.engineId === 'brain' ? state.brain : state.llm
+}
+
+/** The catalogue entry behind the current engine — `BUILT_IN` or a model. */
+function activeEntry() {
+  return state.engineId === 'brain' ? BUILT_IN : (findModel(state.engineId) ?? BUILT_IN)
+}
+
+/**
+ * A readable message out of whatever was thrown.
+ *
+ * Errors that cross a worker boundary arrive structured-cloned, and WebLLM
+ * sometimes rejects with a plain object or a bare string, so reading
+ * `err.message` alone put the word "undefined" in front of the user exactly
+ * where the reason should have been.
+ */
+function reason(err) {
+  if (!err) return 'Unknown error.'
+  if (typeof err === 'string') return err
+  const text = err.message || err.msg || err.name || err.detail
+  if (text) return String(text)
+  try {
+    return JSON.stringify(err)
+  } catch {
+    return String(err)
+  }
+}
+
+/** Refuses a turn while a model is still coming down the wire. */
+function requireBackend() {
+  if (state.busy) return false
+  const engine = backend()
+  if (!engine?.ready) {
+    toast('That model is still loading. 360 Brain can answer in the meantime.', 'warn')
+    return false
+  }
+  return true
+}
+
 /* ------------------------------------------------------------------ boot */
 
 /**
@@ -70,41 +153,94 @@ function withTimeout(promise, ms, message) {
   ])
 }
 
-function showFatal(message) {
-  const el = document.createElement('div')
-  el.className = 'system-note'
-  el.innerHTML = renderMarkdown(`⚠️ ${message}`)
-  $('#messages').replaceChildren(el)
-}
-
+/**
+ * Boot in two beats.
+ *
+ * 360 Brain needs no storage and no download to answer, so the interface is
+ * painted and usable immediately, and the saved chats, settings, taught facts
+ * and any downloaded model are loaded after. Waiting on IndexedDB first meant
+ * a blank screen wherever it is slow or unavailable — private windows,
+ * locked-down browsers, a database another tab is blocking — which is the
+ * wrong failure for an app whose whole promise is that it works everywhere.
+ */
 async function boot() {
-  try {
-    state.settings = await withTimeout(
-      getSettings(),
-      8000,
-      'Could not open the local database. If 360AI is open in another tab, ' +
-        'close it and reload this page.',
-    )
-  } catch (err) {
-    showFatal(err.message)
-    return
-  }
-
-  state.facts = await listFacts().catch(() => [])
-  state.backend = new BrainBackend(createMemory())
+  state.settings = { ...DEFAULT_SETTINGS }
+  state.brain = new BrainBackend(createMemory())
+  state.chat = createChat()
 
   applyTheme(state.settings.theme)
   applySettingsToForm()
   wireEvents()
-  // Resume where the user left off rather than dropping them into a blank chat.
-  const resume = await latestChat()
-  await openChat(resume?.id ?? null)
+  renderMessages()
   renderSkillList()
-  renderFactList()
   updateNetStatus()
-  refreshStorageInfo()
-  $('#engine-badge').textContent = state.backend.label
+  renderEngineLabels()
 
+  try {
+    state.settings = await withTimeout(
+      getSettings(),
+      8000,
+      'The local database did not open, so this session will not be saved. ' +
+        'If 360AI is open in another tab, close it and reload.',
+    )
+    applyTheme(state.settings.theme)
+    applySettingsToForm()
+
+    state.facts = await listFacts()
+    // Resume where the user left off rather than dropping them into a blank chat.
+    const resume = await latestChat()
+    if (resume) await openChat(resume.id)
+    else await refreshChatList()
+  } catch (err) {
+    // Answering still works; only the history does not.
+    state.storageBlocked = true
+    showSystemNote(`⚠️ ${err.message}`)
+  }
+
+  renderFactList()
+  refreshStorageInfo()
+
+  // What we believe is downloaded, from our own record. Checking the real
+  // cache would mean pulling the WebLLM runtime on every visit, including for
+  // the many people who will only ever use 360 Brain.
+  state.downloaded = new Set(state.settings.downloaded ?? [])
+  renderEngineLabels()
+
+  // Cheap - it touches navigator.gpu and nothing else - but it decides which
+  // build of every model gets quoted, so nothing on screen is right until it
+  // has run.
+  state.gpu = await probeGPU()
+  renderEngineLabels()
+  if (!state.chat.messages.length) renderMessages()
+
+  await restoreChosenModel()
+}
+
+/**
+ * Puts the user back on the model they chose last time — but only if it is
+ * genuinely on the device. Re-downloading gigabytes because someone opened the
+ * app on mobile data would be an unforgivable surprise.
+ */
+async function restoreChosenModel() {
+  const wanted = state.settings.engine
+  if (!wanted || wanted === 'brain') return
+
+  const entry = findModel(wanted)
+  if (!entry) {
+    await setSetting('engine', 'brain')
+    return
+  }
+  if (!state.downloaded.has(entry.id)) {
+    showSystemNote(
+      `**${entry.name}** is no longer on this device, so 360 Brain is answering. ` +
+        'Open **Choose your AI** to download it again.',
+    )
+    state.settings.engine = 'brain'
+    await setSetting('engine', 'brain')
+    renderEngineLabels()
+    return
+  }
+  await useModel(entry, { silent: true })
 }
 
 /* --------------------------------------------------------------- chat io */
@@ -120,6 +256,7 @@ function matchesFilter(chat, needle) {
   return chat.messages.some((m) => m.content.toLowerCase().includes(needle))
 }
 
+/** The sidebar, bucketed by day so a long history stays readable. */
 function renderChatList() {
   const list = $('#chat-list')
   const needle = state.filter.trim().toLowerCase()
@@ -134,38 +271,52 @@ function renderChatList() {
     return
   }
 
-  for (const c of shown) {
-    const row = document.createElement('div')
-    row.className = `chat-row${c.id === state.chat?.id ? ' active' : ''}`
-
-    const open = document.createElement('button')
-    open.type = 'button'
-    open.className = 'chat-open'
-    open.textContent = c.title
-    open.title = c.title
-    open.addEventListener('click', () => {
-      openChat(c.id)
-      setSidebar(false)
-    })
-
-    const del = document.createElement('button')
-    del.type = 'button'
-    del.className = 'chat-del'
-    del.title = 'Delete'
-    del.textContent = '×'
-    del.addEventListener('click', async (e) => {
-      e.stopPropagation()
-      if (!confirm(`Delete "${c.title}"?`)) return
-      await deleteChat(c.id)
-      const wasOpen = state.chat?.id === c.id
-      if (wasOpen) state.chat = null
-      await refreshChatList()
-      if (wasOpen) await openChat(null)
-    })
-
-    row.append(open, del)
-    list.appendChild(row)
+  for (const [heading, rows] of groupChats(shown)) {
+    const label = document.createElement('h3')
+    label.className = 'chat-group'
+    label.textContent = heading
+    list.appendChild(label)
+    for (const chat of rows) list.appendChild(buildChatRow(chat))
   }
+}
+
+function buildChatRow(c) {
+  const row = document.createElement('div')
+  row.className = `chat-row${c.id === state.chat?.id ? ' active' : ''}`
+
+  const open = document.createElement('button')
+  open.type = 'button'
+  open.className = 'chat-open'
+  open.textContent = c.title
+  open.title = c.title
+  open.addEventListener('click', () => {
+    openChat(c.id)
+    setSidebar(false)
+  })
+
+  const del = document.createElement('button')
+  del.type = 'button'
+  del.className = 'chat-del'
+  del.title = 'Delete'
+  del.textContent = '×'
+  del.addEventListener('click', async (e) => {
+    e.stopPropagation()
+    const ok = await confirmSheet({
+      title: 'Delete this chat?',
+      body: c.title,
+      confirmLabel: 'Delete',
+      danger: true,
+    })
+    if (!ok) return
+    await deleteChat(c.id)
+    const wasOpen = state.chat?.id === c.id
+    if (wasOpen) state.chat = null
+    await refreshChatList()
+    if (wasOpen) await openChat(null)
+  })
+
+  row.append(open, del)
+  return row
 }
 
 async function openChat(id) {
@@ -189,32 +340,79 @@ function renderMessages() {
   scrollToBottom(true)
 }
 
+/**
+ * The opening screen: the mark, one line on what is answering, and examples
+ * grouped by the kind of question they are. The grouping is the point — it
+ * tells you what this engine can actually do before you spend a question
+ * finding out, and the two engines can do very different things.
+ */
 function buildEmptyState() {
+  const entry = activeEntry()
+  const isBrain = state.engineId === 'brain'
+
   const wrap = document.createElement('div')
   wrap.className = 'empty-state'
 
+  const mark = document.createElement('div')
+  mark.className = 'orbit orbit-lg'
+  mark.setAttribute('aria-hidden', 'true')
+
   const h = document.createElement('h1')
   h.textContent = '360AI'
-  const p = document.createElement('p')
-  p.textContent = 'Your own AI. It runs on this device — phone, tablet or computer — and works with the internet off.'
-  wrap.append(h, p)
 
-  const chips = document.createElement('div')
-  chips.className = 'suggestions'
-  for (const s of SUGGESTIONS) {
-    const b = document.createElement('button')
-    b.type = 'button'
-    b.className = 'suggestion'
-    b.textContent = s
-    b.addEventListener('click', () => {
-      const input = $('#input')
-      input.value = s
-      autosize(input)
-      input.focus()
-    })
-    chips.appendChild(b)
+  const p = document.createElement('p')
+  p.textContent = isBrain
+    ? 'Your own AI, running on this device. Nothing to download, no account, no internet — ' +
+      'and it says so plainly when it does not know.'
+    : `${entry.name} is running on this device. It was downloaded once and now answers ` +
+      'with no internet, no account and nothing leaving your phone.'
+
+  wrap.append(mark, h, p)
+
+  const groups = document.createElement('div')
+  groups.className = 'suggestion-groups'
+
+  for (const [heading, examples] of isBrain ? BRAIN_SUGGESTIONS : MODEL_SUGGESTIONS) {
+    const group = document.createElement('section')
+    group.className = 'suggestion-group'
+
+    const title = document.createElement('h2')
+    title.textContent = heading
+    group.appendChild(title)
+
+    for (const example of examples) {
+      const chip = document.createElement('button')
+      chip.type = 'button'
+      chip.className = 'suggestion'
+      chip.textContent = example
+      chip.addEventListener('click', () => {
+        const input = $('#input')
+        input.value = example
+        autosize(input)
+        input.focus()
+      })
+      group.appendChild(chip)
+    }
+    groups.appendChild(group)
   }
-  wrap.appendChild(chips)
+
+  wrap.appendChild(groups)
+
+  // On 360 Brain there is a whole other tier of ability one tap away, and no
+  // way to discover it from the chat itself.
+  if (isBrain) {
+    const upsell = document.createElement('button')
+    upsell.type = 'button'
+    upsell.className = 'empty-upsell'
+    const pick = suggestFor(state.device)
+    upsell.innerHTML =
+      `<strong>Want a real language model?</strong> ` +
+      `<span>Download a free one — ${pick.name} is a ` +
+      `${fmtSize(pick.downloadMB)} download — and it works offline too.</span>`
+    upsell.addEventListener('click', openModels)
+    wrap.appendChild(upsell)
+  }
+
   return wrap
 }
 
@@ -258,7 +456,6 @@ function wireActions(handles, role, index) {
 
   if (role === 'assistant') {
     addAction(handles.actions, 'Regenerate', 'Answer this again', () => {
-      if (state.busy) return null
       regenerateFrom(index)
       return null
     })
@@ -349,6 +546,10 @@ function setBusy(busy) {
 async function send(text) {
   const trimmed = text.trim()
   if (state.busy || !trimmed) return
+  if (!backend()?.ready) {
+    toast('That model is still loading — give it a moment.', 'warn')
+    return
+  }
 
   clearEmptyState()
   state.chat.messages.push({ role: 'user', content: trimmed })
@@ -374,8 +575,8 @@ async function runCompletion() {
   handles.el.classList.add('streaming')
   scrollToBottom(true)
 
-  // The brain answers the latest question; the history goes along only so
-  // that the adapter can find it.
+  // 360 Brain answers the latest question and ignores the rest; a downloaded
+  // model reads the whole thread. Both get the same payload.
   const payload = state.chat.messages.map(({ role, content }) => ({ role, content }))
 
   let raw = ''
@@ -394,7 +595,8 @@ async function runCompletion() {
   }
 
   try {
-    for await (const chunk of state.backend.stream(payload)) {
+    const stream = backend().stream(payload, { verbosity: state.settings.replyLength })
+    for await (const chunk of stream) {
       if (chunk.text) {
         raw += chunk.text
         // Coalesce paints to one per frame; repainting on every token turns
@@ -407,7 +609,7 @@ async function runCompletion() {
       if (chunk.done) stats = chunk.stats
     }
   } catch (err) {
-    raw += `\n\n**⚠️ Error:** ${err.message}`
+    raw += `\n\n**⚠️ Error:** ${reason(err)}`
   }
 
   paint()
@@ -419,12 +621,408 @@ async function runCompletion() {
     handles.meta.textContent = stats.note
   }
 
+  // Saying "shorter" or "elaborate" mid-chat is a real preference, so it moves
+  // the Settings control rather than silently disagreeing with it.
+  if (stats?.verbosity && stats.verbosity !== state.settings.replyLength) {
+    state.settings.replyLength = stats.verbosity
+    applySettingsToForm()
+    setSetting('replyLength', stats.verbosity).catch(() => {})
+  }
+
   state.chat.messages.push({ role: 'assistant', content: raw, stats })
   await saveChat(state.chat)
   wireActions(handles, 'assistant', state.chat.messages.length - 1)
 
   setBusy(false)
-  $('#input').focus()
+  if (!state.device.mobile) $('#input').focus()
+}
+
+/* ----------------------------------------------------- the model picker */
+
+async function openModels() {
+  setSidebar(false)
+  $('#models-dialog').showModal()
+  renderModels()
+  state.gpu ??= await probeGPU()
+  renderModels()
+  await refreshDownloads()
+  renderModels()
+  refreshStorageInfo()
+}
+
+/**
+ * Reconciles our record of what is downloaded against the actual cache.
+ *
+ * Only when we believe something is there: with nothing recorded there is
+ * nothing to disagree about, and the check would cost a six-megabyte import
+ * for no reason. A browser under storage pressure is free to evict a model, so
+ * the record alone cannot be trusted forever.
+ */
+async function refreshDownloads() {
+  state.gpu ??= await probeGPU()
+  if (!state.downloaded.size) return
+  try {
+    state.downloaded = await listDownloaded()
+    await rememberDownloads()
+  } catch {
+    // Leave the record as it stands; a failed check is not evidence of
+    // anything, and wiping the list here would hide models that are present.
+  }
+}
+
+/** Writes the downloaded-model record back, so the next boot starts from it. */
+async function rememberDownloads() {
+  const ids = [...state.downloaded]
+  state.settings.downloaded = ids
+  await setSetting('downloaded', ids).catch(() => {})
+}
+
+/** One line about this device, so the size figures below mean something. */
+function renderDeviceNote() {
+  const note = $('#device-note')
+  const gpu = state.gpu
+
+  // The probe is asynchronous and the dialog opens instantly. Saying nothing
+  // yet beats asserting "full-precision builds" and correcting it a beat later.
+  if (!gpu) {
+    note.className = 'device-note'
+    note.textContent = 'Checking what this device can run…'
+    return
+  }
+
+  if (!gpu.ok) {
+    note.className = 'device-note warn'
+    note.innerHTML = renderMarkdown(
+      `**Downloaded models cannot run here.** ${gpu.reason}`,
+    )
+    return
+  }
+
+  const bits = []
+  if (gpu?.description || gpu?.vendor) bits.push(gpu.description || gpu.vendor)
+  bits.push(gpu?.f16 ? 'half-precision supported' : 'full-precision builds')
+  note.className = 'device-note'
+  note.innerHTML = renderMarkdown(
+    `Detected **${state.device.name}** — ${bits.join(' · ')}. ` +
+      'The first download needs Wi-Fi; everything after that is offline.',
+  )
+}
+
+function renderModels() {
+  renderDeviceNote()
+  const host = $('#model-groups')
+  host.innerHTML = ''
+
+  host.appendChild(buildBuiltInCard())
+
+  const usable = state.gpu?.ok !== false
+  for (const tier of TIERS) {
+    const entries = MODELS.filter((m) => m.tier === tier.id)
+    if (!entries.length) continue
+
+    const section = document.createElement('section')
+    section.className = 'model-group'
+
+    const head = document.createElement('div')
+    head.className = 'model-group-head'
+    const h = document.createElement('h3')
+    h.textContent = tier.label
+    const hint = document.createElement('span')
+    hint.className = 'muted'
+    hint.textContent = tier.hint
+    head.append(h, hint)
+    section.appendChild(head)
+
+    for (const entry of entries) section.appendChild(buildModelCard(entry, usable))
+    host.appendChild(section)
+  }
+}
+
+function buildBuiltInCard() {
+  const card = document.createElement('article')
+  const active = state.engineId === 'brain'
+  card.className = `model-card builtin${active ? ' active' : ''}`
+
+  card.innerHTML = `
+    <div class="model-top">
+      <span class="orbit" aria-hidden="true"></span>
+      <div class="model-id">
+        <h4>${BUILT_IN.name}</h4>
+        <span class="model-family">Ships with the app</span>
+      </div>
+      <span class="pill pill-ok">0 MB</span>
+    </div>
+    <p class="model-blurb">${BUILT_IN.blurb}</p>
+  `
+
+  const actions = document.createElement('div')
+  actions.className = 'model-actions'
+  const use = document.createElement('button')
+  use.type = 'button'
+  use.className = active ? 'btn btn-active' : 'btn btn-primary'
+  use.textContent = active ? '✓ Answering now' : 'Use 360 Brain'
+  use.disabled = active
+  use.addEventListener('click', () => useBrain())
+  actions.appendChild(use)
+  card.appendChild(actions)
+  return card
+}
+
+function buildModelCard(entry, usable) {
+  const active = state.engineId === entry.id
+  const have = state.downloaded.has(entry.id)
+  const loading = state.loadingId === entry.id
+  const fits = fitsDevice(entry, state.gpu, state.device)
+  const size = downloadSize(entry)
+
+  const card = document.createElement('article')
+  card.className = [
+    'model-card',
+    active ? 'active' : '',
+    have ? 'have' : '',
+    !fits || !usable ? 'tight' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const recommended =
+    (entry.recommendedFor === 'mobile' && state.device.mobile) ||
+    (entry.recommendedFor === 'desktop' && !state.device.mobile)
+
+  const pills = [
+    have
+      ? `<span class="pill pill-ok">On this device · ${size}</span>`
+      : `<span class="pill">${size} download</span>`,
+    recommended ? '<span class="pill pill-star">Recommended</span>' : '',
+    entry.reasoning ? '<span class="pill pill-soft">Shows its thinking</span>' : '',
+  ]
+    .filter(Boolean)
+    .join('')
+
+  card.innerHTML = `
+    <div class="model-top">
+      <div class="model-id">
+        <h4>${entry.name}</h4>
+        <span class="model-family">${entry.family} · ${entry.tag}</span>
+      </div>
+      <div class="model-pills">${pills}</div>
+    </div>
+    <p class="model-blurb">${entry.blurb}</p>
+    <div class="model-strengths">${entry.strengths
+      .map((s) => `<span class="tagline">${s}</span>`)
+      .join('')}</div>
+  `
+
+  if (!usable) {
+    const why = document.createElement('p')
+    why.className = 'model-warn'
+    why.textContent = 'Needs WebGPU, which this browser does not have.'
+    card.appendChild(why)
+  } else if (!fits) {
+    const why = document.createElement('p')
+    why.className = 'model-warn'
+    const needs = fmtSize(ramFor(entry, state.gpu))
+    why.textContent = state.device.mobile
+      ? `Needs about ${needs} of memory, which is probably more than this phone has. You can still try it.`
+      : `Needs about ${needs} of memory, which may be more than this GPU can hold. You can still try it.`
+    card.appendChild(why)
+  }
+
+  const actions = document.createElement('div')
+  actions.className = 'model-actions'
+
+  const use = document.createElement('button')
+  use.type = 'button'
+  if (active) {
+    use.className = 'btn btn-active'
+    use.textContent = '✓ Answering now'
+    use.disabled = true
+  } else if (loading) {
+    use.className = 'btn'
+    use.textContent = 'Downloading…'
+    use.disabled = true
+  } else {
+    use.className = have ? 'btn btn-primary' : 'btn'
+    use.textContent = have ? 'Use this model' : `Download · ${size}`
+    use.disabled = !usable || state.loadingId !== null
+    use.addEventListener('click', () => useModel(entry))
+  }
+  actions.appendChild(use)
+
+  if (have) {
+    const del = document.createElement('button')
+    del.type = 'button'
+    del.className = 'btn btn-ghost model-del'
+    del.textContent = 'Remove'
+    del.title = `Free the ${size} this model takes`
+    del.disabled = state.loadingId !== null
+    del.addEventListener('click', () => removeModel(entry))
+    actions.appendChild(del)
+  }
+
+  card.appendChild(actions)
+  return card
+}
+
+async function useBrain() {
+  state.engineId = 'brain'
+  state.settings.engine = 'brain'
+  await setSetting('engine', 'brain').catch(() => {})
+  renderEngineLabels()
+  renderModels()
+  if (!state.chat.messages.length) renderMessages()
+  toast('360 Brain is answering — instant, exact, nothing downloaded.')
+}
+
+/**
+ * Downloads `entry` if it is not here yet, then makes it the answering engine.
+ *
+ * The confirmation before a first download is not ceremony: on mobile data
+ * this is a real cost, and it is the single moment in the app's life that
+ * needs the internet at all.
+ */
+async function useModel(entry, { silent = false } = {}) {
+  if (state.loadingId) return
+
+  const gpu = (state.gpu ??= await probeGPU())
+  if (!gpu.ok) {
+    toast(gpu.reason, 'error', 7000)
+    return
+  }
+
+  const have = state.downloaded.has(entry.id)
+  const size = downloadSize(entry)
+
+  if (!have && !silent) {
+    if (!navigator.onLine) {
+      toast(`${entry.name} has not been downloaded yet, and you are offline.`, 'warn', 5000)
+      return
+    }
+    const ok = await confirmSheet({
+      title: `Download ${entry.name}?`,
+      body:
+        `A one-time download of ${size}. Use Wi-Fi if you can: after this it is stored ` +
+        'on this device and never needs the internet again.',
+      confirmLabel: `Download ${size}`,
+    })
+    if (!ok) return
+  }
+
+  const { WebLLMBackend } = await loadLLMModule()
+  state.llm ??= new WebLLMBackend()
+  state.loadingId = entry.id
+  guardDownload(!have)
+  renderModels()
+  showLoad(have ? `Loading ${entry.name}` : `Downloading ${entry.name}`, silent)
+
+  try {
+    await state.llm.load(entry, ({ progress, text }) => updateLoad(progress, text))
+
+    state.engineId = entry.id
+    state.settings.engine = entry.id
+    await setSetting('engine', entry.id).catch(() => {})
+    state.downloaded.add(entry.id)
+    await rememberDownloads()
+
+    if (!silent) toast(`${entry.name} is ready, and now works offline.`, 'ok', 5000)
+  } catch (err) {
+    if (err?.name === 'LoadCancelled') {
+      toast('Download cancelled. What arrived is kept, so resuming is quicker.', 'warn', 5000)
+    } else {
+      console.error(err)
+      const why = reason(err)
+      toast(`Could not load ${entry.name}: ${why}`, 'error', 8000)
+      showSystemNote(
+        `⚠️ **${entry.name} could not start.** ${why}\n\n` +
+          'A dropped connection during the download is the usual cause. Whatever ' +
+          'arrived is kept, so trying again picks up where it stopped. ' +
+          '360 Brain is answering in the meantime.',
+      )
+    }
+    // A half-loaded model must never be left as the chosen engine.
+    if (state.engineId === entry.id) state.engineId = 'brain'
+  } finally {
+    state.loadingId = null
+    guardDownload(false)
+    hideLoad()
+    renderEngineLabels()
+    renderModels()
+    if (!state.chat.messages.length) renderMessages()
+    refreshStorageInfo()
+  }
+}
+
+async function removeModel(entry) {
+  const size = downloadSize(entry)
+  const ok = await confirmSheet({
+    title: `Remove ${entry.name}?`,
+    body: `This frees ${size} on this device. You can download it again later, over Wi-Fi.`,
+    confirmLabel: 'Remove',
+    danger: true,
+  })
+  if (!ok) return
+
+  if (state.engineId === entry.id) {
+    await state.llm?.unload()
+    state.engineId = 'brain'
+    state.settings.engine = 'brain'
+    await setSetting('engine', 'brain').catch(() => {})
+  }
+  await deleteDownload(entry)
+  state.downloaded.delete(entry.id)
+  await rememberDownloads()
+  renderEngineLabels()
+  renderModels()
+  refreshStorageInfo()
+  toast(`${entry.name} removed — ${size} freed.`, 'ok')
+}
+
+/* ------------------------------------------------------------- load bar */
+
+function showLoad(title, quiet) {
+  $('#load-title').textContent = title
+  $('#load-pct').textContent = '0%'
+  $('#load-fill').style.width = '0%'
+  $('#load-text').textContent = quiet ? 'Reading from this device…' : 'Starting…'
+  $('#load-bar').hidden = false
+}
+
+function updateLoad(progress, text) {
+  const pct = Math.max(0, Math.min(100, Math.round((progress ?? 0) * 100)))
+  $('#load-fill').style.width = `${pct}%`
+  $('#load-pct').textContent = `${pct}%`
+  // MLC's own progress text names the shard and the elapsed time, which is
+  // exactly the reassurance a long download needs.
+  if (text) $('#load-text').textContent = text
+}
+
+function hideLoad() {
+  $('#load-bar').hidden = true
+}
+
+/* ------------------------------------------------------ engine labelling */
+
+/** Keeps the topbar chip, the sidebar card and the disclaimer in step. */
+function renderEngineLabels() {
+  const entry = activeEntry()
+  const isBrain = state.engineId === 'brain'
+
+  $('#engine-chip-name').textContent = entry.name
+  $('#engine-chip').classList.toggle('chip-model', !isBrain)
+  $('#engine-card-name').textContent = entry.name
+  $('#engine-card-note').textContent = isBrain
+    ? 'Built in · nothing to download'
+    : `${downloadSize(entry)} · on this device`
+
+  $('#disclaimer').innerHTML = renderMarkdown(
+    isBrain
+      ? '360AI runs entirely on this device — **nothing downloaded, no internet, no account**. ' +
+          'It knows what is built into it and what you teach it, and says so plainly when it ' +
+          'does not know. Do not rely on it for medical, legal or financial decisions.'
+      : `**${entry.name}** is running on this device — **offline, and nothing you type leaves it**. ` +
+          'Small models get things wrong confidently, so check anything that matters. Do not rely ' +
+          'on it for medical, legal or financial decisions.',
+  )
 }
 
 /* ----------------------------------------------------------- what I can do */
@@ -510,18 +1108,30 @@ function renderFactList() {
 }
 
 async function forgetEverything() {
-  if (!state.facts.length) return
-  if (!confirm('Forget everything you have taught 360AI? This cannot be undone.')) return
+  if (!state.facts.length) {
+    toast('There is nothing taught to forget.')
+    return
+  }
+  const ok = await confirmSheet({
+    title: 'Forget everything you taught 360AI?',
+    body: `${state.facts.length} fact${state.facts.length === 1 ? '' : 's'} will be deleted. This cannot be undone.`,
+    confirmLabel: 'Forget it all',
+    danger: true,
+  })
+  if (!ok) return
   await clearFacts()
   state.facts = []
   renderFactList()
-  showSystemNote('🧹 Everything you taught me has been forgotten.')
+  toast('Everything you taught me has been forgotten.', 'ok')
 }
 
 /* -------------------------------------------------------------- settings */
 
 function applySettingsToForm() {
   $('#theme').value = state.settings.theme
+  for (const seg of document.querySelectorAll('.seg')) {
+    seg.classList.toggle('on', seg.dataset.length === state.settings.replyLength)
+  }
 }
 
 function applyTheme(theme) {
@@ -529,18 +1139,26 @@ function applyTheme(theme) {
   const dark =
     theme === 'dark' ||
     (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-  $('#theme-color').content = dark ? '#0b0d12' : '#ffffff'
+  $('#theme-color').content = dark ? '#0a0e15' : '#ffffff'
 }
 
 async function refreshStorageInfo() {
   if (!navigator.storage?.estimate) return
   const { usage, quota } = await navigator.storage.estimate()
-  $('#storage-info').textContent = `Storage used: ${fmtBytes(usage)} of ${fmtBytes(quota)}`
+  const pct = quota ? Math.min(100, (usage / quota) * 100) : 0
+
+  const fill = $('#storage-fill')
+  if (fill) fill.style.width = `${Math.max(pct, usage ? 1.5 : 0)}%`
+
+  const line = `${fmtBytes(usage)} used of ${fmtBytes(quota)} available on this device`
+  $('#storage-info').textContent = line
+  $('#model-storage').textContent = line
 }
 
 /**
- * There is nothing to download and nothing to call, so the network state is
- * only ever a reassurance — which is exactly why it is worth showing.
+ * With 360 Brain there is nothing to download and nothing to call, so the
+ * network state is pure reassurance. With a model chosen it matters exactly
+ * once — the first download — and never again.
  */
 function updateNetStatus() {
   const el = $('#net-status')
@@ -637,6 +1255,12 @@ function wireEvents() {
     if (!narrow.matches) setSidebar(false)
   })
 
+  // Every dialog closes from its × and its footer button; <form method="dialog">
+  // is not used because these dialogs hold real controls of their own.
+  for (const btn of document.querySelectorAll('[data-close]')) {
+    btn.addEventListener('click', () => btn.closest('dialog')?.close())
+  }
+
   $('#composer').addEventListener('submit', (e) => {
     e.preventDefault()
     const text = input.value
@@ -660,11 +1284,13 @@ function wireEvents() {
   })
   $('#scroll-bottom').addEventListener('click', () => scrollToBottom(true))
 
-  $('#stop').addEventListener('click', () => state.backend?.stop())
+  $('#stop').addEventListener('click', () => backend()?.stop())
+  $('#load-cancel').addEventListener('click', () => state.llm?.cancelLoad())
+
   $('#new-chat').addEventListener('click', () => {
     openChat(null)
     setSidebar(false)
-    input.focus()
+    if (!state.device.mobile) input.focus()
   })
   $('#open-skills').addEventListener('click', () => {
     renderSkillList()
@@ -675,7 +1301,15 @@ function wireEvents() {
     refreshStorageInfo()
     $('#settings-dialog').showModal()
   })
+  $('#settings-models').addEventListener('click', () => {
+    $('#settings-dialog').close()
+    openModels()
+  })
+  $('#engine-chip').addEventListener('click', openModels)
+  $('#engine-card').addEventListener('click', openModels)
+
   $('#toggle-sidebar').addEventListener('click', toggleSidebar)
+  $('#close-sidebar').addEventListener('click', () => setSidebar(false))
   $('#scrim').addEventListener('click', () => setSidebar(false))
 
   $('#chat-search').addEventListener('input', (e) => {
@@ -706,6 +1340,15 @@ function wireEvents() {
     applyTheme(e.target.value)
     await setSetting('theme', e.target.value)
   })
+
+  for (const seg of document.querySelectorAll('.seg')) {
+    seg.addEventListener('click', async () => {
+      state.settings.replyLength = seg.dataset.length
+      applySettingsToForm()
+      await setSetting('replyLength', seg.dataset.length).catch(() => {})
+    })
+  }
+
   $('#forget-all').addEventListener('click', forgetEverything)
 
   $('#export-chats').addEventListener('click', async () => {
@@ -717,6 +1360,7 @@ function wireEvents() {
     a.download = `360ai-backup-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(a.href)
+    toast('Backup saved to your downloads.', 'ok')
   })
 
   $('#import-chats').addEventListener('click', () => $('#import-file').click())
@@ -726,9 +1370,11 @@ function wireEvents() {
     try {
       const count = await importAll(JSON.parse(await file.text()))
       await refreshChatList()
-      alert(`Imported ${count} chat${count === 1 ? '' : 's'}.`)
+      state.facts = await listFacts()
+      renderFactList()
+      toast(`Imported ${count} chat${count === 1 ? '' : 's'}.`, 'ok')
     } catch (err) {
-      alert(`Import failed: ${err.message}`)
+      toast(`Import failed: ${reason(err)}`, 'error', 6000)
     }
     e.target.value = ''
   })
@@ -743,6 +1389,9 @@ function wireEvents() {
     } else if (mod && e.key.toLowerCase() === 'b') {
       e.preventDefault()
       toggleSidebar()
+    } else if (mod && e.key.toLowerCase() === 'm') {
+      e.preventDefault()
+      openModels()
     } else if (e.key === 'Escape') {
       setSidebar(false)
     }
@@ -775,10 +1424,28 @@ function wireEvents() {
     installPrompt = null
     $('#install-app').hidden = true
   })
+
 }
 
-// Ask the browser to keep our data even under storage pressure — otherwise a
-// multi-GB model cache is the first thing evicted.
+/**
+ * Guards a download in flight against a stray tab close.
+ *
+ * The listener is attached only while one is running and removed the moment it
+ * finishes: a permanently registered `beforeunload` handler makes some
+ * browsers treat every navigation away as risky, and a spurious "Leave site?"
+ * on an app people close a dozen times a day is worse than the rare lost
+ * download it would prevent.
+ */
+function warnBeforeLeaving(e) {
+  e.preventDefault()
+  e.returnValue = ''
+}
+
+function guardDownload(on) {
+  if (on) window.addEventListener('beforeunload', warnBeforeLeaving)
+  else window.removeEventListener('beforeunload', warnBeforeLeaving)
+}
+
 navigator.storage?.persist?.().catch(() => {})
 
 boot()

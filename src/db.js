@@ -104,6 +104,23 @@ export async function clearFacts() {
 
 export const DEFAULT_SETTINGS = {
   theme: 'dark',
+  /**
+   * Which engine answers: '360 Brain' by default, or the catalogue id of a
+   * downloaded model. Storing the id rather than the WebLLM model name keeps
+   * the setting valid when a device switches between the f16 and f32 builds.
+   */
+  engine: 'brain',
+  /** How much detail an answer carries. Applies to both engines. */
+  replyLength: 'normal',
+  /**
+   * Catalogue ids of the models this device has downloaded.
+   *
+   * The authority is the browser cache, not this list — but reading that
+   * cache means loading the six-megabyte WebLLM runtime, which someone who
+   * only uses 360 Brain should never pay for. So the app keeps its own record
+   * and reconciles it with the cache when the model picker is opened.
+   */
+  downloaded: [],
 }
 
 function newId() {

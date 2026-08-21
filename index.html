@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0b0d12" id="theme-color" />
-    <meta name="description" content="360AI — an AI that runs entirely on your own phone, tablet or computer. No provider, no account, no internet." />
+    <meta name="theme-color" content="#0a0e15" id="theme-color" />
+    <meta name="description" content="360AI — an AI that runs entirely on your own phone, tablet or computer. Choose a free model, download it once, then use it with no internet." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
     <!-- iOS ignores the web manifest for standalone launch and colour; these
@@ -21,19 +21,50 @@
       <div id="scrim" class="scrim" hidden></div>
       <aside id="sidebar" class="sidebar" aria-label="Chats">
         <div class="sidebar-head">
-          <button id="new-chat" type="button" class="btn btn-primary btn-block">+ New chat</button>
-          <input
-            id="chat-search"
-            class="text-input search-input"
-            type="search"
-            placeholder="Search chats…  (Ctrl+K)"
-            autocomplete="off"
-          />
+          <div class="brand">
+            <span class="orbit" aria-hidden="true"></span>
+            <span class="brand-name">360AI</span>
+            <button
+              id="close-sidebar"
+              type="button"
+              class="btn btn-icon brand-close"
+              aria-label="Close chat list"
+            >×</button>
+          </div>
+          <button id="new-chat" type="button" class="btn btn-primary btn-block">
+            <span aria-hidden="true">＋</span> New chat
+          </button>
+          <div class="search-wrap">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input
+              id="chat-search"
+              class="text-input search-input"
+              type="search"
+              placeholder="Search chats"
+              autocomplete="off"
+              aria-label="Search chats"
+            />
+            <kbd class="search-kbd" aria-hidden="true">Ctrl K</kbd>
+          </div>
         </div>
+
         <nav id="chat-list" class="chat-list"></nav>
+
         <div class="sidebar-foot">
-          <button id="open-settings" type="button" class="btn btn-ghost btn-block">Settings</button>
-          <button id="install-app" type="button" class="btn btn-ghost btn-block" hidden>Install app</button>
+          <!-- The engine card is the sidebar's anchor: it names what is
+               answering right now and is the way to change it. -->
+          <button id="engine-card" type="button" class="engine-card">
+            <span class="engine-card-top">
+              <span class="engine-card-label">Answering with</span>
+              <span class="engine-card-change">Change</span>
+            </span>
+            <span id="engine-card-name" class="engine-card-name">360 Brain</span>
+            <span id="engine-card-note" class="engine-card-note">Built in · nothing to download</span>
+          </button>
+          <div class="foot-row">
+            <button id="open-settings" type="button" class="btn btn-ghost">Settings</button>
+            <button id="install-app" type="button" class="btn btn-ghost" hidden>Install</button>
+          </div>
           <div id="net-status" class="net-status"></div>
         </div>
       </aside>
@@ -51,9 +82,18 @@
           <div class="topbar-title">
             <strong id="chat-title" title="Click to rename" tabindex="0" role="button">New chat</strong>
             <input id="chat-title-input" class="title-input" hidden aria-label="Chat name" />
-            <span id="engine-badge" class="badge">no model loaded</span>
           </div>
-          <button id="open-skills" type="button" class="btn btn-ghost">Skills</button>
+          <button
+            id="engine-chip"
+            type="button"
+            class="chip"
+            title="Choose which AI answers"
+            aria-haspopup="dialog"
+          >
+            <span class="chip-dot" aria-hidden="true"></span>
+            <span id="engine-chip-name">360 Brain</span>
+          </button>
+          <button id="open-skills" type="button" class="btn btn-ghost btn-compact" title="What 360 Brain can do"><span class="open-skills-label">Skills</span><span aria-hidden="true" class="open-skills-icon">?</span></button>
         </header>
 
         <div class="messages-wrap">
@@ -62,54 +102,105 @@
         </div>
 
         <div class="composer-wrap">
+          <!-- Download progress. Lives above the composer so a multi-gigabyte
+               fetch never hides the conversation it is for. -->
           <div id="load-bar" class="load-bar" hidden>
+            <div class="load-head">
+              <span id="load-title" class="load-title">Downloading…</span>
+              <span id="load-pct" class="load-pct">0%</span>
+              <button id="load-cancel" type="button" class="btn btn-ghost btn-compact">Cancel</button>
+            </div>
             <div class="load-bar-fill"><i id="load-fill"></i></div>
             <span id="load-text" class="load-text"></span>
           </div>
+
           <form id="composer" class="composer">
-            <textarea
-              id="input"
-              class="input"
-              rows="1"
-              placeholder="Ask anything…  (Enter to send, Shift+Enter for a new line)"
-              autocomplete="off"
-            ></textarea>
-            <button id="send" class="btn btn-primary btn-send" type="submit">Send</button>
-            <button id="stop" class="btn btn-danger btn-send" type="button" hidden>Stop</button>
+            <div class="composer-shell">
+              <textarea
+                id="input"
+                class="input"
+                rows="1"
+                placeholder="Ask anything…"
+                autocomplete="off"
+              ></textarea>
+              <button id="send" class="btn-send" type="submit" aria-label="Send">
+                <span aria-hidden="true">↑</span>
+              </button>
+              <button id="stop" class="btn-send btn-stop" type="button" hidden aria-label="Stop">
+                <span aria-hidden="true">■</span>
+              </button>
+            </div>
           </form>
-          <p class="disclaimer">
-            360AI runs entirely on this device — <b>no model download, no internet, no account</b>.
-            It only knows what is built into it and what you teach it, and it will say so plainly
-            when it does not know. Don't rely on it for medical, legal or financial decisions.
-          </p>
+          <div id="disclaimer" class="disclaimer"></div>
         </div>
       </main>
     </div>
 
+    <!-- --------------------------------------------------------- models -->
+    <dialog id="models-dialog" class="dialog dialog-wide">
+      <div class="dialog-inner" tabindex="-1" autofocus>
+        <header class="dialog-head">
+          <div>
+            <h2>Choose your AI</h2>
+            <p class="muted dialog-sub">
+              Every model here is free and open. Download one <b>once</b> over Wi-Fi and it
+              lives on this device — after that it answers with the internet off.
+            </p>
+          </div>
+          <button type="button" class="btn btn-icon dialog-x" data-close aria-label="Close">×</button>
+        </header>
+
+        <div id="device-note" class="device-note"></div>
+        <div id="model-groups" class="model-groups"></div>
+
+        <footer class="dialog-foot">
+          <span id="model-storage" class="muted"></span>
+          <button type="button" class="btn" data-close>Done</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <!-- --------------------------------------------------------- skills -->
     <dialog id="skills-dialog" class="dialog">
-      <form method="dialog" class="dialog-inner">
-        <h2>What I can do</h2>
-        <p class="muted">
-          Everything here runs in JavaScript on this device — instantly, with no model to
-          download. Tap any example to try it. Say <code>shorter</code> or
-          <code>elaborate</code> at any point to change how much detail I give.
-        </p>
+      <div class="dialog-inner" tabindex="-1" autofocus>
+        <header class="dialog-head">
+          <div>
+            <h2>What 360 Brain can do</h2>
+            <p class="muted dialog-sub">
+              These run in JavaScript on this device — instantly, with nothing downloaded.
+              Tap an example to try it. Say <code>shorter</code> or <code>elaborate</code>
+              at any point to change how much detail you get.
+            </p>
+          </div>
+          <button type="button" class="btn btn-icon dialog-x" data-close aria-label="Close">×</button>
+        </header>
+
         <div id="skill-list" class="skill-list"></div>
+
         <hr />
         <h3>What you have taught me</h3>
         <p class="muted">
-          Teach me anything with <code>remember: question = answer</code>. It is stored on this
-          device only, and I will know it from then on.
+          Teach me anything with <code>remember: question = answer</code>. It is stored on
+          this device only, and I will know it from then on.
         </p>
         <div id="fact-count" class="muted"></div>
         <div id="fact-list" class="fact-list"></div>
-        <menu class="dialog-actions"><button class="btn" value="close">Close</button></menu>
-      </form>
+
+        <footer class="dialog-foot">
+          <span></span>
+          <button type="button" class="btn" data-close>Close</button>
+        </footer>
+      </div>
     </dialog>
 
+    <!-- ------------------------------------------------------- settings -->
     <dialog id="settings-dialog" class="dialog">
-      <form method="dialog" class="dialog-inner">
-        <h2>Settings</h2>
+      <div class="dialog-inner" tabindex="-1" autofocus>
+        <header class="dialog-head">
+          <div><h2>Settings</h2></div>
+          <button type="button" class="btn btn-icon dialog-x" data-close aria-label="Close">×</button>
+        </header>
+
         <label class="field">
           <span>Appearance</span>
           <select id="theme" class="text-input">
@@ -118,19 +209,63 @@
             <option value="system">Match system</option>
           </select>
         </label>
+
+        <div class="field">
+          <span>Answer length</span>
+          <div class="segmented" role="group" aria-label="Answer length">
+            <button type="button" class="seg" data-length="short">Short</button>
+            <button type="button" class="seg" data-length="normal">Normal</button>
+            <button type="button" class="seg" data-length="detailed">Detailed</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span>AI engine</span>
+          <button id="settings-models" type="button" class="btn btn-block">
+            Choose or download a model
+          </button>
+        </div>
+
         <hr />
+        <h3>Your data</h3>
+        <p class="muted">
+          Chats, settings and everything you have taught 360AI stay in this browser.
+          A backup file is the only way any of it leaves the device.
+        </p>
         <div class="row">
-          <button id="export-chats" class="btn" type="button">Export everything (JSON)</button>
-          <button id="import-chats" class="btn" type="button">Import</button>
+          <button id="export-chats" class="btn" type="button">Export everything</button>
+          <button id="import-chats" class="btn" type="button">Import backup</button>
           <input id="import-file" type="file" accept="application/json" hidden />
         </div>
         <div class="row">
           <button id="forget-all" class="btn btn-danger" type="button">Forget everything I taught</button>
         </div>
-        <div id="storage-info" class="muted"></div>
-        <menu class="dialog-actions"><button class="btn" value="close">Close</button></menu>
+
+        <div class="storage">
+          <div class="storage-bar"><i id="storage-fill"></i></div>
+          <div id="storage-info" class="muted"></div>
+        </div>
+
+        <footer class="dialog-foot">
+          <span></span>
+          <button type="button" class="btn" data-close>Close</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <!-- -------------------------------------------------------- confirm -->
+    <dialog id="confirm-dialog" class="dialog dialog-narrow">
+      <form method="dialog" class="dialog-inner">
+        <h2 id="confirm-title">Are you sure?</h2>
+        <p id="confirm-body" class="muted"></p>
+        <footer class="dialog-foot">
+          <button class="btn" value="cancel">Cancel</button>
+          <button id="confirm-go" class="btn btn-primary" value="go">Confirm</button>
+        </footer>
       </form>
     </dialog>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
