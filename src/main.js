@@ -1,9 +1,10 @@
 import './styles.css'
-import { MODELS, findModel, fitsComfortably, pickVariant, probeGPU } from './models.js'
-import { OllamaBackend } from './backends/ollama.js'
+import { BrainBackend } from './backends/brain.js'
+import { SKILLS, skillList } from './brain/index.js'
+import { detectDevice, installHelp } from './device.js'
 import {
-  createChat, deleteChat, deriveTitle, exportAll, getChat, getSettings,
-  importAll, latestChat, listChats, saveChat, setSetting,
+  clearFacts, createChat, deleteChat, deleteFact, deriveTitle, exportAll, getChat,
+  getSettings, importAll, latestChat, listChats, listFacts, saveChat, saveFact, setSetting,
 } from './db.js'
 import {
   addAction, createBubble, decorateCodeBlocks, fmtBytes, renderMarkdown, splitThinking,
@@ -12,10 +13,10 @@ import {
 const $ = (sel) => document.querySelector(sel)
 
 const SUGGESTIONS = [
-  'Explain how a large language model works, in plain language.',
-  'Draft a short, polite follow-up email about an unpaid invoice.',
-  'Write a Python script that renames files by their creation date.',
-  'What are the trade-offs of running an AI model locally instead of in the cloud?',
+  '17% of 4,850',
+  'pila ka adlaw tubtob Christmas',
+  '5 km to miles',
+  'remember: akon wifi = ...',
 ]
 
 const state = {
@@ -23,21 +24,36 @@ const state = {
   chat: null,
   backend: null,
   busy: false,
-  gpu: null,
+  device: detectDevice(),
+  // What the user has taught the brain. Kept in memory so a question costs no
+  // database round-trip, and rewritten whenever it changes.
+  facts: [],
   chats: [],
   filter: '',
   autoScroll: true,
 }
 
 /**
- * The WebLLM runtime is ~6 MB of JS. Importing it eagerly would block first
- * paint even though it is not needed until the user actually picks a model, so
- * it is pulled in on demand. The service worker still precaches the chunk, so
- * the offline path is unaffected.
+ * The brain's view of what it has been taught. `remember` and `forget` write
+ * through to IndexedDB and refresh the in-memory copy, so the next question
+ * already sees the change.
  */
-async function newWebLLMBackend() {
-  const { WebLLMBackend } = await import('./backends/webllm.js')
-  return new WebLLMBackend()
+function createMemory() {
+  return {
+    get taught() {
+      return state.facts
+    },
+    remember: async (q, a) => {
+      await saveFact(q, a)
+      state.facts = await listFacts()
+      renderFactList()
+    },
+    forget: async (id) => {
+      await deleteFact(id)
+      state.facts = await listFacts()
+      renderFactList()
+    },
+  }
 }
 
 /* ------------------------------------------------------------------ boot */
@@ -66,7 +82,7 @@ async function boot() {
     state.settings = await withTimeout(
       getSettings(),
       8000,
-      'Could not open the local database. If Bulig AI is open in another tab, ' +
+      'Could not open the local database. If 360AI is open in another tab, ' +
         'close it and reload this page.',
     )
   } catch (err) {
@@ -74,7 +90,8 @@ async function boot() {
     return
   }
 
-  state.gpu = await probeGPU()
+  state.facts = await listFacts().catch(() => [])
+  state.backend = new BrainBackend(createMemory())
 
   applyTheme(state.settings.theme)
   applySettingsToForm()
@@ -82,29 +99,12 @@ async function boot() {
   // Resume where the user left off rather than dropping them into a blank chat.
   const resume = await latestChat()
   await openChat(resume?.id ?? null)
-  renderModelList()
+  renderSkillList()
+  renderFactList()
   updateNetStatus()
   refreshStorageInfo()
+  $('#engine-badge').textContent = state.backend.label
 
-  if (!state.gpu.ok) {
-    showSystemNote(
-      `⚠️ ${state.gpu.reason}\n\nYou can still use **Turbo mode** (Ollama) from the Model menu.`,
-    )
-    return
-  }
-
-  showSystemNote(
-    `Ready. Pick a model from the **Model** button above to get started.\n\n` +
-      `GPU: ${state.gpu.description || state.gpu.vendor} · ` +
-      `${state.gpu.f16 ? 'f16 supported' : 'no f16 — the larger f32 builds will be used'}`,
-  )
-
-  // Only auto-load a model whose weights this device has already downloaded;
-  // silently pulling several gigabytes on start-up would be hostile.
-  const last = state.settings.lastModelId
-  if (state.settings.autoLoadModel && last && state.settings.cachedModels.includes(last)) {
-    loadModel(last)
-  }
 }
 
 /* --------------------------------------------------------------- chat io */
@@ -194,9 +194,9 @@ function buildEmptyState() {
   wrap.className = 'empty-state'
 
   const h = document.createElement('h1')
-  h.textContent = 'Bulig AI'
+  h.textContent = '360AI'
   const p = document.createElement('p')
-  p.textContent = 'A private AI assistant that runs entirely on this device.'
+  p.textContent = 'Your own AI. It runs on this device — phone, tablet or computer — and works with the internet off.'
   wrap.append(h, p)
 
   const chips = document.createElement('div')
@@ -234,9 +234,9 @@ function appendMessage(role, content, stats, index) {
   body.innerHTML = renderMarkdown(answer)
   decorateCodeBlocks(body)
 
-  if (stats?.decodeTps) {
+  if (stats?.note) {
     meta.hidden = false
-    meta.textContent = `${stats.decodeTps.toFixed(1)} tokens/sec`
+    meta.textContent = stats.note
   }
 
   if (index !== null && index !== undefined) wireActions(handles, role, index)
@@ -339,13 +339,6 @@ function scrollToBottom(force = false) {
 
 /* ------------------------------------------------------------ generation */
 
-function requireBackend() {
-  if (state.backend?.ready) return true
-  showSystemNote('No model is loaded yet. Pick one from the **Model** button first.')
-  $('#models-dialog').showModal()
-  return false
-}
-
 function setBusy(busy) {
   state.busy = busy
   $('#send').hidden = busy
@@ -356,7 +349,6 @@ function setBusy(busy) {
 async function send(text) {
   const trimmed = text.trim()
   if (state.busy || !trimmed) return
-  if (!requireBackend()) return
 
   clearEmptyState()
   state.chat.messages.push({ role: 'user', content: trimmed })
@@ -382,14 +374,9 @@ async function runCompletion() {
   handles.el.classList.add('streaming')
   scrollToBottom(true)
 
-  // Only the tail of the conversation is sent — small models have a 4k window
-  // and overflowing it makes the runtime drop the system prompt first.
-  const windowSize = state.settings.contextWindow
-  const history = state.chat.messages.slice(-windowSize)
-  const payload = [
-    { role: 'system', content: state.settings.systemPrompt },
-    ...history.map(({ role, content }) => ({ role, content })),
-  ]
+  // The brain answers the latest question; the history goes along only so
+  // that the adapter can find it.
+  const payload = state.chat.messages.map(({ role, content }) => ({ role, content }))
 
   let raw = ''
   let stats = null
@@ -408,7 +395,7 @@ async function runCompletion() {
 
   try {
     for await (const chunk of state.backend.stream(payload, {
-      temperature: state.settings.temperature,
+      lang: state.settings.replyLanguage,
     })) {
       if (chunk.text) {
         raw += chunk.text
@@ -429,9 +416,9 @@ async function runCompletion() {
   decorateCodeBlocks(handles.body)
   handles.el.classList.remove('streaming')
 
-  if (stats?.decodeTps) {
+  if (stats?.note) {
     handles.meta.hidden = false
-    handles.meta.textContent = `${stats.decodeTps.toFixed(1)} tokens/sec`
+    handles.meta.textContent = stats.note
   }
 
   state.chat.messages.push({ role: 'assistant', content: raw, stats })
@@ -442,135 +429,104 @@ async function runCompletion() {
   $('#input').focus()
 }
 
-/* ---------------------------------------------------------- model picker */
+/* ----------------------------------------------------------- what I can do */
 
-function renderModelList() {
-  const list = $('#model-list')
+/**
+ * The capability list, built from the skills themselves. Each example is
+ * clickable: tapping one drops it into the composer, which is the fastest way
+ * to learn what an offline assistant will and will not answer.
+ */
+function renderSkillList() {
+  const list = $('#skill-list')
+  if (!list) return
   list.innerHTML = ''
+  const lang = state.settings.replyLanguage === 'auto' ? 'en' : state.settings.replyLanguage
 
-  $('#gpu-note').textContent = state.gpu.ok
-    ? `GPU: ${state.gpu.description || state.gpu.vendor}${
-        state.gpu.f16 ? '' : ' — no f16 support, so the larger f32 builds are used'
-      }`
-    : state.gpu.reason
+  for (const skill of SKILLS) {
+    const card = document.createElement('div')
+    card.className = 'skill-card'
 
-  for (const m of MODELS) {
-    const v = pickVariant(m, state.gpu)
-    const cached = state.settings.cachedModels.includes(m.id)
-    const card = document.createElement('button')
-    card.type = 'button'
-    card.className = 'model-card'
-    if (state.backend?.modelId === v.model) card.classList.add('active')
-    if (!fitsComfortably(v.vramMB, state.gpu)) card.classList.add('heavy')
+    const head = document.createElement('h4')
+    head.className = 'skill-name'
+    head.textContent = skill.label?.[lang] ?? skill.label?.en ?? skill.id
+    card.appendChild(head)
 
-    card.innerHTML = `
-      <div class="model-head">
-        <span class="model-name"></span>
-        <span class="model-tag"></span>
-      </div>
-      <p class="model-blurb"></p>
-      <div class="model-size"></div>`
-    card.querySelector('.model-name').textContent = m.name
-    card.querySelector('.model-tag').textContent = m.recommended ? `★ ${m.tag}` : m.tag
-    card.querySelector('.model-blurb').textContent = m.blurb
-    card.querySelector('.model-size').textContent = cached
-      ? `downloaded · ${(v.vramMB / 1024).toFixed(1)} GB · ${v.precision}`
-      : `~${(v.vramMB / 1024).toFixed(1)} GB download · ${v.precision}`
-
-    card.disabled = !state.gpu.ok
-    card.addEventListener('click', () => loadModel(m.id))
+    const examples = document.createElement('div')
+    examples.className = 'skill-examples'
+    for (const example of skill.examples) {
+      const chip = document.createElement('button')
+      chip.type = 'button'
+      chip.className = 'skill-example'
+      chip.textContent = example
+      chip.addEventListener('click', () => {
+        $('#skills-dialog').close()
+        const input = $('#input')
+        input.value = example
+        autosize(input)
+        input.focus()
+      })
+      examples.appendChild(chip)
+    }
+    card.appendChild(examples)
     list.appendChild(card)
   }
 }
 
-async function loadModel(id) {
-  const entry = findModel(id)
-  if (!entry || state.busy) return
+/** The user's own facts, with a delete button on each. */
+function renderFactList() {
+  const list = $('#fact-list')
+  if (!list) return
+  list.innerHTML = ''
 
-  $('#models-dialog').close()
-  const bar = $('#load-bar')
-  bar.hidden = false
-  $('#engine-badge').textContent = 'loading…'
+  const count = $('#fact-count')
+  if (count) {
+    count.textContent = state.facts.length
+      ? `${state.facts.length} thing${state.facts.length === 1 ? '' : 's'} you have taught me`
+      : 'You have not taught me anything yet.'
+  }
 
-  try {
-    if (state.backend?.kind !== 'webllm') state.backend = await newWebLLMBackend()
-    const info = await state.backend.load(entry, ({ progress, text }) => {
-      $('#load-fill').style.width = `${Math.round((progress ?? 0) * 100)}%`
-      $('#load-text').textContent = text ?? ''
+  for (const fact of state.facts) {
+    const row = document.createElement('div')
+    row.className = 'fact-row'
+
+    const text = document.createElement('div')
+    text.className = 'fact-text'
+    const q = document.createElement('strong')
+    q.textContent = fact.q[0]
+    const a = document.createElement('span')
+    a.textContent = ` — ${fact.a}`
+    text.append(q, a)
+
+    const del = document.createElement('button')
+    del.type = 'button'
+    del.className = 'btn btn-ghost fact-del'
+    del.textContent = '×'
+    del.title = 'Forget this'
+    del.addEventListener('click', async () => {
+      await deleteFact(fact.id)
+      state.facts = await listFacts()
+      renderFactList()
     })
-    $('#engine-badge').textContent = info.label
-    await setSetting('lastModelId', id)
-    state.settings.lastModelId = id
-    await rememberDownload(id)
-    showSystemNote(`✅ **${entry.name}** is loaded. Ask away.`)
-  } catch (err) {
-    $('#engine-badge').textContent = 'failed'
-    showSystemNote(`⚠️ Could not load the model: ${err.message}`)
-  } finally {
-    bar.hidden = true
-    $('#load-fill').style.width = '0%'
-    renderModelList()
-    refreshStorageInfo()
+
+    row.append(text, del)
+    list.appendChild(row)
   }
 }
 
-async function rememberDownload(id) {
-  if (state.settings.cachedModels.includes(id)) return
-  state.settings.cachedModels = [...state.settings.cachedModels, id]
-  await setSetting('cachedModels', state.settings.cachedModels)
-}
-
-async function checkOllama() {
-  const url = $('#ollama-url').value.trim()
-  const out = $('#ollama-result')
-  out.textContent = 'Checking…'
-  try {
-    const models = await OllamaBackend.listModels(url)
-    await setSetting('ollamaUrl', url)
-    state.settings.ollamaUrl = url
-    if (!models.length) {
-      out.textContent = 'Connected, but no models are installed. Run: ollama pull qwen3:8b'
-      return
-    }
-    out.innerHTML = ''
-    for (const m of models) {
-      const b = document.createElement('button')
-      b.type = 'button'
-      b.className = 'btn btn-ghost btn-block'
-      b.textContent = `${m.name}${m.sizeGB ? ` · ${m.sizeGB} GB` : ''}`
-      b.addEventListener('click', async () => {
-        state.backend = new OllamaBackend(url, m.name)
-        const info = await state.backend.load()
-        $('#engine-badge').textContent = info.label
-        $('#models-dialog').close()
-        showSystemNote(`✅ Turbo mode: connected to **${m.name}** through Ollama.`)
-      })
-      out.appendChild(b)
-    }
-  } catch (err) {
-    // A running Ollama still refuses browser requests unless this page's
-    // origin is allowed, and that rejection looks identical to "not installed".
-    out.innerHTML = renderMarkdown(
-      `Could not connect (${err.message}).\n\n` +
-        '**If Ollama is not installed yet:** get it from ollama.com, then run ' +
-        '`ollama pull qwen3:8b`.\n\n' +
-        '**If it is already running:** it has to allow this page. Restart it with ' +
-        `\`OLLAMA_ORIGINS=${location.origin}\` set, then check again.`,
-    )
-  }
+async function forgetEverything() {
+  if (!state.facts.length) return
+  if (!confirm('Forget everything you have taught 360AI? This cannot be undone.')) return
+  await clearFacts()
+  state.facts = []
+  renderFactList()
+  showSystemNote('🧹 Everything you taught me has been forgotten.')
 }
 
 /* -------------------------------------------------------------- settings */
 
 function applySettingsToForm() {
-  $('#sys-prompt').value = state.settings.systemPrompt
-  $('#temp').value = state.settings.temperature
-  $('#temp-val').textContent = state.settings.temperature
-  $('#ctx').value = state.settings.contextWindow
-  $('#ctx-val').textContent = state.settings.contextWindow
-  $('#ollama-url').value = state.settings.ollamaUrl
+  $('#reply-lang').value = state.settings.replyLanguage
   $('#theme').value = state.settings.theme
-  $('#auto-load').checked = state.settings.autoLoadModel
 }
 
 function applyTheme(theme) {
@@ -587,25 +543,14 @@ async function refreshStorageInfo() {
   $('#storage-info').textContent = `Storage used: ${fmtBytes(usage)} of ${fmtBytes(quota)}`
 }
 
-async function clearModelCache() {
-  if (!confirm('Delete every downloaded model? You will have to download them again.')) return
-  await state.backend?.unload().catch(() => {})
-  for (const key of await caches.keys()) {
-    if (/webllm|mlc/i.test(key)) await caches.delete(key)
-  }
-  state.backend = null
-  state.settings.cachedModels = []
-  await setSetting('cachedModels', [])
-  $('#engine-badge').textContent = 'no model loaded'
-  renderModelList()
-  await refreshStorageInfo()
-  showSystemNote('🧹 Model cache cleared.')
-}
-
+/**
+ * There is nothing to download and nothing to call, so the network state is
+ * only ever a reassurance — which is exactly why it is worth showing.
+ */
 function updateNetStatus() {
   const el = $('#net-status')
   const online = navigator.onLine
-  el.textContent = online ? '● Online (downloads available)' : '● Offline — still working'
+  el.textContent = online ? '● Online — not that I need it' : '● Offline — working normally'
   el.className = `net-status ${online ? 'on' : 'off'}`
 }
 
@@ -726,15 +671,15 @@ function wireEvents() {
     setSidebar(false)
     input.focus()
   })
-  $('#open-models').addEventListener('click', () => {
-    renderModelList()
-    $('#models-dialog').showModal()
+  $('#open-skills').addEventListener('click', () => {
+    renderSkillList()
+    renderFactList()
+    $('#skills-dialog').showModal()
   })
   $('#open-settings').addEventListener('click', () => {
     refreshStorageInfo()
     $('#settings-dialog').showModal()
   })
-  $('#ollama-check').addEventListener('click', checkOllama)
   $('#toggle-sidebar').addEventListener('click', toggleSidebar)
   $('#scrim').addEventListener('click', () => setSidebar(false))
 
@@ -761,33 +706,17 @@ function wireEvents() {
   })
   $('#chat-title-input').addEventListener('blur', commitRename)
 
-  $('#sys-prompt').addEventListener('change', async (e) => {
-    state.settings.systemPrompt = e.target.value
-    await setSetting('systemPrompt', e.target.value)
-  })
-  $('#temp').addEventListener('input', async (e) => {
-    const v = Number(e.target.value)
-    state.settings.temperature = v
-    $('#temp-val').textContent = v.toFixed(2)
-    await setSetting('temperature', v)
-  })
-  $('#ctx').addEventListener('input', async (e) => {
-    const v = Number(e.target.value)
-    state.settings.contextWindow = v
-    $('#ctx-val').textContent = v
-    await setSetting('contextWindow', v)
+  $('#reply-lang').addEventListener('change', async (e) => {
+    state.settings.replyLanguage = e.target.value
+    await setSetting('replyLanguage', e.target.value)
+    renderSkillList()
   })
   $('#theme').addEventListener('change', async (e) => {
     state.settings.theme = e.target.value
     applyTheme(e.target.value)
     await setSetting('theme', e.target.value)
   })
-  $('#auto-load').addEventListener('change', async (e) => {
-    state.settings.autoLoadModel = e.target.checked
-    await setSetting('autoLoadModel', e.target.checked)
-  })
-
-  $('#clear-models').addEventListener('click', clearModelCache)
+  $('#forget-all').addEventListener('click', forgetEverything)
 
   $('#export-chats').addEventListener('click', async () => {
     const blob = new Blob([JSON.stringify(await exportAll(), null, 2)], {
@@ -795,7 +724,7 @@ function wireEvents() {
     })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `bulig-ai-backup-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `360ai-backup-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(a.href)
   })
@@ -842,8 +771,15 @@ function wireEvents() {
     installPrompt = e
     $('#install-app').hidden = false
   })
+  // Safari on iOS has no install prompt event at all, so the button would stay
+  // hidden on exactly the platform whose install gesture is hardest to find.
+  if (state.device.ios && !state.device.standalone) $('#install-app').hidden = false
   $('#install-app').addEventListener('click', async () => {
-    if (!installPrompt) return
+    if (!installPrompt) {
+      showSystemNote(`📲 ${installHelp(state.device)}`)
+      setSidebar(false)
+      return
+    }
     installPrompt.prompt()
     await installPrompt.userChoice
     installPrompt = null

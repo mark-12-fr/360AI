@@ -3,14 +3,25 @@ import { openDB } from 'idb'
 /**
  * Everything lives in IndexedDB on this device. Nothing is ever sent anywhere.
  */
-const DB_NAME = 'bulig-ai'
-const DB_VERSION = 1
+const DB_NAME = '360ai'
+const DB_VERSION = 2
+
+/** Pre-rename database. Its chats are pulled across once, on first open. */
+const LEGACY_DB_NAME = 'bulig-ai'
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
-  upgrade(db) {
-    const chats = db.createObjectStore('chats', { keyPath: 'id' })
-    chats.createIndex('updatedAt', 'updatedAt')
-    db.createObjectStore('settings', { keyPath: 'key' })
+  upgrade(db, oldVersion) {
+    if (oldVersion < 1) {
+      const chats = db.createObjectStore('chats', { keyPath: 'id' })
+      chats.createIndex('updatedAt', 'updatedAt')
+      db.createObjectStore('settings', { keyPath: 'key' })
+    }
+    // v2: the facts the user teaches the brain. Same shape as the built-in
+    // entries in brain/facts.js so both can be searched as one list.
+    if (oldVersion < 2) {
+      const facts = db.createObjectStore('facts', { keyPath: 'id' })
+      facts.createIndex('createdAt', 'createdAt')
+    }
   },
   /**
    * This tab is holding an older version open and blocking another one from
@@ -21,25 +32,81 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
     event.target.close()
   },
   blocked() {
-    console.warn('bulig-ai: another tab is holding the database open at an older version.')
+    console.warn('360ai: another tab is holding the database open at an older version.')
   },
 })
 
+/**
+ * The app was renamed from Bulig AI to 360AI, and an IndexedDB rename is a new,
+ * empty database — so anyone who used the old build would silently lose every
+ * chat. Copy them over once, then leave the old database alone as a backup.
+ */
+async function adoptLegacyData(db) {
+  if (!indexedDB.databases) return
+  const names = await indexedDB.databases().catch(() => [])
+  if (!names.some((d) => d.name === LEGACY_DB_NAME)) return
+  if (await db.count('chats')) return
+
+  const old = await openDB(LEGACY_DB_NAME).catch(() => null)
+  if (!old?.objectStoreNames.contains('chats')) return
+
+  const chats = await old.getAll('chats').catch(() => [])
+  const settings = old.objectStoreNames.contains('settings')
+    ? await old.getAll('settings').catch(() => [])
+    : []
+  const tx = db.transaction(['chats', 'settings'], 'readwrite')
+  for (const chat of chats) tx.objectStore('chats').put(chat)
+  for (const row of settings) tx.objectStore('settings').put(row)
+  await tx.done
+  old.close()
+  console.info(`360ai: carried over ${chats.length} chat(s) from the previous version.`)
+}
+
+const ready = dbPromise.then(async (db) => {
+  await adoptLegacyData(db).catch((err) => console.warn('360ai: legacy import skipped', err))
+  return db
+})
+
+/* ------------------------------------------------------------- taught facts */
+
+/**
+ * What the user has taught the brain, newest last. Returned in the entry shape
+ * the brain expects: `{ id, source, q: [...], a }`.
+ */
+export async function listFacts() {
+  const rows = await (await ready).getAllFromIndex('facts', 'createdAt')
+  return rows.map((row) => ({ id: row.id, source: 'taught', q: [row.q], a: row.a }))
+}
+
+/** Teaching the same question twice updates the answer rather than duplicating it. */
+export async function saveFact(question, answer) {
+  const db = await ready
+  const key = question.trim().toLowerCase()
+  const existing = (await db.getAll('facts')).find((r) => r.q.trim().toLowerCase() === key)
+  const row = {
+    id: existing?.id ?? newId(),
+    q: question.trim(),
+    a: answer.trim(),
+    createdAt: existing?.createdAt ?? Date.now(),
+    updatedAt: Date.now(),
+  }
+  await db.put('facts', row)
+  return row
+}
+
+export async function deleteFact(id) {
+  await (await ready).delete('facts', id)
+}
+
+export async function clearFacts() {
+  await (await ready).clear('facts')
+}
+
 export const DEFAULT_SETTINGS = {
-  systemPrompt:
-    'You are Bulig, a helpful AI assistant running privately on the user\'s own device. ' +
-    'Answer in the same language the user writes in. Be clear and concise. ' +
-    'If you are not sure about something, say so plainly instead of inventing an answer.',
-  temperature: 0.7,
-  contextWindow: 10,
-  lastModelId: 'qwen3-4b',
-  ollamaUrl: 'http://127.0.0.1:11434',
+  // 'auto' mirrors whichever language the question was written in; the others
+  // pin every reply to one language.
+  replyLanguage: 'auto',
   theme: 'dark',
-  autoLoadModel: true,
-  // Ids of models this device has finished downloading at least once. Used to
-  // decide whether a start-up auto-load would hit the cache or kick off a
-  // multi-gigabyte download, without having to pull in the WebLLM runtime.
-  cachedModels: [],
 }
 
 function newId() {
@@ -47,13 +114,13 @@ function newId() {
 }
 
 export async function listChats() {
-  const db = await dbPromise
+  const db = await ready
   const all = await db.getAllFromIndex('chats', 'updatedAt')
   return all.reverse()
 }
 
 export async function getChat(id) {
-  return (await dbPromise).get('chats', id)
+  return (await ready).get('chats', id)
 }
 
 /**
@@ -80,39 +147,42 @@ export async function latestChat() {
 
 export async function saveChat(chat) {
   chat.updatedAt = Date.now()
-  await (await dbPromise).put('chats', chat)
+  await (await ready).put('chats', chat)
   return chat
 }
 
 export async function deleteChat(id) {
-  await (await dbPromise).delete('chats', id)
+  await (await ready).delete('chats', id)
 }
 
 export async function getSettings() {
-  const db = await dbPromise
+  const db = await ready
   const rows = await db.getAll('settings')
   const stored = Object.fromEntries(rows.map((r) => [r.key, r.value]))
   return { ...DEFAULT_SETTINGS, ...stored }
 }
 
 export async function setSetting(key, value) {
-  await (await dbPromise).put('settings', { key, value })
+  await (await ready).put('settings', { key, value })
 }
 
 export async function exportAll() {
   return {
-    format: 'bulig-ai/v1',
+    format: '360ai/v1',
     exportedAt: new Date().toISOString(),
     settings: await getSettings(),
     chats: await listChats(),
+    facts: await listFacts(),
   }
 }
 
 export async function importAll(payload) {
-  if (payload?.format !== 'bulig-ai/v1' || !Array.isArray(payload.chats)) {
-    throw new Error('This is not a valid Bulig AI backup file.')
+  // Backups written by the pre-rename build stay importable.
+  const known = ['360ai/v1', 'bulig-ai/v1']
+  if (!known.includes(payload?.format) || !Array.isArray(payload.chats)) {
+    throw new Error('This is not a valid 360AI backup file.')
   }
-  const db = await dbPromise
+  const db = await ready
   const tx = db.transaction('chats', 'readwrite')
   let count = 0
   for (const chat of payload.chats) {
@@ -123,6 +193,13 @@ export async function importAll(payload) {
     count++
   }
   await tx.done
+
+  // Taught facts travel with the backup; older files simply have none.
+  for (const fact of payload.facts ?? []) {
+    const question = Array.isArray(fact?.q) ? fact.q[0] : fact?.q
+    if (question && fact?.a) await saveFact(String(question), String(fact.a))
+  }
+
   return count
 }
 

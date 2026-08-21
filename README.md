@@ -1,125 +1,118 @@
-# Bulig AI — Offline
+# 360AI
 
-A chat assistant that runs a large language model **entirely inside your browser**,
-on your own GPU. No API keys, no accounts, no server, no cost. After the first
-model download the whole thing works with the network switched off.
+Your own AI. It runs **entirely on your own device** — phone, tablet or computer —
+and it is written in **plain JavaScript**, so there is no provider, no API key, no
+account, no server, and **no model to download**. The whole app is about 200 KB.
+Open it once and it works forever, with the internet switched off.
 
-Installable as a PWA, so it launches from the Start menu / home screen like a
-native app.
+## What it actually is
 
-## How it works
+Most "offline AI" apps still make you download a 2–7 GB model. 360AI does not,
+because it is not a large language model — it is a **rules engine with a knowledge
+base**. It recognises what you are asking, computes the answer, and looks things up
+in facts that ship with the app or that you teach it.
 
-| Piece | What it does |
+The trade is honest and worth stating plainly:
+
+| | 360AI | A local LLM |
+| --- | --- | --- |
+| Download | **none** | 2–7 GB |
+| Answer speed | **instant (1–15 ms)** | seconds |
+| Runs on old phones | **yes** | no — needs WebGPU and 2 GB+ of VRAM |
+| Knows the world | **no** | mostly |
+| Makes things up | **never** | sometimes |
+
+When 360AI does not know something, it says so — it has no way to invent an answer.
+
+## What it can do
+
+| Skill | Ask it |
 | --- | --- |
-| [WebLLM](https://github.com/mlc-ai/web-llm) | Runs the model on WebGPU, inside a dedicated Web Worker so the UI never freezes. |
-| Cache Storage | Holds the model weights (2–7 GB). Downloaded once, reused forever. |
-| IndexedDB | Holds your chats and settings. Nothing leaves the device. |
-| Workbox service worker | Precaches the app shell and the WebLLM runtime so cold starts work offline. |
+| **Maths** | `17% of 4,850` · `(1250 + 380) * 3` · `average of 12, 19, 7, 30` · `15 is what percent of 240` |
+| **Conversions** | `5 km to miles` · `30 C to F` · `2.5 kg to lbs` · `500 mb to gb` |
+| **Dates and time** | `pila ka adlaw tubtob Christmas` · `what day is December 25, 2026` · `age if born May 4, 1998` |
+| **Text tools** | `summarize: <long text>` · `count words: …` · `keywords: …` · `uppercase:` / `sort` / `unique` / `slugify` |
+| **Dice and picks** | `flip a coin` · `roll 2d6` · `pick one: adobo, sinigang, tinola` · `password 16` |
+| **Knowledge** | `what is 360AI` · `capital of the philippines` · `how many islands philippines` |
+| **Chat** | `kamusta` · `salamat` · `tell me a joke` |
 
-## Requirements
+It answers in the language you write in — **Hiligaynon, Tagalog or English** — and
+you can pin one language in Settings.
 
-- **Chrome or Edge 113+** — WebGPU is required. Firefox and Safari are not there yet.
-- A GPU with roughly 2 GB of spare VRAM for the smallest model, ~6 GB for the largest.
-- Hardware acceleration enabled (check `chrome://gpu`).
+## Teaching it
 
-Cards without the WebGPU `shader-f16` feature — GTX 10xx and most integrated
-GPUs — automatically get the larger `q4f32_1` builds instead, because the f16
-builds fail there with an unreadable shader-compilation error.
+This is the part that makes it *yours*. Anything it does not know, you can give it:
 
-## Getting started
+```
+remember: akon wifi password = ilonggo123
+remember: schedule sang delivery = Martes kag Biyernes
+```
+
+Then just ask, and it answers from your own knowledge. `what do you know` lists
+everything you have taught it; `forget: <question>` removes one. It is stored in
+IndexedDB on that device only — never uploaded, because there is nowhere to upload
+it to.
+
+## Devices
+
+Any browser from the last few years, on anything: Android, iPhone, iPad, Windows,
+Mac, Linux. There is no WebGPU requirement and no memory floor, so a five-year-old
+phone runs it exactly as well as a desktop.
+
+Install it as an app:
+
+- **iPhone / iPad** — Share → **Add to Home Screen**
+- **Android** — ⋮ menu → **Add to Home screen**
+- **Desktop** — the install icon in the address bar, or **Install app** in the sidebar
+
+## How it is built
+
+```
+src/
+  brain/
+    index.js       the engine: every skill scores the question, the best one answers
+    nlp.js         normalising, number parsing, fuzzy matching, language detection
+    facts.js       the knowledge that ships with the app — edit this to add more
+    skills/        math · units · datetime · text · chance · knowledge · smalltalk
+  backends/brain.js  adapter between the chat UI and the brain
+  db.js            IndexedDB: chats, settings, and the facts you teach
+  ui.js            markdown rendering and message bubbles
+```
+
+Adding an ability means dropping another module into `skills/` that exports
+`match(ctx)` and returning `{ score, text }`. Adding knowledge means adding an entry
+to `facts.js`. Nothing else needs to change.
+
+## Running it yourself
 
 ```bash
 npm install
-npm run dev      # http://127.0.0.1:5173
-```
-
-Open the app, click **Model**, and pick one. The first load downloads the
-weights; every later load reads them from cache.
-
-```bash
+npm run dev      # http://127.0.0.1:5173 — and on your LAN IP, for phone testing
 npm run build    # production bundle into dist/
-npm run preview  # serve the built bundle on 127.0.0.1:4173
-npm run icons    # regenerate the PWA icons in public/icons/
+npm run preview  # serve that bundle
+npm run icons    # regenerate the PWA icons
 ```
 
-## Models
+## Deploying
 
-| Model | Download | Best for |
-| --- | --- | --- |
-| Qwen 3 — 1.7B | ~2.0 GB | Fastest; simple questions and everyday writing |
-| Llama 3.2 — 3B | ~2.2 GB | Balanced speed and quality |
-| **Qwen 3 — 4B** | ~3.4 GB | **Recommended** — noticeably better reasoning and code |
-| Llama 3.1 — 8B | ~4.9 GB | The most capable model that still fits in a browser |
-| Qwen 3 — 8B | ~5.6 GB | Strongest at maths and programming |
-
-Sizes shown are the f16 builds; f32 builds are roughly 20–25% larger.
-
-## Turbo mode (optional)
-
-If you have [Ollama](https://ollama.com) installed, the app can talk to it
-instead and use models far larger than WebGPU allows — still entirely offline.
-
-Ollama has to be told to accept requests from the page's origin:
+Every push to `main` publishes to GitHub Pages via `.github/workflows/deploy.yml`
+(enable it once under **Settings → Pages → Source: GitHub Actions**). Because a
+project site lives under `/<repo>/`, the build takes its base path from an
+environment variable:
 
 ```bash
-# Windows (PowerShell)
-$env:OLLAMA_ORIGINS = "http://127.0.0.1:4173"; ollama serve
-
-# macOS / Linux
-OLLAMA_ORIGINS=http://127.0.0.1:4173 ollama serve
+BASE_PATH=/360AI/ npm run build
 ```
 
-Then open **Model → Turbo mode → Check**.
-
-## Features
-
-- Streaming replies with tokens/sec, and a **Stop** button that actually interrupts the GPU.
-- Reasoning models' `<think>` output is folded into a collapsible section.
-- Per-message **Copy**, **Regenerate**, and **Edit and send again**.
-- Full-text search across every saved chat (`Ctrl+K`), inline chat renaming.
-- Dark / light / follow-system themes.
-- Export and import everything as JSON.
-- Optional auto-load of your last model on start — only when it is already downloaded.
-
-### Responsive layout
-
-Verified from 280px (Galaxy Fold closed) up to 1920px, in portrait and
-landscape, with no horizontal scrolling at any size:
-
-| Width | Layout |
-| --- | --- |
-| ≥ 1025px | Docked 260px sidebar |
-| 761–1024px | Docked 216px sidebar, so the reading column keeps its width |
-| ≤ 760px | Sidebar becomes an overlay with a tap-to-dismiss backdrop; dialogs become bottom sheets |
-| ≤ 400px | Tighter spacing and a smaller welcome heading |
-| ≤ 360px | The model badge yields the topbar to the chat title |
-
-Short and landscape viewports (≤ 520px tall) get a compact welcome panel so the
-composer always stays on screen. On touch devices, controls that a mouse would
-reveal on hover are always visible, tap targets grow to ~44px, and text fields
-render at 16px so iOS does not zoom when you focus them. Notch and home-bar safe
-areas are respected on all four edges.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| `Enter` | Send |
-| `Shift+Enter` | New line |
-| `Ctrl+K` | Search chats |
-| `Ctrl+B` | Toggle the sidebar |
-| `Esc` | Close the sidebar |
+Any static host works — there is no backend to deploy.
 
 ## Privacy
 
-Prompts and replies never leave the machine. The only network traffic the app
-ever makes is downloading model weights from the MLC CDN, and fetching the app
-itself. Turbo mode talks to `127.0.0.1` only.
+There is no server, no telemetry, and no network request after the page loads. Your
+chats and taught facts live in IndexedDB on the device; **Settings → Export
+everything** writes them to a JSON file if you want a backup or want to carry them
+to another device.
 
-Model output is rendered as Markdown through DOMPurify with a strict tag
-allow-list, so a model cannot inject script into the page's origin.
+## Licence
 
-## Caveats
-
-Small quantized models get things wrong and make things up. Don't rely on this
-for medical, legal, financial, or breaking-news questions.
+MIT

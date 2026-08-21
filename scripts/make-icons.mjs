@@ -1,6 +1,9 @@
 /**
  * Generates the PWA PNG icons procedurally.
  *
+ * The 360AI mark: a ring opened at the top right — a 360° sweep — around a
+ * solid centre dot, on the app's indigo-to-violet gradient.
+ *
  * Written against Node's built-in zlib rather than pulling in a raster library:
  * the icons are simple signed-distance shapes, and this keeps the dependency
  * tree (and the audit surface) small.
@@ -118,33 +121,28 @@ function drawIcon(size, maskable) {
       const t = clamp01((fx / size) * 0.5 + (fy / size) * 0.5)
       overlay(px, i, mix(0x7c, 0x44, t), mix(0x6c, 0x33, t), mix(0xff, 0xcc, t), bgA)
 
-      // Chat bubble body.
-      const bw = 150 * s * gs
-      const bh = 112 * s * gs
-      const by = cy - 14 * s * gs
-      let d = sdRoundedRect(fx, fy, cx, by, bw, bh, 40 * s * gs)
+      // The mark is a 360° sweep: a ring, opened where the sweep closes.
+      const ringR = 128 * s * gs
+      const ringW = 23 * s * gs
+      // Annulus = the circle's distance field folded about the ring radius.
+      let d = Math.abs(sdCircle(fx, fy, cx, cy, ringR)) - ringW
 
-      // Tail: a small rounded square rotated 45°, unioned into the body.
-      const tx = cx - 52 * s * gs
-      const ty = by + bh + 12 * s * gs
-      const rx = (fx - tx) * Math.SQRT1_2 + (fy - ty) * Math.SQRT1_2
-      const ry = -(fx - tx) * Math.SQRT1_2 + (fy - ty) * Math.SQRT1_2
-      d = Math.min(d, sdRoundedRect(rx, ry, 0, 0, 30 * s * gs, 30 * s * gs, 8 * s * gs))
-
-      const bubbleA = cover(d) * bgA
-      overlay(px, i, 255, 255, 255, bubbleA)
-
-      // Three dots, punched out of the bubble by drawing in the bg colour.
-      if (bubbleA > 0.01) {
-        const dotR = 15 * s * gs
-        const gap = 44 * s * gs
-        let dotD = Infinity
-        for (const k of [-1, 0, 1]) {
-          dotD = Math.min(dotD, sdCircle(fx, fy, cx + k * gap, by, dotR))
-        }
-        const dotA = cover(dotD) * bubbleA
-        overlay(px, i, mix(0x7c, 0x44, t), mix(0x6c, 0x33, t), mix(0xff, 0xcc, t), dotA)
+      // Cut the opening: a wedge in the upper right, its ends rounded off by
+      // unioning a cap back in at the cut's leading edge.
+      const ang = Math.atan2(fy - cy, fx - cx) // -pi..pi, y grows downward
+      const inGap = ang > -1.25 && ang < -0.42
+      if (inGap) d = Math.max(d, -(Math.hypot(fx - cx, fy - cy) - ringR - ringW * 2))
+      for (const a of [-1.25, -0.42]) {
+        d = Math.min(
+          d,
+          sdCircle(fx, fy, cx + Math.cos(a) * ringR, cy + Math.sin(a) * ringR, ringW),
+        )
       }
+
+      // The dot at the centre — the "device" the sweep goes around.
+      d = Math.min(d, sdCircle(fx, fy, cx, cy, 34 * s * gs))
+
+      overlay(px, i, 255, 255, 255, cover(d) * bgA)
     }
   }
   return px

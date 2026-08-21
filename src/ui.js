@@ -56,7 +56,7 @@ export function createBubble(role) {
 
   const who = document.createElement('div')
   who.className = 'msg-role'
-  who.textContent = role === 'user' ? 'You' : 'Bulig AI'
+  who.textContent = role === 'user' ? 'You' : '360AI'
 
   const think = document.createElement('details')
   think.className = 'thinking'
