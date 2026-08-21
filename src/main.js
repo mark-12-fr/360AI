@@ -94,7 +94,14 @@ function createMemory() {
  */
 let llmModulePromise = null
 function loadLLMModule() {
-  llmModulePromise ??= import('./backends/webllm.js')
+  llmModulePromise ??= import('./backends/webllm.js').catch((err) => {
+    // Forget the failure rather than caching it. The usual cause is being
+    // offline while this chunk is not in the runtime cache yet, and then
+    // reconnecting has to be enough — a memoized rejection would keep failing
+    // for the rest of the session no matter what the network did.
+    llmModulePromise = null
+    throw err
+  })
   return llmModulePromise
 }
 
@@ -908,7 +915,25 @@ async function useModel(entry, { silent = false } = {}) {
     if (!ok) return
   }
 
-  const { WebLLMBackend } = await loadLLMModule()
+  // The runtime is a separate chunk, deliberately kept out of the offline
+  // precache so 360 Brain users never download it. That leaves one narrow
+  // window where it can be missing: the app updated, giving the chunk a new
+  // filename, and this is the first launch since — offline. Saying that
+  // plainly beats an unhandled rejection and a model that silently never
+  // starts.
+  let WebLLMBackend
+  try {
+    ;({ WebLLMBackend } = await loadLLMModule())
+  } catch {
+    const why = navigator.onLine
+      ? `Could not load the engine that runs ${entry.name}. Reload 360AI and try again.`
+      : `**360AI has updated since you last used ${entry.name}.** Go online once to ` +
+        'finish the update — after that the model works with no internet again.'
+    showSystemNote(`⚠️ ${why} 360 Brain is answering in the meantime.`)
+    toast('The model engine is not available offline yet.', 'error', 7000)
+    return
+  }
+
   state.llm ??= new WebLLMBackend()
   state.loadingId = entry.id
   guardDownload(!have)
