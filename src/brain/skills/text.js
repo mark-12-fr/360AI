@@ -51,43 +51,27 @@ function summarise(text, wanted) {
 }
 
 const T = {
-  en: {
-    stats: 'Text stats',
-    words: 'Words', chars: 'Characters', charsNoSpace: 'Characters (no spaces)',
-    sentencesLabel: 'Sentences', lines: 'Lines', reading: 'Reading time',
-    min: 'min', summary: 'Summary', keywords: 'Keywords', needMore: 'Give me some text to work on — put it after a colon, like `summarize: your text here`.',
-    tooShort: 'That is already short enough to read as it is.',
-  },
-  tl: {
-    stats: 'Text stats',
-    words: 'Salita', chars: 'Karakter', charsNoSpace: 'Karakter (walang space)',
-    sentencesLabel: 'Pangungusap', lines: 'Linya', reading: 'Oras ng pagbasa',
-    min: 'min', summary: 'Buod', keywords: 'Keywords',
-    needMore: 'Bigyan mo ako ng text — ilagay pagkatapos ng colon, tulad ng `summarize: text mo dito`.',
-    tooShort: 'Maikli na iyan para basahin nang buo.',
-  },
-  hil: {
-    stats: 'Text stats',
-    words: 'Pulong', chars: 'Karakter', charsNoSpace: 'Karakter (wala sing space)',
-    sentencesLabel: 'Sentence', lines: 'Linya', reading: 'Oras sa pagbasa',
-    min: 'min', summary: 'Sumaryo', keywords: 'Keywords',
-    needMore: 'Hatagi ako sing text — ibutang pagkatapos sang colon, kaangay sang `summarize: text mo diri`.',
-    tooShort: 'Malip-ot na ina, mabasa mo na lang tanan.',
-  },
+
+  stats: 'Text stats',
+  words: 'Words', chars: 'Characters', charsNoSpace: 'Characters (no spaces)',
+  sentencesLabel: 'Sentences', lines: 'Lines', reading: 'Reading time',
+  min: 'min', summary: 'Summary', keywords: 'Keywords', needMore: 'Give me some text to work on — put it after a colon, like `summarize: your text here`.',
+  tooShort: 'That is already short enough to read as it is.',
+  
 }
 
 export default {
   id: 'text',
-  label: { en: 'Text tools', tl: 'Text tools', hil: 'Text tools' },
+  label: 'Text tools',
   examples: [
     'summarize: <paste a long paragraph>',
     'count words: hello world',
-    'uppercase: 360ai kag ako',
+    'uppercase: hello world',
     'keywords: <paste some text>',
   ],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     const raw = ctx.text.trim()
     const s = normalise(raw)
 

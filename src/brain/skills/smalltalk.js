@@ -17,58 +17,30 @@ const JOKE = /(tell me a joke|joke|pabinat|patawa|nakakatawa)/
 const HOURS = (now) => now.getHours()
 
 const T = {
-  en: {
-    morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
-    greetTail: ['What can I do for you?', 'What do you need?', 'How can I help?'],
-    thanks: ['Any time.', 'Happy to help.', 'You are welcome.'],
-    bye: ['See you.', 'Take care.', 'Bye for now.'],
-    how: [
-      'Running fine — instantly, and entirely on your device. What do you need?',
-      'All good here. No server to be slow, no bill to run up. What can I do?',
-    ],
-    jokes: [
-      'A programmer put two glasses by the bed: a full one in case they get thirsty, and an empty one in case they do not.',
-      'There are only 10 kinds of people: those who understand binary and those who do not.',
-      'I would tell you a UDP joke, but you might not get it.',
-    ],
-  },
-  tl: {
-    morning: 'Magandang umaga', afternoon: 'Magandang hapon', evening: 'Magandang gabi',
-    greetTail: ['Ano ang maitutulong ko?', 'Ano ang kailangan mo?', 'Paano kita matutulungan?'],
-    thanks: ['Walang anuman.', 'Masaya akong makatulong.', 'Wala yun.'],
-    bye: ['Sige, ingat.', 'Paalam.', 'Kita tayo ulit.'],
-    how: [
-      'Ayos naman — mabilis, at nasa device mo lang lahat. Ano ang kailangan mo?',
-      'Maayos ako. Walang server na mabagal, walang bayarin. Ano ang gagawin natin?',
-    ],
-    jokes: [
-      'Dalawang baso ang inilagay ng programmer sa tabi ng kama: puno kung sakaling mauhaw, walang laman kung sakaling hindi.',
-      'May 10 klase lang ng tao: yung marunong ng binary at yung hindi.',
-    ],
-  },
-  hil: {
-    morning: 'Maayong aga', afternoon: 'Maayong hapon', evening: 'Maayong gab-i',
-    greetTail: ['Ano ang mabuligan ko?', 'Ano ang kinahanglan mo?', 'Ano ang himuon ta?'],
-    thanks: ['Wala sing sapayan.', 'Malipay ako nga nakabulig.', 'Ok lang.'],
-    bye: ['Sige, halong.', 'Asta sa liwat.', 'Amo na, halong ka.'],
-    how: [
-      'Maayo man — madasig, kag ari lang tanan sa imo device. Ano ang kinahanglan mo?',
-      'Ok gid ako. Wala sing server nga mahinay, wala sing bayad. Ano ang himuon ta?',
-    ],
-    jokes: [
-      'Duha ka baso ang ginbutang sang programmer sa tupad sang katre: puno kon mauhaw, walay sulod kon indi.',
-      'May 10 lang ka klase sang tawo: ang kabalo sang binary kag ang indi.',
-    ],
-  },
+
+  morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
+  greetTail: ['What can I do for you?', 'What do you need?', 'How can I help?'],
+  thanks: ['Any time.', 'Happy to help.', 'You are welcome.'],
+  bye: ['See you.', 'Take care.', 'Bye for now.'],
+  how: [
+    'Running fine — instantly, and entirely on your device. What do you need?',
+    'All good here. No server to be slow, no bill to run up. What can I do?',
+  ],
+  jokes: [
+    'A programmer put two glasses by the bed: a full one in case they get thirsty, and an empty one in case they do not.',
+    'There are only 10 kinds of people: those who understand binary and those who do not.',
+    'I would tell you a UDP joke, but you might not get it.',
+  ],
+  
 }
 
 export default {
   id: 'smalltalk',
-  label: { en: 'Chat', tl: 'Chat', hil: 'Chat' },
-  examples: ['kamusta', 'salamat', 'tell me a joke', 'how are you'],
+  label: 'Chat',
+  examples: ['hello', 'thank you', 'tell me a joke', 'how are you'],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     const s = normalise(ctx.text)
     const now = ctx.now ?? new Date()
 

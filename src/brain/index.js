@@ -6,70 +6,66 @@
  * bar, we say so plainly instead of inventing something, which is the one
  * behaviour that separates a useful offline assistant from a liar.
  *
- * Adding knowledge is a matter of editing `facts.js`, and adding an ability is
- * a matter of dropping another module into `skills/`.
+ * Two things make it forgiving about *how* a question is asked:
+ *   - each skill reads the question in two halves — the subject and the fact
+ *     wanted about it — so word order barely matters (see nlp.js);
+ *   - a short-term memory of the last subject, so "and its capital?" works.
+ *
+ * Adding knowledge means editing `facts.js` or a file in `data/`. Adding an
+ * ability means dropping another module into `skills/`.
  */
 
-import { detectLanguage } from './nlp.js'
+import academics from './skills/academics.js'
 import chance from './skills/chance.js'
+import chemistry from './skills/chemistry.js'
 import datetime from './skills/datetime.js'
+import define from './skills/define.js'
+import geography from './skills/geography.js'
 import knowledge from './skills/knowledge.js'
 import math from './skills/math.js'
 import smalltalk from './skills/smalltalk.js'
 import text from './skills/text.js'
 import units from './skills/units.js'
 
-export const SKILLS = [knowledge, math, units, datetime, text, chance, smalltalk]
+export const SKILLS = [
+  knowledge,
+  math,
+  units,
+  datetime,
+  geography,
+  chemistry,
+  academics,
+  define,
+  text,
+  chance,
+  smalltalk,
+]
 
 /** Below this, no skill is trusted and the honest fallback runs instead. */
 const THRESHOLD = 0.5
 
-const T = {
-  en: {
-    canDo: 'Here is what I can do, all of it offline and instant',
-    unknown: [
-      "I don't know that one.",
-      "That is outside what I know.",
-      "I have nothing on that.",
-    ],
-    because:
-      'I have no trained model behind me — only what is written into me and what you teach me.',
-    teach: 'You can teach me the answer: **remember: <question> = <answer>**',
-    tryThese: 'Things I answer well',
-    empty: 'Ask me something.',
-  },
-  tl: {
-    canDo: 'Eto ang kaya ko, lahat offline at instant',
-    unknown: ['Hindi ko alam iyan.', 'Wala ako niyan.', 'Wala akong sagot diyan.'],
-    because:
-      'Wala akong trained na model — kung ano lang ang nakasulat sa akin at ang itinuro mo.',
-    teach: 'Pwede mo akong turuan: **remember: <tanong> = <sagot>**',
-    tryThese: 'Mga bagay na kaya kong sagutin',
-    empty: 'Magtanong ka.',
-  },
-  hil: {
-    canDo: 'Ari ang akon masarangan, tanan offline kag instant',
-    unknown: ['Wala ko kabalo sina.', 'Indi ko ini nahibal-an.', 'Wala ako sing sabat dira.'],
-    because:
-      'Wala ako sing trained nga model — ang nasulat lang sa akon kag ang gintudlo mo.',
-    teach: 'Pwede mo ako tudluan: **remember: <pamangkot> = <sabat>**',
-    tryThese: 'Mga butang nga masabat ko gid',
-    empty: 'Pamangkot lang.',
-  },
-}
+/**
+ * A question with no subject of its own — "and its capital?", "what about the
+ * population?" — is answered against whatever was last asked about.
+ */
+const FOLLOW_UP =
+  /^(?:and|what about|how about|ok(?:ay)?|then)?[,\s]*(?:what(?:'s| is| are)\s+)?(?:its|it's|their|the|his|her)?\s*(?:capital|currency|language|population|area|continent|symbol|atomic number|atomic mass|subjects?|majors?|minors?|careers?|years?|meaning|definition)\s*[?.!]*$/i
+
+const PRONOUN_ONLY = /^\s*(and|what about|how about)?\s*(it|that|this|there|them|those)\s*[?.!]*\s*$/i
 
 /** The capability list, built from the skills themselves so it cannot go stale. */
-export function skillList(lang = 'en') {
-  const t = T[lang] ?? T.en
-  const rows = SKILLS.map((s) => {
-    const label = s.label?.[lang] ?? s.label?.en ?? s.id
-    return `- **${label}** — e.g. \`${s.examples[0]}\``
-  })
-  return `${t.canDo}:\n\n${rows.join('\n')}`
+export function skillList() {
+  const rows = SKILLS.map((s) => `- **${s.label ?? s.id}** — e.g. \`${s.examples[0]}\``)
+  return `Here is what I can do, all of it offline and instant:\n\n${rows.join('\n')}`
 }
 
-function fallback(ctx) {
-  const t = T[ctx.lang] ?? T.en
+const UNKNOWN = [
+  "I don't know that one.",
+  'That is outside what I know.',
+  'I have nothing on that.',
+]
+
+function fallback() {
   const examples = SKILLS.flatMap((s) => s.examples.slice(0, 1))
     .map((e) => `- \`${e}\``)
     .join('\n')
@@ -77,8 +73,10 @@ function fallback(ctx) {
     skill: 'fallback',
     score: 0,
     text:
-      `${t.unknown[Math.floor(Math.random() * t.unknown.length)]} ${t.because}\n\n` +
-      `${t.teach}\n\n**${t.tryThese}:**\n${examples}`,
+      `${UNKNOWN[Math.floor(Math.random() * UNKNOWN.length)]} I have no trained model behind ` +
+      `me — only what is written into me and what you teach me.\n\n` +
+      `You can teach me the answer: **remember: <question> = <answer>**\n\n` +
+      `**Things I answer well:**\n${examples}`,
   }
 }
 
@@ -87,20 +85,27 @@ function fallback(ctx) {
  *
  * `memory.taught` supplies the user's own facts; a returned `effect` asks the
  * caller to write one back, because storage is the app's job, not the brain's.
+ * `context` carries the previous subject so follow-up questions resolve.
  */
 export function answer(input, options = {}) {
   const raw = String(input ?? '').trim()
-  const lang =
-    options.lang && options.lang !== 'auto' ? options.lang : detectLanguage(raw)
+  if (!raw) return { skill: 'empty', score: 1, text: 'Ask me something.' }
 
-  if (!raw) return { skill: 'empty', score: 1, text: (T[lang] ?? T.en).empty, lang }
+  const context = options.context ?? {}
+  let question = raw
+
+  // Re-attach the previous subject to a question that has none of its own.
+  const bare = FOLLOW_UP.test(raw) || PRONOUN_ONLY.test(raw)
+  if (bare && context.subject) {
+    question = PRONOUN_ONLY.test(raw) ? context.subject : `${raw} of ${context.subject}`
+  }
 
   const ctx = {
-    text: raw,
-    lang,
+    text: question,
+    original: raw,
     now: options.now ?? new Date(),
     memory: options.memory ?? { taught: [] },
-    skillList: skillList(lang),
+    skillList: skillList(),
   }
 
   let best = null
@@ -117,6 +122,11 @@ export function answer(input, options = {}) {
     if (!best || result.score > best.score) best = { ...result, skill: skill.id }
   }
 
-  if (!best || best.score < THRESHOLD) return { ...fallback(ctx), lang }
-  return { ...best, lang }
+  if (!best || best.score < THRESHOLD) return fallback()
+
+  // Remember what this answer was about, for the next question.
+  if (best.subject) context.subject = best.subject
+  else if (!bare) context.subject = raw
+
+  return best
 }

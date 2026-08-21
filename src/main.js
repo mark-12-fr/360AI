@@ -13,10 +13,10 @@ import {
 const $ = (sel) => document.querySelector(sel)
 
 const SUGGESTIONS = [
-  '17% of 4,850',
-  'pila ka adlaw tubtob Christmas',
-  '5 km to miles',
-  'remember: akon wifi = ...',
+  'What is the capital of Japan?',
+  'Major subjects in BSIT',
+  'How many days until Christmas?',
+  'remember: my wifi password = ...',
 ]
 
 const state = {
@@ -394,9 +394,7 @@ async function runCompletion() {
   }
 
   try {
-    for await (const chunk of state.backend.stream(payload, {
-      lang: state.settings.replyLanguage,
-    })) {
+    for await (const chunk of state.backend.stream(payload)) {
       if (chunk.text) {
         raw += chunk.text
         // Coalesce paints to one per frame; repainting on every token turns
@@ -440,15 +438,13 @@ function renderSkillList() {
   const list = $('#skill-list')
   if (!list) return
   list.innerHTML = ''
-  const lang = state.settings.replyLanguage === 'auto' ? 'en' : state.settings.replyLanguage
-
   for (const skill of SKILLS) {
     const card = document.createElement('div')
     card.className = 'skill-card'
 
     const head = document.createElement('h4')
     head.className = 'skill-name'
-    head.textContent = skill.label?.[lang] ?? skill.label?.en ?? skill.id
+    head.textContent = skill.label ?? skill.id
     card.appendChild(head)
 
     const examples = document.createElement('div')
@@ -525,7 +521,6 @@ async function forgetEverything() {
 /* -------------------------------------------------------------- settings */
 
 function applySettingsToForm() {
-  $('#reply-lang').value = state.settings.replyLanguage
   $('#theme').value = state.settings.theme
 }
 
@@ -706,11 +701,6 @@ function wireEvents() {
   })
   $('#chat-title-input').addEventListener('blur', commitRename)
 
-  $('#reply-lang').addEventListener('change', async (e) => {
-    state.settings.replyLanguage = e.target.value
-    await setSetting('replyLanguage', e.target.value)
-    renderSkillList()
-  })
   $('#theme').addEventListener('change', async (e) => {
     state.settings.theme = e.target.value
     applyTheme(e.target.value)

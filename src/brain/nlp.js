@@ -47,40 +47,6 @@ export const STOPWORDS = new Set([
 ])
 
 /**
- * Which of the three languages the user is writing in.
- *
- * Tagalog and Hiligaynon share a lot of vocabulary, so only words fairly
- * distinctive to one of them count as evidence. English is the default,
- * because it is also the fallback when nothing scores.
- */
-const MARKERS = {
-  hil: [
-    'gid', 'bala', 'sang', 'sin-o', 'pila', 'halin', 'tubtob', 'subong', 'akon', 'imo',
-    'aton', 'amon', 'kag', 'indi', 'ngaa', 'diin', 'san-o', 'kabalo', 'ari', 'karon',
-    'ambot', 'daw', 'ya', 'sabta', 'sabat', 'palihog', 'himua', 'ginahimo', 'maayong',
-    'kamusta', 'musta', 'ok', 'lang', 'guro', 'basi', 'tani', 'pwede',
-  ],
-  tl: [
-    'ng', 'mga', 'ang', 'yung', 'po', 'opo', 'hindi', 'ikaw', 'kailan', 'saan', 'bakit',
-    'magkano', 'ilan', 'sino', 'pakisuyo', 'paki', 'naman', 'talaga', 'kasi', 'pala',
-    'ngayon', 'bukas', 'kahapon', 'gusto', 'ayaw', 'meron', 'kailangan', 'mo', 'ako',
-  ],
-}
-
-export function detectLanguage(text) {
-  const words = new Set(tokenise(text))
-  let hil = 0
-  let tl = 0
-  for (const w of MARKERS.hil) if (words.has(w)) hil++
-  for (const w of MARKERS.tl) if (words.has(w)) tl++
-  if (hil === 0 && tl === 0) return 'en'
-  if (hil > tl) return 'hil'
-  if (tl > hil) return 'tl'
-  // A tie means shared vocabulary only. Hiligaynon is this app's home language.
-  return 'hil'
-}
-
-/**
  * Parses the numbers people actually type: "4,850", "1.5k", "2 million",
  * "1/2", and the spelled-out small ones.
  */
@@ -202,4 +168,165 @@ export function fmtNumber(n, maxDecimals = 6) {
   if (Number.isInteger(n) && Math.abs(n) < 1e15) return n.toLocaleString('en-US')
   const rounded = Number(n.toPrecision(12))
   return rounded.toLocaleString('en-US', { maximumFractionDigits: maxDecimals })
+}
+
+/* --------------------------------------------------------- understanding */
+
+/**
+ * The scaffolding people wrap a question in. Stripping it leaves the part that
+ * actually identifies what they want, so "can you please tell me what the
+ * capital city of japan is?" reduces to "capital city japan".
+ */
+const QUESTION_FRAMES = [
+  /^(hey|hi|hello|ok|okay|so|um|uh|well)\b[,\s]*/,
+  /^(can|could|would|will)\s+(you|u)\s+(please\s+)?(tell|give|show|explain|say)\s*(me|us)?\s*/,
+  /^(do|does|did)\s+you\s+know\s*(what|who|where|when|why|how|if)?\s*/,
+  /^(please|pls|paki|palihog|pakisuyo)\s+/,
+  /^(i\s+(want|need|would like)\s+to\s+know\s*(what|who|where|when|why|how)?)\s*/,
+  /^(tell|give|show|explain|define|describe)\s+(me|us)?\s*(about|the|a|an)?\s*/,
+  /^(what|whats|what's)\s+(is|are|was|were)\s+(the|a|an)?\s*/,
+  /^(what|whats|what's|who|whos|who's|where|when|why|how|which)\s+/,
+  /^(ano|anong|sino|sinong|saan|kailan|bakit|paano|ilan|magkano)\s+(ang|ba|po|yung)?\s*/,
+  /^(sin-o|pila|diin|san-o|ngaa|paagi)\s+(ang|bala|ka)?\s*/,
+  /^(the|a|an)\s+/,
+]
+
+const TRAILING = /\s*(please|pls|po|ha|thanks|thank you|salamat|ba|bala|kaya|nga|daw)\s*[?!.]*\s*$/
+
+export function coreQuestion(text) {
+  let s = normalise(text).replace(/[?!.]+$/, '')
+  let changed = true
+  // Frames nest ("can you tell me what is the…"), so keep peeling.
+  while (changed) {
+    changed = false
+    for (const frame of QUESTION_FRAMES) {
+      const next = s.replace(frame, '')
+      if (next !== s) {
+        s = next.trim()
+        changed = true
+      }
+    }
+  }
+  return s.replace(TRAILING, '').trim()
+}
+
+/**
+ * Words that mean the same thing to a lookup. Normalising through this map is
+ * what lets "how much people live in japan", "japan population" and "populasyon
+ * sang japan" all reach the same field.
+ */
+export const SYNONYMS = {
+  'capital city': 'capital',
+  'capital of': 'capital',
+  kapital: 'capital',
+  kabisera: 'capital',
+  punong: 'capital',
+  populasyon: 'population',
+  people: 'population',
+  inhabitants: 'population',
+  residents: 'population',
+  pera: 'currency',
+  money: 'currency',
+  salapi: 'currency',
+  lenguahe: 'language',
+  wika: 'language',
+  languages: 'language',
+  'spoken language': 'language',
+  dialect: 'language',
+  size: 'area',
+  kadakuon: 'area',
+  laki: 'area',
+  'land area': 'area',
+  kontinente: 'continent',
+  subjects: 'subject',
+  asignatura: 'subject',
+  curriculum: 'subject',
+  'course content': 'subject',
+  trabaho: 'career',
+  jobs: 'career',
+  job: 'career',
+  work: 'career',
+  careers: 'career',
+  'kahulugan': 'meaning',
+  ibig: 'meaning',
+  definition: 'meaning',
+  define: 'meaning',
+  means: 'meaning',
+  duration: 'years',
+  'how long': 'years',
+  'how many years': 'years',
+  tagal: 'years',
+}
+
+/** Applies the synonym map to a whole phrase, longest key first. */
+const SYNONYM_KEYS = Object.keys(SYNONYMS).sort((a, b) => b.length - a.length)
+
+export function canonicalise(text) {
+  let s = normalise(text)
+  for (const key of SYNONYM_KEYS) {
+    s = s.replace(new RegExp(`\\b${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), SYNONYMS[key])
+  }
+  return s
+}
+
+/**
+ * Dice coefficient over character bigrams: better than edit distance for
+ * multi-word names, and cheap. "philipines" vs "philippines" scores ~0.95.
+ */
+export function diceSimilarity(a, b) {
+  const bigrams = (str) => {
+    const out = new Map()
+    for (let i = 0; i < str.length - 1; i++) {
+      const g = str.slice(i, i + 2)
+      out.set(g, (out.get(g) ?? 0) + 1)
+    }
+    return out
+  }
+  if (a === b) return 1
+  if (a.length < 2 || b.length < 2) return 0
+  const A = bigrams(a)
+  const B = bigrams(b)
+  let hits = 0
+  let total = 0
+  for (const [g, count] of A) {
+    total += count
+    hits += Math.min(count, B.get(g) ?? 0)
+  }
+  for (const count of B.values()) total += count
+  return (2 * hits) / total
+}
+
+/**
+ * Finds which of `names` the text is talking about.
+ *
+ * Exact substring wins, longest first, so "south korea" is not answered as
+ * "korea"; otherwise the best fuzzy match above `threshold` is used, which is
+ * what carries typos like "japn" or "phillipines".
+ */
+export function findEntity(text, names, { threshold = 0.82 } = {}) {
+  const haystack = normalise(text)
+  const sorted = [...names].sort((a, b) => b.length - a.length)
+
+  for (const name of sorted) {
+    const n = normalise(name)
+    if (n.length < 3) continue
+    if (new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(haystack)) {
+      return { name, exact: true, score: 1 }
+    }
+  }
+
+  // Fuzzy: compare each word (and each adjacent pair of words) to every name.
+  const words = haystack.split(' ').filter((w) => w.length > 2)
+  const candidates = [...words]
+  for (let i = 0; i < words.length - 1; i++) candidates.push(`${words[i]} ${words[i + 1]}`)
+
+  let best = null
+  for (const name of names) {
+    const n = normalise(name)
+    for (const candidate of candidates) {
+      const score = diceSimilarity(candidate, n)
+      if (score >= threshold && (!best || score > best.score)) best = { name, exact: false, score }
+    }
+  }
+  return best
 }

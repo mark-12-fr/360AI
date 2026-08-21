@@ -44,18 +44,16 @@ function password(length, withSymbols) {
 }
 
 const T = {
-  en: { heads: 'Heads', tails: 'Tails', rolled: 'Rolled', picked: 'I picked', pwd: 'Here you go — copy it now, I do not keep a copy' },
-  tl: { heads: 'Heads', tails: 'Tails', rolled: 'Lumabas', picked: 'Napili ko', pwd: 'Eto — kopyahin mo na, wala akong kopya nito' },
-  hil: { heads: 'Heads', tails: 'Tails', rolled: 'Nagguwa', picked: 'Ginpili ko', pwd: 'Ari — kopyaha na subong, wala ko sing kopya sini' },
+ heads: 'Heads', tails: 'Tails', rolled: 'Rolled', picked: 'I picked', pwd: 'Here you go — copy it now, I do not keep a copy' 
 }
 
 export default {
   id: 'chance',
-  label: { en: 'Dice and picks', tl: 'Dice at pili', hil: 'Dice kag pili' },
+  label: 'Dice and picks',
   examples: ['flip a coin', 'roll 2d6', 'pick one: adobo, sinigang, tinola', 'password 16'],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     const s = normalise(ctx.text)
 
     if (/\b(flip|toss|coin|barya|pitik)\b/.test(s) && !/\bpick\b/.test(s)) {

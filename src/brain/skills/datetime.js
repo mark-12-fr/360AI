@@ -24,11 +24,7 @@ const MONTHS = [
   ['december', 'dec', 'disyembre', 'diciembre'],
 ]
 
-const DAY_NAMES = {
-  en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-  tl: ['Linggo', 'Lunes', 'Martes', 'Miyerkules', 'Huwebes', 'Biyernes', 'Sabado'],
-  hil: ['Domingo', 'Lunes', 'Martes', 'Miyerkoles', 'Huwebes', 'Biyernes', 'Sabado'],
-}
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -40,8 +36,8 @@ function monthIndex(word) {
   return MONTHS.findIndex((names) => names.includes(w))
 }
 
-export function formatDate(d, lang = 'en') {
-  return `${DAY_NAMES[lang]?.[d.getDay()] ?? DAY_NAMES.en[d.getDay()]}, ${
+export function formatDate(d) {
+  return `${DAY_NAMES[d.getDay()]}, ${
     MONTH_NAMES[d.getMonth()]
   } ${d.getDate()}, ${d.getFullYear()}`
 }
@@ -144,66 +140,38 @@ function nextOccurrence(occasion, now) {
 }
 
 const T = {
-  en: {
-    today: (d) => `Today is **${d}**.`,
-    time: (t, d) => `It is **${t}** — ${d}.`,
-    until: (n, label, d) =>
-      n === 0
-        ? `**${label} is today** (${d}).`
-        : `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** from today until ${label} (${d}).`,
-    since: (n, d) => `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** since ${d}.`,
-    between: (n, a, b) => `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** between ${a} and ${b}.`,
-    weekday: (d, name) => `${d} falls on a **${name}**.`,
-    age: (y, m, dd) => `You are **${y} years old** — ${y} years, ${m} months and ${dd} days.`,
-    fromNow: (n, d) => `${fmtNumber(Math.abs(n))} days from today is **${d}**.`,
-    away: (n) =>
-      n > 0
-        ? `That is ${fmtNumber(n)} day${n === 1 ? '' : 's'} from today.`
-        : `That was ${fmtNumber(-n)} day${n === -1 ? '' : 's'} ago.`,
-    ago: (n, d) => `${fmtNumber(Math.abs(n))} days ago was **${d}**.`,
-  },
-  tl: {
-    today: (d) => `Ngayon ay **${d}**.`,
-    time: (t, d) => `Ang oras ay **${t}** — ${d}.`,
-    until: (n, label, d) =>
-      n === 0 ? `**${label} ay ngayon** (${d}).` : `**${fmtNumber(n)} araw** mula ngayon hanggang ${label} (${d}).`,
-    since: (n, d) => `**${fmtNumber(n)} araw** na mula noong ${d}.`,
-    between: (n, a, b) => `**${fmtNumber(n)} araw** ang pagitan ng ${a} at ${b}.`,
-    weekday: (d, name) => `Ang ${d} ay **${name}**.`,
-    age: (y, m, dd) => `Ikaw ay **${y} taong gulang** — ${y} taon, ${m} buwan at ${dd} araw.`,
-    fromNow: (n, d) => `${fmtNumber(Math.abs(n))} araw mula ngayon ay **${d}**.`,
-    away: (n) =>
-      n > 0 ? `${fmtNumber(n)} araw pa mula ngayon.` : `${fmtNumber(-n)} araw na ang nakalipas.`,
-    ago: (n, d) => `${fmtNumber(Math.abs(n))} araw ang nakalipas ay **${d}**.`,
-  },
-  hil: {
-    today: (d) => `Subong amo ang **${d}**.`,
-    time: (t, d) => `Ang oras subong **${t}** — ${d}.`,
-    until: (n, label, d) =>
-      n === 0 ? `**${label} subong** (${d}).` : `**${fmtNumber(n)} ka adlaw** halin subong tubtob ${label} (${d}).`,
-    since: (n, d) => `**${fmtNumber(n)} ka adlaw** na halin sang ${d}.`,
-    between: (n, a, b) => `**${fmtNumber(n)} ka adlaw** ang tunga sang ${a} kag ${b}.`,
-    weekday: (d, name) => `Ang ${d} isa ka **${name}**.`,
-    age: (y, m, dd) => `**${y} ka tuig** na ang imo edad — ${y} ka tuig, ${m} ka bulan kag ${dd} ka adlaw.`,
-    fromNow: (n, d) => `${fmtNumber(Math.abs(n))} ka adlaw halin subong amo ang **${d}**.`,
-    away: (n) =>
-      n > 0 ? `${fmtNumber(n)} pa ka adlaw halin subong.` : `${fmtNumber(-n)} ka adlaw na ang nagligad.`,
-    ago: (n, d) => `${fmtNumber(Math.abs(n))} ka adlaw ang nagligad amo ang **${d}**.`,
-  },
+
+  today: (d) => `Today is **${d}**.`,
+  time: (t, d) => `It is **${t}** — ${d}.`,
+  until: (n, label, d) =>
+    n === 0
+      ? `**${label} is today** (${d}).`
+      : `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** from today until ${label} (${d}).`,
+  since: (n, d) => `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** since ${d}.`,
+  between: (n, a, b) => `**${fmtNumber(n)} day${n === 1 ? '' : 's'}** between ${a} and ${b}.`,
+  weekday: (d, name) => `${d} falls on a **${name}**.`,
+  age: (y, m, dd) => `You are **${y} years old** — ${y} years, ${m} months and ${dd} days.`,
+  fromNow: (n, d) => `${fmtNumber(Math.abs(n))} days from today is **${d}**.`,
+  away: (n) =>
+    n > 0
+      ? `That is ${fmtNumber(n)} day${n === 1 ? '' : 's'} from today.`
+      : `That was ${fmtNumber(-n)} day${n === -1 ? '' : 's'} ago.`,
+  ago: (n, d) => `${fmtNumber(Math.abs(n))} days ago was **${d}**.`,
+  
 }
 
 export default {
   id: 'datetime',
-  label: { en: 'Dates and time', tl: 'Petsa at oras', hil: 'Petsa kag oras' },
+  label: 'Dates and time',
   examples: [
-    'pila ka adlaw tubtob Christmas',
+    'how many days until Christmas',
     'what day is December 25, 2026',
     'days between 2026-01-01 and 2026-12-25',
     'age if born May 4, 1998',
   ],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     const s = normalise(ctx.text)
     const now = ctx.now ?? new Date()
 
@@ -212,7 +180,7 @@ export default {
 
     if (asksTime) {
       const time = now.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
-      return { score: 0.96, text: t.time(time, formatDate(now, ctx.lang)) }
+      return { score: 0.96, text: t.time(time, formatDate(now)) }
     }
 
     // Age: "born May 4 1998", "edad if born 1998-05-04"
@@ -242,7 +210,7 @@ export default {
           const when = nextOccurrence(occ, now)
           return {
             score: 0.96,
-            text: t.until(daysBetween(now, when), occ.label, formatDate(when, ctx.lang)),
+            text: t.until(daysBetween(now, when), occ.label, formatDate(when)),
           }
         }
       }
@@ -258,7 +226,7 @@ export default {
       if (a && b) {
         return {
           score: 0.95,
-          text: t.between(Math.abs(daysBetween(a, b)), formatDate(a, ctx.lang), formatDate(b, ctx.lang)),
+          text: t.between(Math.abs(daysBetween(a, b)), formatDate(a), formatDate(b)),
         }
       }
     }
@@ -272,8 +240,8 @@ export default {
       return {
         score: 0.94,
         text: forward
-          ? t.fromNow(n, formatDate(target, ctx.lang))
-          : t.ago(n, formatDate(target, ctx.lang)),
+          ? t.fromNow(n, formatDate(target))
+          : t.ago(n, formatDate(target)),
       }
     }
 
@@ -281,13 +249,13 @@ export default {
     const date = parseDate(s, now)
     if (date) {
       const delta = daysBetween(now, date)
-      const name = DAY_NAMES[ctx.lang]?.[date.getDay()] ?? DAY_NAMES.en[date.getDay()]
-      const head = `**${name}** — ${formatDate(date, ctx.lang)}.`
+      const name = DAY_NAMES[date.getDay()]
+      const head = `**${name}** — ${formatDate(date)}.`
       const tail = delta === 0 ? '' : `\n\n${t.away(delta)}`
       return { score: 0.9, text: head + tail }
     }
 
-    if (asksDate) return { score: 0.95, text: t.today(formatDate(now, ctx.lang)) }
+    if (asksDate) return { score: 0.95, text: t.today(formatDate(now)) }
 
     return null
   },

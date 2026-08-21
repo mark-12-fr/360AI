@@ -31,33 +31,15 @@ function scoreEntry(query, entry) {
 }
 
 const T = {
-  en: {
-    learned: (q) => `Got it — I will remember **${q}** from now on.`,
-    forgot: (q) => `Forgotten: **${q}**.`,
-    notFound: (q) => `I have nothing stored under **${q}**.`,
-    nothing: 'You have not taught me anything yet. Try `remember: my wifi password = ...`',
-    known: (n) => `You have taught me **${n}** thing${n === 1 ? '' : 's'}:`,
-    teachHint: 'Use `remember: <question> = <answer>` to teach me.',
-    from: 'you taught me this',
-  },
-  tl: {
-    learned: (q) => `Tandaan ko na — **${q}** mula ngayon.`,
-    forgot: (q) => `Nakalimutan ko na: **${q}**.`,
-    notFound: (q) => `Wala akong nakaimbak para sa **${q}**.`,
-    nothing: 'Wala ka pang itinuturo sa akin. Subukan: `remember: password ng wifi = ...`',
-    known: (n) => `**${n}** bagay ang itinuro mo sa akin:`,
-    teachHint: 'Gamitin ang `remember: <tanong> = <sagot>` para turuan ako.',
-    from: 'itinuro mo ito sa akin',
-  },
-  hil: {
-    learned: (q) => `Sige — dumdumon ko na ang **${q}** halin subong.`,
-    forgot: (q) => `Ginkalimtan ko na: **${q}**.`,
-    notFound: (q) => `Wala ako sing natago para sa **${q}**.`,
-    nothing: 'Wala ka pa sing gintudlo sa akon. Tilawi: `remember: password sang wifi = ...`',
-    known: (n) => `**${n}** ka butang ang gintudlo mo sa akon:`,
-    teachHint: 'Gamita ang `remember: <pamangkot> = <sabat>` para tudluan ako.',
-    from: 'gintudlo mo ini sa akon',
-  },
+
+  learned: (q) => `Got it — I will remember **${q}** from now on.`,
+  forgot: (q) => `Forgotten: **${q}**.`,
+  notFound: (q) => `I have nothing stored under **${q}**.`,
+  nothing: 'You have not taught me anything yet. Try `remember: my wifi password = ...`',
+  known: (n) => `You have taught me **${n}** thing${n === 1 ? '' : 's'}:`,
+  teachHint: 'Use `remember: <question> = <answer>` to teach me.',
+  from: 'you taught me this',
+  
 }
 
 const TEACH = /^(?:remember|memorise|memorize|learn|tandaan|dumduma|tandaan mo|note)\b\s*[:\-]?\s*([\s\S]+)$/i
@@ -66,11 +48,11 @@ const LIST = /^(?:what do you know|list (?:what you know|memory|facts)|ano ang n
 
 export default {
   id: 'knowledge',
-  label: { en: 'Knowledge', tl: 'Kaalaman', hil: 'Kinaalam' },
+  label: 'Knowledge',
   examples: ['what is 360AI', 'remember: my wifi = kitty123', 'what do you know', 'capital of the philippines'],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     const raw = ctx.text.trim()
     const query = normalise(raw)
     const taught = ctx.memory?.taught ?? []
@@ -83,7 +65,7 @@ export default {
       if (!split) {
         return {
           score: 0.99,
-          text: `${t.teachHint}\n\n${ctx.lang === 'en' ? 'For example' : 'Halimbawa'}: \`remember: akon numero = 0917-000-0000\``,
+          text: `${t.teachHint}\n\n${'For example'}: \`remember: akon numero = 0917-000-0000\``,
         }
       }
       const key = split[1].trim()
@@ -118,10 +100,8 @@ export default {
     }
     if (!best || best.score < 0.62) return null
 
-    // An entry's answer may be a plain string or one string per language.
     const stored = best.entry.a
-    const localised = typeof stored === 'string' ? stored : stored[ctx.lang] ?? stored.en
-    const answer = localised === 'SKILL_LIST' ? ctx.skillList ?? localised : localised
+    const answer = stored === 'SKILL_LIST' ? ctx.skillList ?? stored : stored
     const note = best.entry.source === 'taught' ? `\n\n*(${t.from})*` : ''
     return { score: Math.min(0.92, best.score), text: answer + note }
   },

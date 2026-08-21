@@ -14,35 +14,16 @@ export const FACTS = [
   /* ------------------------------------------------------- about the app */
   {
     q: ['what is 360ai', 'ano ang 360ai', 'about 360ai', 'sino ka', 'who are you', 'sin-o ka'],
-    a: {
-      en:
-        "I'm **360AI** — an assistant that runs completely on your own device, written in plain " +
-        'JavaScript. No provider, no account, no server, and nothing to download. That also means ' +
-        "my knowledge is only what's built into me plus whatever you teach me.",
-      hil:
-        'Ako si **360AI** — isa ka assistant nga nagadalagan sa imo mismo nga device, puro ' +
-        'JavaScript ang pagkahimo. Wala sing provider, wala sing account, wala sing server, kag ' +
-        'wala sing i-download. Amo man ini nga ang akon nahibal-an amo lang ang nasulat sa akon ' +
-        'kag ang imo gintudlo.',
-      tl:
-        'Ako si **360AI** — isang assistant na tumatakbo mismo sa device mo, purong JavaScript. ' +
-        'Walang provider, walang account, walang server, at walang ida-download. Kaya nga ang alam ' +
-        'ko ay ang nakasulat lang sa akin at ang itinuro mo.',
-    },
+    a:
+      "I'm **360AI** — an assistant that runs completely on your own device, written in plain " +
+      'JavaScript. No provider, no account, no server, and nothing to download. That also means ' +
+      "my knowledge is only what's built into me plus whatever you teach me.",
   },
   {
     q: ['do you need internet', 'kailangan ba internet', 'nagakinahanglan bala sang internet', 'offline ka bala', 'work offline'],
-    a: {
-      en:
-        'No. Everything happens inside your browser on this device. You can switch the Wi-Fi off ' +
-        'and I will keep working exactly the same — nothing is ever sent anywhere.',
-      hil:
-        'Wala. Tanan nagakatabo sa sulod sang imo browser, diri sa device mo. Pwede mo patyon ang ' +
-        'Wi-Fi kag padayon lang ako sa pareho nga paagi — wala gid sing ginapadala bisan diin.',
-      tl:
-        'Hindi. Lahat ay nangyayari sa loob ng browser mo, dito sa device mo. Pwede mong patayin ' +
-        'ang Wi-Fi at gagana pa rin ako nang pareho — walang ipinapadala kahit saan.',
-    },
+    a:
+      'No. Everything happens inside your browser on this device. You can switch the Wi-Fi off ' +
+      'and I will keep working exactly the same — nothing is ever sent anywhere.',
   },
   {
     q: ['what can you do', 'ano ang kaya mo', 'ano ang mahimo mo', 'help', 'skills', 'commands'],
@@ -50,21 +31,10 @@ export const FACTS = [
   },
   {
     q: ['are you chatgpt', 'are you an llm', 'llm ka bala', 'ano nga model gingamit mo', 'what model do you use'],
-    a: {
-      en:
-        "No. I'm not a large language model and I have no weights to download. I'm a rules engine: " +
-        'I recognise what you are asking, compute the answer, and look things up in my knowledge ' +
-        'base. That is why I am instant and tiny — and also why I cannot answer everything.',
-      hil:
-        'Indi. Indi ako large language model kag wala ako sing weights nga i-download. Rules engine ' +
-        'ako: ginakilala ko kon ano ang imo ginapamangkot, ginakwenta ko ang sabat, kag ginapangita ' +
-        'ko sa akon knowledge base. Amo ina nga instant kag gamay ako — kag amo man ina nga indi ko ' +
-        'masabat ang tanan.',
-      tl:
-        'Hindi. Hindi ako large language model at wala akong weights na ida-download. Rules engine ' +
-        'ako: kinikilala ko ang tanong mo, kinukwenta ko ang sagot, at hinahanap ko sa knowledge ' +
-        'base ko. Kaya instant at maliit ako — at kaya rin hindi ko kayang sagutin ang lahat.',
-    },
+    a:
+      "No. I'm not a large language model and I have no weights to download. I'm a rules engine: " +
+      'I recognise what you are asking, compute the answer, and look things up in my knowledge ' +
+      'base. That is why I am instant and tiny — and also why I cannot answer everything.',
   },
   {
     q: ['why don\'t you know', 'ngaa indi ka kabalo', 'bakit hindi mo alam', 'you are limited'],
@@ -75,32 +45,15 @@ export const FACTS = [
   },
   {
     q: ['how do i teach you', 'paano kita matudluan', 'paano kita tuturuan', 'remember command', 'teach you'],
-    a: {
-      en:
-        'Type **remember: <question> = <answer>**. For example `remember: my number = 0917-000-0000`. ' +
-        'Ask **what do you know** to see everything you have taught me, and **forget: <question>** to remove one.',
-      hil:
-        'I-type ang **remember: <pamangkot> = <sabat>**. Halimbawa `remember: akon numero = 0917-000-0000`. ' +
-        'Pamangkot sang **ano ang nahibal-an mo** para makita ang tanan nga gintudlo mo, kag ' +
-        '**forget: <pamangkot>** para kwaon ang isa.',
-      tl:
-        'I-type ang **remember: <tanong> = <sagot>**. Halimbawa `remember: numero ko = 0917-000-0000`. ' +
-        'Itanong ang **ano ang alam mo** para makita lahat ng itinuro mo, at **forget: <tanong>** para burahin.',
-    },
+    a:
+      'Type **remember: <question> = <answer>**. For example `remember: my number = 0917-000-0000`. ' +
+      'Ask **what do you know** to see everything you have taught me, and **forget: <question>** to remove one.',
   },
   {
     q: ['is my data private', 'private bala', 'ligtas ba ang data ko', 'where are my chats stored'],
-    a: {
-      en:
-        "Your chats live in this browser's IndexedDB, on this device only. There is no server to " +
-        'send them to. Settings → Export everything writes them to a file if you want a backup.',
-      hil:
-        'Ang imo mga chat ara sa IndexedDB sang browser, sa sini lang nga device. Wala sing server ' +
-        'nga padal-an sini. Ang Settings → Export everything nagasulat sini sa file kon gusto mo sing backup.',
-      tl:
-        'Ang mga chat mo ay nasa IndexedDB ng browser, dito lang sa device na ito. Walang server na ' +
-        'pagpapadalhan. Ang Settings → Export everything ay magsusulat nito sa file kung gusto mo ng backup.',
-    },
+    a:
+      "Your chats live in this browser's IndexedDB, on this device only. There is no server to " +
+      'send them to. Settings → Export everything writes them to a file if you want a backup.',
   },
   {
     q: ['how do i install', 'paano i-install', 'add to home screen', 'install app'],
@@ -112,33 +65,19 @@ export const FACTS = [
   /* ---------------------------------------------------------- Philippines */
   {
     q: ['capital of the philippines', 'kapital sang pilipinas', 'kabisera ng pilipinas'],
-    a: {
-      en: 'The capital of the Philippines is **Manila**. The largest city by population is Quezon City.',
-      hil: 'Ang kapital sang Pilipinas amo ang **Manila**. Ang pinakadaku nga siyudad sa populasyon amo ang Quezon City.',
-      tl: 'Ang kabisera ng Pilipinas ay **Manila**. Ang pinakamalaking lungsod sa populasyon ay Quezon City.',
-    },
+    a:
+ 'The capital of the Philippines is **Manila**. The largest city by population is Quezon City.',
   },
   {
     q: ['how many islands philippines', 'pila ka isla ang pilipinas', 'ilang isla ang pilipinas'],
-    a: {
-      en: 'The Philippines has **7,641 islands** (the 2016 survey added 534 to the long-quoted 7,107).',
-      hil: 'May **7,641 ka isla** ang Pilipinas (ang 2016 nga survey nagdugang sang 534 sa daan nga 7,107).',
-      tl: 'May **7,641 na isla** ang Pilipinas (nagdagdag ang 2016 survey ng 534 sa dating 7,107).',
-    },
+    a:
+ 'The Philippines has **7,641 islands** (the 2016 survey added 534 to the long-quoted 7,107).',
   },
   {
     q: ['what is hiligaynon', 'ano ang hiligaynon', 'ilonggo language'],
-    a: {
-      en:
-        '**Hiligaynon** (Ilonggo) is a Visayan language spoken by around 9 million people, mainly in ' +
-        'Iloilo, Negros Occidental, Capiz, Guimaras and Antique.',
-      hil:
-        'Ang **Hiligaynon** (Ilonggo) isa ka Bisaya nga lenguahe nga ginahambal sang mga 9 ka milyon ' +
-        'nga tawo, labi na sa Iloilo, Negros Occidental, Capiz, Guimaras kag Antique.',
-      tl:
-        'Ang **Hiligaynon** (Ilonggo) ay wikang Bisaya na ginagamit ng humigit-kumulang 9 milyong tao, ' +
-        'lalo na sa Iloilo, Negros Occidental, Capiz, Guimaras at Antique.',
-    },
+    a:
+      '**Hiligaynon** (Ilonggo) is a Visayan language spoken by around 9 million people, mainly in ' +
+      'Iloilo, Negros Occidental, Capiz, Guimaras and Antique.',
   },
   {
     q: ['languages in the philippines', 'pila ka lenguahe sa pilipinas', 'ilang wika sa pilipinas'],

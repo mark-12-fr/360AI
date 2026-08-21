@@ -9,9 +9,15 @@
 
 import { answer } from '../brain/index.js'
 
-/** Characters per tick and milliseconds per tick. */
-const CHUNK = 3
+/**
+ * Typing pace. The brain answers in under a millisecond, so this is purely
+ * cosmetic — but a 900-character subject list typed three characters at a time
+ * would take ten seconds, which is worse than useless. The chunk grows with the
+ * answer so that nothing ever takes much more than a second and a half.
+ */
 const TICK = 12
+const MAX_TICKS = 110
+const chunkFor = (length) => Math.max(3, Math.ceil(length / MAX_TICKS))
 
 export class BrainBackend {
   /**
@@ -24,6 +30,8 @@ export class BrainBackend {
     this.label = '360 Brain · JS'
     this.memory = memory
     this.aborted = false
+    // Carries the last subject between turns so "and its capital?" resolves.
+    this.context = {}
   }
 
   get ready() {
@@ -45,8 +53,8 @@ export class BrainBackend {
     const started = performance.now()
 
     const result = answer(last?.content ?? '', {
-      lang: options.lang ?? 'auto',
       memory: this.memory,
+      context: this.context,
       now: new Date(),
     })
 
@@ -66,12 +74,22 @@ export class BrainBackend {
     const elapsed = performance.now() - started
     const text = result.text ?? ''
 
-    for (let i = 0; i < text.length; i += CHUNK) {
+    const chunk = chunkFor(text.length)
+    for (let i = 0; i < text.length; i += chunk) {
       if (this.aborted) break
-      yield { text: text.slice(i, i + CHUNK) }
-      // Punctuation gets a slightly longer beat, which is what makes it read
-      // like typing rather than like a progress bar.
-      const pause = /[.!?\n]/.test(text[i + CHUNK - 1] ?? '') ? TICK * 4 : TICK
+
+      // A hidden tab clamps setTimeout to about a second, which would stretch
+      // the animation into minutes — and nobody is watching it anyway. Hand
+      // over the rest in one piece instead.
+      if (typeof document !== 'undefined' && document.hidden) {
+        yield { text: text.slice(i) }
+        break
+      }
+
+      yield { text: text.slice(i, i + chunk) }
+      // Punctuation gets a slightly longer beat on short answers, which is what
+      // makes them read like typing rather than like a progress bar.
+      const pause = chunk <= 4 && /[.!?\n]/.test(text[i + chunk - 1] ?? '') ? TICK * 3 : TICK
       await new Promise((r) => setTimeout(r, pause))
     }
 
@@ -80,7 +98,6 @@ export class BrainBackend {
       stats: {
         ms: elapsed,
         skill: result.skill,
-        lang: result.lang,
         note: `${elapsed < 1 ? '<1' : elapsed.toFixed(0)} ms · ${result.skill}`,
       },
     }

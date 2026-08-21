@@ -103,9 +103,6 @@ export async function clearFacts() {
 }
 
 export const DEFAULT_SETTINGS = {
-  // 'auto' mirrors whichever language the question was written in; the others
-  // pin every reply to one language.
-  replyLanguage: 'auto',
   theme: 'dark',
 }
 

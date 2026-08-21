@@ -225,42 +225,18 @@ export function evaluate(expr) {
 const STRIP = /\b(what(?:'s| is)|how much is|compute|calculate|solve|equals?|kwenta(?:ha)?|pila|ang|is|sang|ka|please|paki)\b/g
 
 const T = {
-  en: {
-    percentOf: (p, n, r) => `**${fmtNumber(r)}**\n\n${fmtNumber(p)}% of ${fmtNumber(n)} = ${fmtNumber(p / 100)} × ${fmtNumber(n)} = ${fmtNumber(r)}`,
-    whatPercent: (a, b, r) => `**${fmtNumber(r)}%**\n\n${fmtNumber(a)} ÷ ${fmtNumber(b)} × 100 = ${fmtNumber(r)}%`,
-    change: (from, to, pct) => `**${pct >= 0 ? '+' : ''}${fmtNumber(pct)}%**\n\nFrom ${fmtNumber(from)} to ${fmtNumber(to)} is a change of ${fmtNumber(to - from)}, which is ${fmtNumber(pct)}%.`,
-    stats: 'Here is the breakdown',
-    count: 'numbers',
-    sum: 'Sum',
-    mean: 'Average',
-    median: 'Median',
-    min: 'Smallest',
-    max: 'Largest',
-  },
-  tl: {
-    percentOf: (p, n, r) => `**${fmtNumber(r)}**\n\n${fmtNumber(p)}% ng ${fmtNumber(n)} = ${fmtNumber(p / 100)} × ${fmtNumber(n)} = ${fmtNumber(r)}`,
-    whatPercent: (a, b, r) => `**${fmtNumber(r)}%**\n\n${fmtNumber(a)} ÷ ${fmtNumber(b)} × 100 = ${fmtNumber(r)}%`,
-    change: (from, to, pct) => `**${pct >= 0 ? '+' : ''}${fmtNumber(pct)}%**\n\nMula ${fmtNumber(from)} papuntang ${fmtNumber(to)} ay ${fmtNumber(to - from)}, o ${fmtNumber(pct)}%.`,
-    stats: 'Eto ang breakdown',
-    count: 'na numero',
-    sum: 'Kabuuan',
-    mean: 'Average',
-    median: 'Median',
-    min: 'Pinakamaliit',
-    max: 'Pinakamalaki',
-  },
-  hil: {
-    percentOf: (p, n, r) => `**${fmtNumber(r)}**\n\n${fmtNumber(p)}% sang ${fmtNumber(n)} = ${fmtNumber(p / 100)} × ${fmtNumber(n)} = ${fmtNumber(r)}`,
-    whatPercent: (a, b, r) => `**${fmtNumber(r)}%**\n\n${fmtNumber(a)} ÷ ${fmtNumber(b)} × 100 = ${fmtNumber(r)}%`,
-    change: (from, to, pct) => `**${pct >= 0 ? '+' : ''}${fmtNumber(pct)}%**\n\nHalin sa ${fmtNumber(from)} pakadto sa ${fmtNumber(to)} amo ${fmtNumber(to - from)}, ukon ${fmtNumber(pct)}%.`,
-    stats: 'Ari ang breakdown',
-    count: 'ka numero',
-    sum: 'Total',
-    mean: 'Average',
-    median: 'Median',
-    min: 'Pinakagamay',
-    max: 'Pinakadaku',
-  },
+
+  percentOf: (p, n, r) => `**${fmtNumber(r)}**\n\n${fmtNumber(p)}% of ${fmtNumber(n)} = ${fmtNumber(p / 100)} × ${fmtNumber(n)} = ${fmtNumber(r)}`,
+  whatPercent: (a, b, r) => `**${fmtNumber(r)}%**\n\n${fmtNumber(a)} ÷ ${fmtNumber(b)} × 100 = ${fmtNumber(r)}%`,
+  change: (from, to, pct) => `**${pct >= 0 ? '+' : ''}${fmtNumber(pct)}%**\n\nFrom ${fmtNumber(from)} to ${fmtNumber(to)} is a change of ${fmtNumber(to - from)}, which is ${fmtNumber(pct)}%.`,
+  stats: 'Here is the breakdown',
+  count: 'numbers',
+  sum: 'Sum',
+  mean: 'Average',
+  median: 'Median',
+  min: 'Smallest',
+  max: 'Largest',
+  
 }
 
 function stats(nums, t) {
@@ -278,7 +254,7 @@ function stats(nums, t) {
 
 export default {
   id: 'math',
-  label: { en: 'Maths', tl: 'Matematika', hil: 'Matematika' },
+  label: 'Maths',
   examples: [
     '(1250 + 380) * 3',
     '17% of 4,850',
@@ -287,7 +263,7 @@ export default {
   ],
 
   match(ctx) {
-    const t = T[ctx.lang] ?? T.en
+    const t = T
     let s = normalise(ctx.text)
 
     // "17% of 4850", "17% sang 4850", "17 percent ng 4850"

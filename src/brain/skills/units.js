@@ -139,7 +139,7 @@ function unitAt(text, startIndex) {
 
 export default {
   id: 'units',
-  label: { en: 'Conversions', tl: 'Conversion', hil: 'Conversion' },
+  label: 'Conversions',
   examples: ['5 km to miles', '30 C to F', '2.5 kg to lbs', '6 feet in cm'],
 
   match(ctx) {
