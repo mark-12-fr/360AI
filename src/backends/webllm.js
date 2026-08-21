@@ -30,6 +30,46 @@ const LENGTH_RULE = {
   detailed: 'Give thorough answers, with the reasoning and the examples spelled out.',
 }
 
+/** Added for a vision model, so it describes what is there rather than what it expects. */
+const SIGHT_RULE =
+  'You can see pictures the user attaches. Describe only what is actually visible, ' +
+  'read any text in the image exactly as written, and say when the picture is too ' +
+  'blurred or cropped to tell.'
+
+/**
+ * Turns one of our messages into the shape WebLLM wants.
+ *
+ * Array content is a vision-model-only feature: sending it to a text model
+ * throws `UserMessageContentErrorForNonVLM` inside the worker, which surfaces
+ * as an opaque failure a long way from the picture that caused it. So the
+ * decision is made here, once, from what is actually loaded.
+ *
+ * `keepImages` is false for every turn but the newest. Phi-3.5 Vision has a
+ * 4096-token window and one embedded image fills most of it, so carrying the
+ * pictures of a whole conversation forward would push out the question being
+ * asked. Older turns keep a note that a picture was there instead.
+ */
+function toWebLLM(message, { canSee, keepImages }) {
+  const images = message.images ?? []
+  if (message.role !== 'user' || !images.length) {
+    return { role: message.role, content: message.content }
+  }
+
+  if (canSee && keepImages) {
+    // At most one text part per message, which is WebLLM's rule, not ours.
+    const parts = images.map((img) => ({ type: 'image_url', image_url: { url: img.url } }))
+    parts.push({ type: 'text', text: message.content?.trim() || 'What is in this picture?' })
+    return { role: message.role, content: parts }
+  }
+
+  const count = `${images.length} picture${images.length === 1 ? '' : 's'}`
+  const note = canSee
+    ? `[${count} from earlier in this conversation, no longer in view.]`
+    : `[The user attached ${count}. You cannot see ${images.length === 1 ? 'it' : 'them'}; ` +
+      'say so plainly rather than describing what you imagine is there.]'
+  return { role: message.role, content: `${message.content ?? ''}\n\n${note}`.trim() }
+}
+
 /** Raised when the user cancels a download; the caller treats it as routine. */
 export class LoadCancelled extends Error {
   constructor() {
@@ -131,17 +171,31 @@ export class WebLLMBackend {
     this.entry = null
   }
 
+  /** True when the loaded model can actually read an attached picture. */
+  get canSee() {
+    return this.entry?.vision === true
+  }
+
   /** Yields `{ text }` deltas, then one `{ done, stats }`. */
   async *stream(messages, { temperature = 0.7, verbosity = 'normal' } = {}) {
     if (!this.engine) throw new Error('No model is loaded yet.')
 
+    const canSee = this.canSee
     const system = {
       role: 'system',
-      content: `${IDENTITY}\n${LENGTH_RULE[verbosity] ?? LENGTH_RULE.normal}`,
+      content: [IDENTITY, canSee ? SIGHT_RULE : null, LENGTH_RULE[verbosity] ?? LENGTH_RULE.normal]
+        .filter(Boolean)
+        .join('\n'),
     }
 
+    const history = messages.filter((m) => m.role !== 'system')
+    const newest = history.reduce((at, m, i) => (m.images?.length ? i : at), -1)
+
     const chunks = await this.engine.chat.completions.create({
-      messages: [system, ...messages.filter((m) => m.role !== 'system')],
+      messages: [
+        system,
+        ...history.map((m, i) => toWebLLM(m, { canSee, keepImages: i === newest })),
+      ],
       stream: true,
       temperature,
       stream_options: { include_usage: true },

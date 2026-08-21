@@ -118,7 +118,19 @@
           </div>
 
           <form id="composer" class="composer">
+            <!-- Pictures waiting to be sent. Above the field so the thumbnail
+                 sits where the message it belongs to will appear. -->
+            <div id="attachments" class="attachments" hidden></div>
             <div class="composer-shell">
+              <button
+                id="attach"
+                type="button"
+                class="btn-attach"
+                aria-label="Add a picture"
+                title="Add a picture"
+              >
+                <span aria-hidden="true">🖼</span>
+              </button>
               <textarea
                 id="input"
                 class="input"
@@ -133,6 +145,10 @@
                 <span aria-hidden="true">■</span>
               </button>
             </div>
+            <!-- `capture` is deliberately absent: on a phone this lets the
+                 picker offer the camera *and* the gallery, rather than forcing
+                 a new photo when the picture is already on the device. -->
+            <input id="attach-file" type="file" accept="image/*" hidden />
           </form>
           <div id="disclaimer" class="disclaimer"></div>
         </div>
@@ -268,7 +284,11 @@
       </form>
     </dialog>
 
-    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <!-- `popover` puts the toast layer in the top layer, so a message raised
+         while a modal dialog is open is seen instead of being painted behind
+         it. Browsers without the API ignore the attribute and it renders as an
+         ordinary fixed layer. -->
+    <div id="toasts" class="toasts" popover="manual" aria-live="polite"></div>
 
     <script type="module" src="/src/main.js"></script>
   </body>

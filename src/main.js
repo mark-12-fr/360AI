@@ -4,8 +4,9 @@ import { SKILLS } from './brain/index.js'
 import { detectDevice, installHelp } from './device.js'
 import {
   BUILT_IN, MODELS, TIERS, deleteDownload, downloadSize, findModel, fitsDevice, fmtSize,
-  listDownloaded, probeGPU, ramFor, suggestFor,
+  listDownloaded, probeGPU, ramFor, suggestFor, visionModel,
 } from './models.js'
+import { MAX_IMAGES, prepareImage } from './images.js'
 
 import {
   DEFAULT_SETTINGS, clearFacts, createChat, deleteChat, deleteFact, deriveTitle, exportAll,
@@ -14,7 +15,7 @@ import {
 } from './db.js'
 import {
   addAction, confirmSheet, createBubble, decorateCodeBlocks, fmtBytes, groupChats,
-  renderMarkdown, splitThinking, toast,
+  renderAttachedImages, renderMarkdown, splitThinking, toast,
 } from './ui.js'
 
 const $ = (sel) => document.querySelector(sel)
@@ -38,6 +39,15 @@ const MODEL_SUGGESTIONS = [
   ['Think', ['Help me plan a 3-day trip on a small budget', 'Give me 5 ideas for a science project']],
 ]
 
+/**
+ * Only shown for a model that can see. The examples are prompts to send *with*
+ * a picture, so they lead the user to the 🖼 button rather than leaving the one
+ * feature they downloaded gigabytes for undiscovered.
+ */
+const VISION_SUGGESTIONS = [
+  ['With a picture', ['What is in this picture?', 'Read the text in this photo']],
+]
+
 const state = {
   settings: null,
   chat: null,
@@ -49,6 +59,8 @@ const state = {
   chats: [],
   filter: '',
   autoScroll: true,
+  /** Pictures picked but not yet sent. See images.js for the shape. */
+  attachments: [],
 
   /* --- engines --- */
   brain: null,
@@ -57,6 +69,8 @@ const state = {
   engineId: 'brain',
   /** Catalogue id currently downloading/loading, or null. */
   loadingId: null,
+  /** `{ id, message }` for the last failed load, shown on that model's card. */
+  loadError: null,
   gpu: null,
   downloaded: new Set(),
   storageBlocked: false,
@@ -341,7 +355,7 @@ function renderMessages() {
   if (!state.chat.messages.length) {
     box.appendChild(buildEmptyState())
   } else {
-    state.chat.messages.forEach((m, i) => appendMessage(m.role, m.content, m.stats, i))
+    state.chat.messages.forEach((m, i) => appendMessage(m.role, m.content, m.stats, i, m.images))
   }
   state.autoScroll = true
   scrollToBottom(true)
@@ -379,7 +393,11 @@ function buildEmptyState() {
   const groups = document.createElement('div')
   groups.className = 'suggestion-groups'
 
-  for (const [heading, examples] of isBrain ? BRAIN_SUGGESTIONS : MODEL_SUGGESTIONS) {
+  const suggestions = isBrain
+    ? BRAIN_SUGGESTIONS
+    : [...(entry.vision ? VISION_SUGGESTIONS : []), ...MODEL_SUGGESTIONS]
+
+  for (const [heading, examples] of suggestions) {
     const group = document.createElement('section')
     group.className = 'suggestion-group'
 
@@ -427,10 +445,12 @@ function clearEmptyState() {
   $('#messages').querySelector('.empty-state')?.remove()
 }
 
-function appendMessage(role, content, stats, index) {
+function appendMessage(role, content, stats, index, images) {
   const handles = createBubble(role)
-  const { el, body, think, thinkBody, meta } = handles
+  const { el, body, think, thinkBody, media, meta } = handles
   const { thinking, answer } = splitThinking(content)
+
+  renderAttachedImages(media, images)
 
   if (thinking.trim()) {
     think.hidden = false
@@ -548,22 +568,31 @@ function setBusy(busy) {
   $('#send').hidden = busy
   $('#stop').hidden = !busy
   $('#input').disabled = busy
+  $('#attach').disabled = busy
 }
 
 async function send(text) {
   const trimmed = text.trim()
-  if (state.busy || !trimmed) return
+  const images = state.attachments
+  if (state.busy || (!trimmed && !images.length)) return
   if (!backend()?.ready) {
     toast('That model is still loading — give it a moment.', 'warn')
     return
   }
 
   clearEmptyState()
-  state.chat.messages.push({ role: 'user', content: trimmed })
-  appendMessage('user', trimmed, null, state.chat.messages.length - 1)
+  const message = { role: 'user', content: trimmed }
+  if (images.length) message.images = images
+  state.chat.messages.push(message)
+  appendMessage('user', trimmed, null, state.chat.messages.length - 1, images)
+
+  // The composer is emptied only once the message is safely in the thread, so
+  // a refusal above never loses the picture the user just picked.
+  state.attachments = []
+  renderAttachments()
 
   if (state.chat.messages.length === 1 && !state.chat.renamed) {
-    state.chat.title = deriveTitle(trimmed)
+    state.chat.title = deriveTitle(trimmed || (images.length ? 'A picture' : ''))
     $('#chat-title').textContent = state.chat.title
   }
   await saveChat(state.chat)
@@ -584,7 +613,9 @@ async function runCompletion() {
 
   // 360 Brain answers the latest question and ignores the rest; a downloaded
   // model reads the whole thread. Both get the same payload.
-  const payload = state.chat.messages.map(({ role, content }) => ({ role, content }))
+  const payload = state.chat.messages.map(({ role, content, images }) =>
+    images?.length ? { role, content, images } : { role, content },
+  )
 
   let raw = ''
   let stats = null
@@ -642,6 +673,103 @@ async function runCompletion() {
 
   setBusy(false)
   if (!state.device.mobile) $('#input').focus()
+}
+
+/* ------------------------------------------------------------ attachments */
+
+/** True when whatever is answering right now can actually read a picture. */
+function engineCanSee() {
+  return activeEntry().vision === true
+}
+
+/**
+ * The strip of pictures waiting to be sent, plus the one line that stops a
+ * picture being sent into a void.
+ *
+ * Only one model in the catalogue has eyes, so most of the time the honest
+ * answer is "this engine cannot see it" — and it is far better to say that
+ * before the message is sent than to let the user watch an answer arrive that
+ * has nothing to do with their photo.
+ */
+function renderAttachments() {
+  const host = $('#attachments')
+  host.innerHTML = ''
+  host.hidden = !state.attachments.length
+  $('#attach').classList.toggle('on', state.attachments.length > 0)
+  if (!state.attachments.length) return
+
+  for (const [i, img] of state.attachments.entries()) {
+    const chip = document.createElement('div')
+    chip.className = 'attachment'
+
+    const thumb = document.createElement('img')
+    thumb.src = img.url
+    thumb.alt = img.name
+    chip.appendChild(thumb)
+
+    const name = document.createElement('span')
+    name.className = 'attachment-name'
+    name.textContent = `${img.name} · ${img.w} × ${img.h}`
+    chip.appendChild(name)
+
+    const drop = document.createElement('button')
+    drop.type = 'button'
+    drop.className = 'attachment-del'
+    drop.textContent = '×'
+    drop.title = 'Remove this picture'
+    drop.setAttribute('aria-label', `Remove ${img.name}`)
+    drop.addEventListener('click', () => {
+      state.attachments.splice(i, 1)
+      renderAttachments()
+    })
+    chip.appendChild(drop)
+    host.appendChild(chip)
+  }
+
+  if (!engineCanSee()) {
+    const note = document.createElement('p')
+    note.className = 'attachment-note'
+    const have = visionModel(state.downloaded)
+    note.innerHTML = renderMarkdown(
+      have
+        ? `**${activeEntry().name} cannot see pictures.** Switch to **${have.name}**, ` +
+            'which is already on this device, to have it read.'
+        : `**${activeEntry().name} cannot see pictures.** It will say what it can work ` +
+            'out about the file, and read any QR code in it. To have the picture ' +
+            'itself read, download **Phi-3.5 Vision**.',
+    )
+    const change = document.createElement('button')
+    change.type = 'button'
+    change.className = 'btn btn-ghost btn-compact'
+    change.textContent = have ? `Use ${have.name}` : 'Choose your AI'
+    change.addEventListener('click', () => (have ? useModel(have) : openModels()))
+    note.appendChild(change)
+    host.appendChild(note)
+  }
+}
+
+/** Runs picked files through the scaler and into the composer. */
+async function attachFiles(files) {
+  const room = MAX_IMAGES - state.attachments.length
+  if (room <= 0) {
+    toast(
+      MAX_IMAGES === 1
+        ? 'One picture per message — remove that one to send a different picture.'
+        : `Up to ${MAX_IMAGES} pictures per message.`,
+      'warn',
+    )
+    return
+  }
+
+  for (const file of [...files].slice(0, room)) {
+    try {
+      state.attachments.push(await prepareImage(file))
+    } catch (err) {
+      toast(reason(err), 'error', 6000)
+    }
+  }
+  renderAttachments()
+  $('#input').focus()
 }
 
 /* ----------------------------------------------------- the model picker */
@@ -801,6 +929,7 @@ function buildModelCard(entry, usable) {
       ? `<span class="pill pill-ok">On this device · ${size}</span>`
       : `<span class="pill">${size} download</span>`,
     recommended ? '<span class="pill pill-star">Recommended</span>' : '',
+    entry.vision ? '<span class="pill pill-star">Reads pictures</span>' : '',
     entry.reasoning ? '<span class="pill pill-soft">Shows its thinking</span>' : '',
   ]
     .filter(Boolean)
@@ -835,6 +964,21 @@ function buildModelCard(entry, usable) {
     card.appendChild(why)
   }
 
+  // Why the last attempt failed, said where the user is looking. `showSystemNote`
+  // writes into the chat behind this dialog, which nobody can read from here.
+  if (state.loadError?.id === entry.id && !loading) {
+    const failed = document.createElement('p')
+    failed.className = 'model-error'
+    failed.innerHTML = renderMarkdown(state.loadError.message)
+    card.appendChild(failed)
+  }
+
+  // The progress bar above the composer is behind this dialog's backdrop, so a
+  // download started from here used to show nothing at all but a greyed-out
+  // button — for as long as it took several hundred megabytes to arrive. The
+  // card carries its own copy.
+  if (loading) card.appendChild(buildCardProgress())
+
   const actions = document.createElement('div')
   actions.className = 'model-actions'
 
@@ -846,17 +990,26 @@ function buildModelCard(entry, usable) {
     use.disabled = true
   } else if (loading) {
     use.className = 'btn'
-    use.textContent = 'Downloading…'
+    use.textContent = have ? 'Loading…' : 'Downloading…'
     use.disabled = true
   } else {
     use.className = have ? 'btn btn-primary' : 'btn'
-    use.textContent = have ? 'Use this model' : `Download · ${size}`
+    use.textContent = have
+      ? 'Use this model'
+      : `${state.loadError?.id === entry.id ? 'Try again' : 'Download'} · ${size}`
     use.disabled = !usable || state.loadingId !== null
     use.addEventListener('click', () => useModel(entry))
   }
   actions.appendChild(use)
 
-  if (have) {
+  if (loading) {
+    const cancel = document.createElement('button')
+    cancel.type = 'button'
+    cancel.className = 'btn btn-ghost model-del'
+    cancel.textContent = 'Cancel'
+    cancel.addEventListener('click', () => state.llm?.cancelLoad())
+    actions.appendChild(cancel)
+  } else if (have) {
     const del = document.createElement('button')
     del.type = 'button'
     del.className = 'btn btn-ghost model-del'
@@ -869,6 +1022,19 @@ function buildModelCard(entry, usable) {
 
   card.appendChild(actions)
   return card
+}
+
+function buildCardProgress() {
+  const box = document.createElement('div')
+  box.className = 'card-load'
+  box.innerHTML = `
+    <div class="card-load-head">
+      <span id="card-load-text" class="load-text">Starting…</span>
+      <span id="card-load-pct" class="load-pct">0%</span>
+    </div>
+    <div class="load-bar-fill"><i id="card-load-fill"></i></div>
+  `
+  return box
 }
 
 async function useBrain() {
@@ -893,16 +1059,24 @@ async function useModel(entry, { silent = false } = {}) {
 
   const gpu = (state.gpu ??= await probeGPU())
   if (!gpu.ok) {
-    toast(gpu.reason, 'error', 7000)
+    failLoad(entry, gpu.reason)
     return
   }
 
   const have = state.downloaded.has(entry.id)
   const size = downloadSize(entry)
 
+  state.loadError = null
+  renderModels()
+
   if (!have && !silent) {
     if (!navigator.onLine) {
-      toast(`${entry.name} has not been downloaded yet, and you are offline.`, 'warn', 5000)
+      failLoad(
+        entry,
+        `**${entry.name} has not been downloaded yet, and this device is offline.** ` +
+          'The one and only time 360AI needs the internet is this first download — ' +
+          'connect to Wi-Fi and try again.',
+      )
       return
     }
     const ok = await confirmSheet({
@@ -929,8 +1103,7 @@ async function useModel(entry, { silent = false } = {}) {
       ? `Could not load the engine that runs ${entry.name}. Reload 360AI and try again.`
       : `**360AI has updated since you last used ${entry.name}.** Go online once to ` +
         'finish the update — after that the model works with no internet again.'
-    showSystemNote(`⚠️ ${why} 360 Brain is answering in the meantime.`)
-    toast('The model engine is not available offline yet.', 'error', 7000)
+    failLoad(entry, why, 'The model engine is not available offline yet.')
     return
   }
 
@@ -949,19 +1122,23 @@ async function useModel(entry, { silent = false } = {}) {
     state.downloaded.add(entry.id)
     await rememberDownloads()
 
-    if (!silent) toast(`${entry.name} is ready, and now works offline.`, 'ok', 5000)
+    if (!silent) {
+      toast(`${entry.name} is ready, and now works offline.`, 'ok', 5000)
+      // Hand the user back to the chat: the model they just chose is the thing
+      // they wanted, and leaving the picker up hides it behind a backdrop.
+      $('#models-dialog').close()
+    }
   } catch (err) {
     if (err?.name === 'LoadCancelled') {
       toast('Download cancelled. What arrived is kept, so resuming is quicker.', 'warn', 5000)
     } else {
       console.error(err)
-      const why = reason(err)
-      toast(`Could not load ${entry.name}: ${why}`, 'error', 8000)
-      showSystemNote(
-        `⚠️ **${entry.name} could not start.** ${why}\n\n` +
+      failLoad(
+        entry,
+        `**${entry.name} could not start.** ${reason(err)}\n\n` +
           'A dropped connection during the download is the usual cause. Whatever ' +
-          'arrived is kept, so trying again picks up where it stopped. ' +
-          '360 Brain is answering in the meantime.',
+          'arrived is kept, so trying again picks up where it stopped.',
+        `Could not load ${entry.name}: ${reason(err)}`,
       )
     }
     // A half-loaded model must never be left as the chosen engine.
@@ -975,6 +1152,30 @@ async function useModel(entry, { silent = false } = {}) {
     if (!state.chat.messages.length) renderMessages()
     refreshStorageInfo()
   }
+}
+
+/**
+ * Reports a load that did not happen, in whichever place the user is actually
+ * looking.
+ *
+ * The model picker is a modal dialog, so the chat behind it — where system
+ * notes go — is not readable while it is open. Every reason a download can
+ * fail to start arrives while it *is* open, which is precisely how tapping
+ * Download came to look like it did nothing. So the message goes on the card
+ * when the picker is up, and into the chat when it is not.
+ */
+function failLoad(entry, message, short) {
+  state.loadError = { id: entry.id, message }
+  const picker = $('#models-dialog')
+  if (picker.open) {
+    renderModels()
+    // Scroll the card back into view: on a phone the failed one is often well
+    // below the fold by the time the message lands.
+    picker.querySelector('.model-error')?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  } else {
+    showSystemNote(`⚠️ ${message}\n\n360 Brain is answering in the meantime.`)
+  }
+  toast(short ?? message.replace(/\*\*/g, ''), 'error', 8000)
 }
 
 async function removeModel(entry) {
@@ -1004,24 +1205,64 @@ async function removeModel(entry) {
 
 /* ------------------------------------------------------------- load bar */
 
+/**
+ * How long the download may go quiet before the app stops pretending it is
+ * fine. WebLLM reports progress per shard, and on a slow connection a shard can
+ * legitimately take a while — but a minute of a frozen bar and no explanation
+ * is indistinguishable from a broken app, which is the reading to avoid.
+ */
+const STALL_MS = 45_000
+
+const STALL_NOTE =
+  'Nothing has arrived for a while — the connection may have dropped. ' +
+  'Cancelling is safe: what already came down is kept.'
+
+let stallTimer = null
+
+function armStall() {
+  clearTimeout(stallTimer)
+  stallTimer = setTimeout(() => setLoadText(STALL_NOTE, 'stalled'), STALL_MS)
+}
+
+/** Writes one line of progress text to both copies of the bar. */
+function setLoadText(text, kind = '') {
+  for (const el of [$('#load-text'), $('#card-load-text')]) {
+    if (!el) continue
+    el.textContent = text
+    el.classList.toggle('stalled', kind === 'stalled')
+  }
+}
+
 function showLoad(title, quiet) {
   $('#load-title').textContent = title
   $('#load-pct').textContent = '0%'
   $('#load-fill').style.width = '0%'
-  $('#load-text').textContent = quiet ? 'Reading from this device…' : 'Starting…'
   $('#load-bar').hidden = false
+  setLoadText(quiet ? 'Reading from this device…' : 'Starting…')
+  armStall()
 }
 
+/**
+ * Paints progress in both places it can be seen: the bar above the composer,
+ * and — when the model picker is open on top of it — the card being downloaded.
+ */
 function updateLoad(progress, text) {
   const pct = Math.max(0, Math.min(100, Math.round((progress ?? 0) * 100)))
-  $('#load-fill').style.width = `${pct}%`
-  $('#load-pct').textContent = `${pct}%`
+  for (const [fill, label] of [
+    [$('#load-fill'), $('#load-pct')],
+    [$('#card-load-fill'), $('#card-load-pct')],
+  ]) {
+    if (fill) fill.style.width = `${pct}%`
+    if (label) label.textContent = `${pct}%`
+  }
   // MLC's own progress text names the shard and the elapsed time, which is
   // exactly the reassurance a long download needs.
-  if (text) $('#load-text').textContent = text
+  if (text) setLoadText(text)
+  armStall()
 }
 
 function hideLoad() {
+  clearTimeout(stallTimer)
   $('#load-bar').hidden = true
 }
 
@@ -1038,6 +1279,10 @@ function renderEngineLabels() {
   $('#engine-card-note').textContent = isBrain
     ? 'Built in · nothing to download'
     : `${downloadSize(entry)} · on this device`
+
+  // Whether the engine can see decides what the composer says about a picture
+  // that is already attached, so the two are kept in step.
+  if ($('#attachments')) renderAttachments()
 
   $('#disclaimer').innerHTML = renderMarkdown(
     isBrain
@@ -1302,6 +1547,43 @@ function wireEvents() {
   })
 
   input.addEventListener('input', () => autosize(input))
+
+  /* --- pictures --- */
+
+  $('#attach').addEventListener('click', () => $('#attach-file').click())
+  $('#attach-file').addEventListener('change', async (e) => {
+    await attachFiles(e.target.files ?? [])
+    // Clearing it is what lets the same picture be picked twice in a row.
+    e.target.value = ''
+  })
+
+  // Pasting a screenshot is how this gets used on a laptop, and dragging one in
+  // is how it gets used on a desktop. Both are the same path as the button.
+  input.addEventListener('paste', (e) => {
+    const files = [...(e.clipboardData?.files ?? [])].filter((f) => f.type.startsWith('image/'))
+    if (!files.length) return
+    e.preventDefault()
+    attachFiles(files)
+  })
+
+  const composer = $('#composer')
+  for (const type of ['dragover', 'dragenter']) {
+    composer.addEventListener(type, (e) => {
+      if (![...(e.dataTransfer?.types ?? [])].includes('Files')) return
+      e.preventDefault()
+      composer.classList.add('dropping')
+    })
+  }
+  for (const type of ['dragleave', 'dragend']) {
+    composer.addEventListener(type, () => composer.classList.remove('dropping'))
+  }
+  composer.addEventListener('drop', (e) => {
+    const files = [...(e.dataTransfer?.files ?? [])].filter((f) => f.type.startsWith('image/'))
+    composer.classList.remove('dropping')
+    if (!files.length) return
+    e.preventDefault()
+    attachFiles(files)
+  })
 
   messages.addEventListener('scroll', () => {
     state.autoScroll = nearBottom()
