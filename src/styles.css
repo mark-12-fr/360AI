@@ -115,6 +115,25 @@
   --r-pill: 999px;
 
   --gutter: 20px;
+
+  /**
+   * The four screen insets, as tokens.
+   *
+   * `viewport-fit=cover` plus a translucent status bar means an installed
+   * 360AI draws edge to edge, right up under the clock and the battery — and
+   * Android 15 now does this to every installed app whether it asked or not.
+   * Every edge of the chrome has to pay the corresponding inset back, and the
+   * top one was simply missing: the toolbar sat underneath the status bar,
+   * with the chat title and the engine chip behind the time.
+   *
+   * Naming them here rather than calling env() at each site keeps the four
+   * fallbacks in one place, and lets a phone layout be checked on a desktop
+   * by overriding a variable.
+   */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 }
 
 * { box-sizing: border-box; }
@@ -263,6 +282,11 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  /* The rail reaches both the top of the screen and its left edge, so it pays
+     those two insets itself — as a docked rail on a tablet in landscape, and
+     as a full-height overlay on a phone. On a desktop both are zero. */
+  padding-top: var(--safe-top);
+  padding-left: var(--safe-left);
 }
 
 .scrim {
@@ -277,7 +301,7 @@ body {
 
 .sidebar-head { padding: 14px; display: grid; gap: 10px; }
 .sidebar-foot {
-  padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+  padding: 10px 14px calc(12px + var(--safe-bottom));
   border-top: 1px solid var(--line-soft);
   display: grid;
   gap: 4px;
@@ -382,8 +406,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px max(var(--gutter), env(safe-area-inset-right)) 10px
-    max(var(--gutter), env(safe-area-inset-left));
+  padding: calc(10px + var(--safe-top)) max(var(--gutter), var(--safe-right)) 10px
+    max(var(--gutter), var(--safe-left));
   border-bottom: 1px solid var(--line-soft);
   background: color-mix(in srgb, var(--panel) 88%, transparent);
   -webkit-backdrop-filter: saturate(140%) blur(8px);
@@ -469,8 +493,8 @@ body {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: 28px max(var(--gutter), env(safe-area-inset-right)) 12px
-    max(var(--gutter), env(safe-area-inset-left));
+  padding: 28px max(var(--gutter), var(--safe-right)) 12px
+    max(var(--gutter), var(--safe-left));
   display: flex;
   flex-direction: column;
   gap: 26px;
@@ -480,7 +504,7 @@ body {
 
 .scroll-bottom {
   position: absolute;
-  right: max(18px, env(safe-area-inset-right));
+  right: max(18px, var(--safe-right));
   bottom: 16px;
   width: 36px;
   height: 36px;
@@ -802,8 +826,8 @@ body {
 .composer-wrap {
   border-top: 1px solid var(--line-soft);
   background: var(--panel);
-  padding: 14px max(var(--gutter), env(safe-area-inset-right))
-    calc(10px + env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
+  padding: 14px max(var(--gutter), var(--safe-right))
+    calc(10px + var(--safe-bottom)) max(var(--gutter), var(--safe-left));
 }
 
 .composer { max-width: var(--reading); min-width: 0; margin: 0 auto; }
@@ -1350,7 +1374,7 @@ body {
   z-index: 60;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(18px + env(safe-area-inset-bottom));
+  bottom: calc(18px + var(--safe-bottom));
   display: grid;
   gap: 8px;
   justify-items: center;
@@ -1412,7 +1436,6 @@ body {
     transform: translateX(-100%);
     transition: transform 0.22s cubic-bezier(0.3, 0.8, 0.4, 1);
     box-shadow: var(--shadow-lg);
-    padding-left: env(safe-area-inset-left);
   }
   .sidebar.open { transform: none; }
   .scrim:not([hidden]) { display: block; }
@@ -1446,15 +1469,16 @@ body {
   .dialog {
     width: 100%;
     max-width: none;
-    max-height: 92dvh;
+    /* A full-height sheet would otherwise put its title under the clock. */
+    max-height: calc(92dvh - var(--safe-top));
     margin: auto auto 0;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     border-bottom: 0;
   }
   .dialog-inner {
-    padding: 20px max(18px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom))
-      max(18px, env(safe-area-inset-left));
-    max-height: 92dvh;
+    padding: 20px max(18px, var(--safe-right)) calc(18px + var(--safe-bottom))
+      max(18px, var(--safe-left));
+    max-height: calc(92dvh - var(--safe-top));
   }
   /* A grab handle, so the sheet reads as a sheet. */
   .dialog-inner::before {
@@ -1474,14 +1498,15 @@ body {
   .model-card.builtin .model-top { flex-direction: row; align-items: center; }
 
   /* Toasts sit above the composer rather than over it. */
-  .toasts { bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .toasts { bottom: calc(84px + var(--safe-bottom)); }
 }
 
 /* Small phones (iPhone SE and below, foldables shut). */
 @media (max-width: 420px) {
   :root { --gutter: 13px; }
 
-  .topbar { gap: 6px; padding-block: 8px; }
+  /* padding-block here would reset the safe-area top the base rule pays. */
+  .topbar { gap: 6px; padding-top: calc(8px + var(--safe-top)); padding-bottom: 8px; }
   .topbar-title strong { font-size: 14px; }
   .btn { padding: 9px 12px; }
   .btn-send { width: 34px; height: 34px; }
@@ -1504,7 +1529,7 @@ body {
 /* Landscape phones and other short viewports: vertical space is the scarce
    resource, so trim the chrome rather than the conversation. */
 @media (max-height: 560px) and (min-width: 481px) {
-  .topbar { padding-block: 6px; }
+  .topbar { padding-top: calc(6px + var(--safe-top)); padding-bottom: 6px; }
   .messages { padding-top: 14px; gap: 18px; }
   .empty-state .orbit-lg { width: 40px; height: 40px; border-width: 3px; margin-bottom: 10px; }
   .empty-state .orbit-lg::after { inset: 11px; }
