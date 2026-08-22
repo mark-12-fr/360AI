@@ -2,6 +2,19 @@ import { CreateWebWorkerMLCEngine } from '@mlc-ai/web-llm'
 import { cachedVariant, pickVariant, probeGPU } from '../models.js'
 
 /**
+ * The built worker bundle's URL, re-exported so the offline warm-up can fetch
+ * the exact file the worker will ask for.
+ *
+ * `?worker&url` rather than `new URL('../llm-worker.js', import.meta.url)`:
+ * that plain form compiles the worker's *source* into an inline `data:` URL,
+ * which no service worker can cache and no network request ever reaches — so a
+ * warm-up built on it silently warmed nothing.
+ */
+import workerURL from '../llm-worker.js?worker&url'
+
+export { workerURL }
+
+/**
  * The downloaded-model backend.
  *
  * Weights are fetched once from the MLC CDN and then live in the browser's
@@ -115,7 +128,7 @@ export class WebLLMBackend {
     // Reuse the worker across model swaps — spawning one costs a fresh module
     // parse, and reload() already tears the old model off the GPU.
     try {
-      this.worker ??= new Worker(new URL('../llm-worker.js', import.meta.url), { type: 'module' })
+      this.worker ??= new Worker(workerURL, { type: 'module' })
     } catch (err) {
       throw new Error(`This browser could not start the model worker: ${err.message}`)
     }
