@@ -4,7 +4,16 @@
  * Everything here is stable — definitions, physical constants, geography,
  * anatomy, historical dates. Nothing that changes with the news belongs in this
  * file, because there is no way to update it once someone has installed the app.
+ *
+ * The reference lists are assembled from here plus the topic files beside it:
+ * formulas, the Philippines, and first aid. They are separate files because
+ * each is a sheet somebody would look up as a whole, and because a 400-line
+ * array of unrelated cards is nobody's idea of maintainable.
  */
+
+import { FIRST_AID } from './firstaid.js'
+import { FORMULAS } from './formulas.js'
+import { PHILIPPINES } from './philippines.js'
 
 /** term → definition. Keys are lowercase; the skill matches them fuzzily. */
 export const GLOSSARY = {
@@ -215,7 +224,7 @@ export const GLOSSARY = {
  * Reference lists — the answers to "what are the…" and "which is the biggest…"
  * questions. Each entry is a title plus rows, rendered as a table or list.
  */
-export const REFERENCE = [
+const CORE = [
   {
     id: 'planets',
     q: ['planets', 'solar system', 'planets in order', 'how many planets'],
@@ -386,3 +395,9 @@ export const REFERENCE = [
       'They do not happen monthly because the Moon\'s orbit is tilted about 5° from Earth\'s.',
   },
 ]
+
+/**
+ * Everything the "what are the…" lookup searches. Order matters only for ties,
+ * and the core list is first because it holds the broadest questions.
+ */
+export const REFERENCE = [...CORE, ...FORMULAS, ...PHILIPPINES, ...FIRST_AID]

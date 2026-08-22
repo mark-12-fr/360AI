@@ -1,10 +1,11 @@
 /**
- * Definitions and reference lists.
+ * Definitions, formula sheets and reference lists.
  *
  * This is the widest net in the brain: several hundred terms across science,
- * maths, computing, business, law and health, plus the "what are the…" lists.
- * When nothing matches well enough it offers the closest terms it does have,
- * which is far more useful than a bare "I don't know".
+ * maths, computing, business, law and health, plus every "what are the…" card —
+ * the formula sheets, the Philippine regions and provinces and history, and the
+ * first aid. When nothing matches well enough it offers the closest terms it
+ * does have, which is far more useful than a bare "I don't know".
  */
 
 import { GLOSSARY, REFERENCE } from '../data/reference.js'
@@ -33,12 +34,19 @@ function rankTerms(query) {
 
 export default {
   id: 'define',
-  label: 'Definitions and reference',
+  label: 'Definitions, formulas and reference',
+  // Spread deliberately across what this skill now covers: the Skills panel is
+  // the app's map of what 360 Brain knows, and four biology-and-business
+  // examples hid the formula sheets and the first aid entirely.
   examples: [
     'what is photosynthesis',
     'define compound interest',
+    'quadratic formula',
+    'volume of a cylinder',
+    'regions of the philippines',
+    'philippine history timeline',
+    'what to do when someone is choking',
     'what are the parts of speech',
-    'explain Newton\'s laws',
   ],
 
   match(ctx) {
