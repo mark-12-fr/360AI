@@ -10,7 +10,7 @@ with → Change** in the sidebar.
 ## 1. 360 Brain — nothing to download
 
 The default. A **rules engine with a knowledge base**, written in plain JavaScript
-and shipped inside the app: about 380 KB, no WebGPU, no memory floor. It works out
+and shipped inside the app: about 440 KB, no WebGPU, no memory floor. It works out
 what you are asking, computes the answer, and looks things up in the data that
 ships with it or that you teach it. When it does not know something it says so — it
 has no way to invent an answer, which is the point.
@@ -117,7 +117,7 @@ and the machine voice's monospace are both system faces.
 | **Text tools** | summarise, count, keywords, case, sort, dedupe, slugify | `summarize: <long text>` · `count words: …` |
 | **Senior high strands** | 10 strands across 4 tracks — specialised subjects, the shared core and applied subjects, where each leads | `what is the STEM strand` · `subjects in ABM` · `HUMSS leads to what course` |
 | **Philippine law** | 30 topics — the Constitution, Bill of Rights, labour, family, criminal law, procedure, by RA number or by topic | `what is RA 9262` · `13th month pay` · `my rights when arrested` · `small claims` |
-| **Code** | 18 languages x 12 tasks — Python, JavaScript, TypeScript, Java, C, C++, C#, PHP, Ruby, Go, Rust, Swift, Kotlin, Dart, SQL, Bash, HTML, CSS | `python for loop` · `how do I read a file in Java` · `show me C++ basics` |
+| **Code** | 18 languages x 18 tasks, all 324 filled — hello world, comments, variables, if/else, loops, functions, arrays, maps, classes, input, files, strings, switch/match, error handling, maths and random, dates, JSON, FizzBuzz. Python, JavaScript, TypeScript, Java, C, C++, C#, PHP, Ruby, Go, Rust, Swift, Kotlin, Dart, SQL, Bash, HTML, CSS | `python for loop` · `javascript try catch` · `go switch statement` · `java date time` · `how do I read a file in Java` |
 | **Dice and picks** | coin, dice, random pick, password generator | `flip a coin` · `roll 2d6` · `password 16` |
 
 It answers in **English**. It still understands questions written in Taglish —
@@ -222,7 +222,7 @@ src/
       courses.js     45 college programs + the shared GE core
       strands.js     10 SHS strands + the core and applied subjects
       law.js         30 Philippine law topics
-      code.js        18 languages x 12 tasks
+      code.js        18 languages x 18 tasks — 324 snippets
       reference.js   the definitions glossary, and the core reference lists
       formulas.js    area, volume, algebra, trigonometry, physics sheets
       philippines.js regions, provinces, history, symbols, emergency numbers
