@@ -42,8 +42,8 @@ export default defineConfig({
         description:
           'Your own AI, running entirely on your phone, tablet or computer. No provider, no account, no internet.',
         lang: 'en',
-        theme_color: '#0b0d12',
-        background_color: '#0b0d12',
+        theme_color: '#262624',
+        background_color: '#262624',
         display: 'standalone',
         // Android and desktop honour the first entry they understand; iOS
         // falls back to the apple-* meta tags in index.html.

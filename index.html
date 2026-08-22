@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#0a0e15" id="theme-color" />
+    <meta name="theme-color" content="#262624" id="theme-color" />
     <meta name="description" content="360AI — an AI that runs entirely on your own phone, tablet or computer. Choose a free model, download it once, then use it with no internet." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
@@ -86,16 +86,6 @@
             <strong id="chat-title" title="Click to rename" tabindex="0" role="button">New chat</strong>
             <input id="chat-title-input" class="title-input" hidden aria-label="Chat name" />
           </div>
-          <button
-            id="engine-chip"
-            type="button"
-            class="chip"
-            title="Choose which AI answers"
-            aria-haspopup="dialog"
-          >
-            <span class="chip-dot" aria-hidden="true"></span>
-            <span id="engine-chip-name">360 Brain</span>
-          </button>
           <button id="open-skills" type="button" class="btn btn-ghost btn-compact" title="What 360 Brain can do"><span class="open-skills-label">Skills</span><span aria-hidden="true" class="open-skills-icon">?</span></button>
         </header>
 
@@ -121,29 +111,44 @@
             <!-- Pictures waiting to be sent. Above the field so the thumbnail
                  sits where the message it belongs to will appear. -->
             <div id="attachments" class="attachments" hidden></div>
+            <!-- A card rather than a pill: the field on top, and everything
+                 that governs the next message on a row beneath it. -->
             <div class="composer-shell">
-              <button
-                id="attach"
-                type="button"
-                class="btn-attach"
-                aria-label="Add a picture"
-                title="Add a picture"
-              >
-                <span aria-hidden="true">🖼</span>
-              </button>
               <textarea
                 id="input"
                 class="input"
                 rows="1"
-                placeholder="Ask anything…"
+                placeholder="How can I help you today?"
                 autocomplete="off"
               ></textarea>
-              <button id="send" class="btn-send" type="submit" aria-label="Send">
-                <span aria-hidden="true">↑</span>
-              </button>
-              <button id="stop" class="btn-send btn-stop" type="button" hidden aria-label="Stop">
-                <span aria-hidden="true">■</span>
-              </button>
+              <div class="composer-tools">
+                <button
+                  id="attach"
+                  type="button"
+                  class="btn-tool"
+                  aria-label="Add a picture"
+                  title="Add a picture"
+                >
+                  <span aria-hidden="true">＋</span>
+                </button>
+                <button
+                  id="engine-chip"
+                  type="button"
+                  class="chip"
+                  title="Choose which AI answers"
+                  aria-haspopup="dialog"
+                >
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span id="engine-chip-name">360 Brain</span>
+                </button>
+                <span class="composer-gap"></span>
+                <button id="send" class="btn-send" type="submit" aria-label="Send">
+                  <span aria-hidden="true">↑</span>
+                </button>
+                <button id="stop" class="btn-send btn-stop" type="button" hidden aria-label="Stop">
+                  <span aria-hidden="true">■</span>
+                </button>
+              </div>
             </div>
             <!-- `capture` is deliberately absent: on a phone this lets the
                  picker offer the camera *and* the gallery, rather than forcing
