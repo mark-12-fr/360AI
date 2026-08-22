@@ -125,6 +125,44 @@ function loadLLMModule() {
   return llmModulePromise
 }
 
+/**
+ * Pulls the model engine into the offline cache while there is still a network
+ * to pull it from.
+ *
+ * The engine is six megabytes and is deliberately kept out of the precache, so
+ * that someone who only ever uses 360 Brain never downloads it. That leaves it
+ * in the service worker's *runtime* cache — which is only populated when the
+ * code is first requested, and only under the filename of the build that
+ * requested it.
+ *
+ * Both halves of that quietly broke the offline promise for the people it
+ * mattered most to. Someone with a model downloaded but 360 Brain answering had
+ * never fetched the engine at all, so switching to their model offline was
+ * impossible — as was removing it, which needs the same code to clear the
+ * weights. And every release renames the file, so even a user who had it cached
+ * lost it on the first launch after an update.
+ *
+ * So: if this device has a model on it and there is a connection, fetch the
+ * engine now, before anything needs it. Whoever has already waited for
+ * gigabytes will not notice six more megabytes; whoever has not is never asked
+ * for them.
+ */
+let warming = null
+function warmRuntime() {
+  if (warming || !state.downloaded.size || !navigator.onLine) return
+  warming = (async () => {
+    const { workerURL } = await loadLLMModule()
+    // The worker is a separate bundle and is never touched by importing the
+    // engine, so it has to be asked for by hand. The service worker caches it
+    // on the way past; the response itself is thrown away.
+    await fetch(workerURL)
+  })().catch(() => {
+    // Offline, or the network died mid-fetch. Nothing is lost — the next
+    // launch, or the next time the connection returns, tries again.
+    warming = null
+  })
+}
+
 /** The engine that will answer the next question. */
 function backend() {
   return state.engineId === 'brain' ? state.brain : state.llm
@@ -238,6 +276,7 @@ async function boot() {
   // the many people who will only ever use 360 Brain.
   state.downloaded = new Set(state.settings.downloaded ?? [])
   renderEngineLabels()
+  warmRuntime()
 
   // Cheap - it touches navigator.gpu and nothing else - but it decides which
   // build of every model gets quoted, so nothing on screen is right until it
@@ -1321,7 +1360,24 @@ async function removeModel(entry) {
     state.settings.engine = 'brain'
     await setSetting('engine', 'brain').catch(() => {})
   }
-  await deleteDownload(entry)
+  // Clearing the weights needs the model engine, which is not part of the app
+  // bundle. Offline, on a device that has never fetched it, that import simply
+  // rejects — and the whole removal used to stop there, without a word: the
+  // sheet closed, the model stayed, and nothing said why.
+  try {
+    await deleteDownload(entry)
+  } catch {
+    failLoad(
+      entry,
+      `**${entry.name} could not be removed.** Freeing the space needs the model ` +
+        'engine, and it is not on this device yet — which only happens offline, ' +
+        'before it has ever been fetched. Connect to the internet once and try ' +
+        'again; the model is untouched in the meantime.',
+      `Could not remove ${entry.name} — the model engine is not available offline.`,
+    )
+    return
+  }
+
   state.downloaded.delete(entry.id)
   await rememberDownloads()
   renderEngineLabels()
@@ -1835,7 +1891,12 @@ function wireEvents() {
     if (state.settings.theme === 'system') applyTheme('system')
   })
 
-  window.addEventListener('online', updateNetStatus)
+  window.addEventListener('online', () => {
+    updateNetStatus()
+    // The one moment a device that has been offline can catch up on the engine
+    // it will need the *next* time it is offline.
+    warmRuntime()
+  })
   window.addEventListener('offline', updateNetStatus)
 
   let installPrompt = null

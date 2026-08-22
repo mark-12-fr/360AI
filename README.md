@@ -66,8 +66,12 @@ One picture per message: Phi-3.5 Vision runs with a 4096-token window, and a sin
 embedded image already fills most of it.
 
 The WebLLM runtime is six megabytes of JavaScript and is **not** part of the app
-bundle or its offline precache — it is fetched the first time you choose a model,
-so anyone who only ever uses 360 Brain never pays for it.
+bundle or its offline precache — so anyone who only ever uses 360 Brain never pays
+for it. Once a model *is* on the device, the app fetches the runtime and the worker
+into the service worker's cache at launch, while there is still a connection: that
+code is what starts a model, removes one, or checks what is downloaded, and without
+it those all failed with the network off — for exactly the people the offline
+promise is for.
 
 ## Which to use
 
