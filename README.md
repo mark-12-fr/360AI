@@ -169,6 +169,20 @@ keeps working. Storage matters too — the browser can evict a cached model when
 device runs short of space, so 360AI checks on every launch and falls back to the
 brain rather than silently re-downloading gigabytes.
 
+**On iPhone and iPad, memory is the real limit, not the GPU.** Safari gives one page
+a fixed budget and kills the whole web-content process the moment it is passed — no
+error, no exception, the page simply closes. So iOS gets its own, much lower ceiling
+in the picker: only the smallest models are offered without a warning, and the rest
+say plainly that they will close the app rather than refuse.
+
+And because a killed process cannot run any cleanup, 360AI marks the two spans that
+can kill it — loading a model, and generating with one — in `localStorage` before
+they start. A mark still standing at the next launch means the tab did not survive.
+Twice in a row with the same model and it stops being restored automatically, which
+is what keeps one crash from becoming a page that can never be opened again. A
+completed answer clears the record, so a backgrounded tab is not mistaken for a
+crash.
+
 Install it as an app:
 
 - **iPhone / iPad** — Share → **Add to Home Screen**
@@ -199,6 +213,7 @@ src/
   llm-worker.js    hosts the model off the main thread, so the UI stays live
   models.js        the catalogue, the WebGPU probe, and the download cache
   images.js        scaling an attached picture, and what to say about one
+  survival.js      did the last session end on its own terms, or was it killed
   db.js            IndexedDB: chats, settings, and the facts you teach
   ui.js            markdown, message bubbles, toasts, confirm sheets
 ```
