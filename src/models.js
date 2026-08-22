@@ -176,6 +176,32 @@ export const MODELS = [
     f32: { model: 'Qwen3-4B-q4f32_1-MLC', ramMB: 4328 },
   },
   {
+    id: 'phi35-vision',
+    name: 'Phi-3.5 Vision',
+    family: 'Microsoft',
+    tag: 'Can see pictures',
+    tier: 'laptop',
+    vision: true,
+    /**
+     * The one vision-language model WebLLM ships, and the only way a picture
+     * gets genuinely read on this device.
+     *
+     * Its download figure is an estimate rather than a measurement — MLC
+     * publishes the memory the build needs but not the bytes on the wire, and
+     * the app cannot find out without fetching the thing. `approxDownload`
+     * makes the picker say so instead of quoting a number it cannot stand
+     * behind.
+     */
+    approxDownload: true,
+    blurb:
+      'The only model here that can look at a picture. Send it a photo, a receipt, ' +
+      'a whiteboard or a page of homework and ask what is in it.',
+    strengths: ['Pictures', 'Reading text in photos', 'Chat'],
+    downloadMB: 2400,
+    f16: { model: 'Phi-3.5-vision-instruct-q4f16_1-MLC', ramMB: 3952 },
+    f32: { model: 'Phi-3.5-vision-instruct-q4f32_1-MLC', ramMB: 5880 },
+  },
+  {
     id: 'llama31-8b',
     name: 'Llama 3.1 — 8B',
     family: 'Meta',
@@ -264,9 +290,18 @@ export function fmtSize(mb) {
   return mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`
 }
 
-/** The size to put in front of someone deciding whether to download. */
+/**
+ * The size to put in front of someone deciding whether to download. Sizes we
+ * have not measured are marked, because on mobile data the difference between
+ * "2.3 GB" and "about 2.3 GB" is the difference between a figure and a promise.
+ */
 export function downloadSize(entry) {
-  return fmtSize(entry.downloadMB)
+  return `${entry.approxDownload ? '≈' : ''}${fmtSize(entry.downloadMB)}`
+}
+
+/** The model on this device that can read a picture, if any is downloaded. */
+export function visionModel(downloaded) {
+  return MODELS.find((m) => m.vision && downloaded?.has(m.id)) ?? null
 }
 
 /**

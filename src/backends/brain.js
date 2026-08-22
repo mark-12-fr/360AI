@@ -8,6 +8,7 @@
  */
 
 import { answer } from '../brain/index.js'
+import { describePictures } from '../images.js'
 
 /**
  * Typing pace. The brain answers in under a millisecond, so this is purely
@@ -52,6 +53,15 @@ export class BrainBackend {
     const last = [...messages].reverse().find((m) => m.role === 'user')
     const started = performance.now()
 
+    // A picture is not a question this engine can parse, and inventing a
+    // description of one would be the exact failure the app exists to avoid.
+    // It says what it can establish — the file, and any code it can decode —
+    // and points at the model that can do the rest.
+    if (last?.images?.length) {
+      yield* this.#type(await describePictures(last.images, last.content), started, 'picture')
+      return
+    }
+
     const result = answer(last?.content ?? '', {
       memory: this.memory,
       context: this.context,
@@ -75,8 +85,12 @@ export class BrainBackend {
       }
     }
 
+    yield* this.#type(result.text ?? '', started, result.skill)
+  }
+
+  /** Types `text` out at reading speed, then closes with the turn's stats. */
+  async *#type(text, started, skill) {
     const elapsed = performance.now() - started
-    const text = result.text ?? ''
 
     const chunk = chunkFor(text.length)
     for (let i = 0; i < text.length; i += chunk) {
@@ -101,9 +115,9 @@ export class BrainBackend {
       done: true,
       stats: {
         ms: elapsed,
-        skill: result.skill,
+        skill,
         verbosity: this.context.verbosity,
-        note: `${elapsed < 1 ? '<1' : elapsed.toFixed(0)} ms · ${result.skill}`,
+        note: `${elapsed < 1 ? '<1' : elapsed.toFixed(0)} ms · ${skill}`,
       },
     }
   }

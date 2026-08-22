@@ -621,6 +621,20 @@ body {
   from { opacity: 0; transform: translateY(4px); }
 }
 
+/**
+ * A picture in the thread. Capped by height rather than width so a tall photo
+ * and a wide one take comparable room, and a screenshot stays legible without
+ * pushing the answer off the screen.
+ */
+.msg-media { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.msg-image {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
 /* Long URLs and unbroken code-ish tokens would otherwise push the page
    sideways on a phone. */
 .msg-body { overflow-wrap: anywhere; }
@@ -883,6 +897,102 @@ body {
 .input::placeholder { color: var(--fg-faint); }
 .input:disabled { opacity: 0.55; }
 
+/**
+ * Attach. Square-ish and quiet next to the send button, because sending is the
+ * primary action and adding a picture is the occasional one — but still a full
+ * 36px, which is the smallest a thumb reliably hits.
+ */
+.btn-attach {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  margin-left: 2px;
+  border-radius: 50%;
+  border: 0;
+  background: none;
+  color: var(--fg-dim);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-attach:hover { background: var(--panel-3); color: var(--fg); }
+.btn-attach.on { color: var(--orbit-lit); background: var(--panel-3); }
+.btn-attach:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------------------------------------------------------- attachments */
+
+.attachments {
+  max-width: var(--reading);
+  margin: 0 auto 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.attachment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.attachment img {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  background: var(--panel-3);
+}
+.attachment-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--fg-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.attachment-del {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--fg-faint);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.attachment-del:hover { color: var(--danger); background: var(--panel-3); }
+
+/* Said before the message is sent, not after: a picture answered by a model
+   that never saw it is the confusing outcome this line exists to prevent. */
+.attachment-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--fg-dim);
+}
+.attachment-note p { margin: 0; flex: 1; min-width: 180px; }
+.attachment-note strong { color: var(--amber); font-weight: 600; }
+
+.composer.dropping .composer-shell {
+  border-color: var(--orbit);
+  background: color-mix(in srgb, var(--orbit) 8%, var(--ink));
+}
+
 /* A round button the size of a thumb, so the primary action is unmissable. */
 .btn-send {
   flex: none;
@@ -952,6 +1062,22 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* A download that has gone quiet says so, and needs room to say it. */
+.load-text.stalled {
+  color: var(--amber);
+  white-space: normal;
+  line-height: 1.45;
+}
+
+/**
+ * The same bar again, on the card being downloaded.
+ *
+ * The picker is a modal dialog and the bar above the composer is behind its
+ * backdrop, so without this a download started from here showed nothing at all.
+ */
+.card-load { display: grid; gap: 7px; margin-top: 2px; }
+.card-load-head { display: flex; align-items: baseline; gap: 10px; }
+.card-load-head .load-text { flex: 1; min-width: 0; }
 
 /* ----------------------------------------------------------------- dialogs */
 
@@ -1321,6 +1447,27 @@ body {
 
 .model-warn { margin: 0; font-size: 11.5px; line-height: 1.5; color: var(--amber); }
 
+/**
+ * Why the last attempt failed, on the card that failed.
+ *
+ * This is the only place the reason can be read while the picker is open — the
+ * chat behind it is under a modal backdrop — so it is styled to be found, not
+ * to be tidy.
+ */
+.model-error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--fg-dim);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line));
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+}
+.model-error p { margin: 0 0 6px; }
+.model-error p:last-child { margin-bottom: 0; }
+.model-error strong { color: var(--fg); }
+
 .model-actions { display: flex; gap: 8px; align-items: center; }
 .model-actions .btn { flex: 1; text-align: center; }
 .model-del { flex: 0 0 auto; color: var(--fg-faint); }
@@ -1384,17 +1531,45 @@ body {
 /* ----------------------------------------------------------------- toasts */
 
 .toasts {
+  /* Held in a variable because the popover rule below has to restate the
+     position, and the phone layout moves it. One place to change it. */
+  --toast-bottom: calc(18px + var(--safe-bottom));
   position: fixed;
   z-index: 60;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(18px + var(--safe-bottom));
+  bottom: var(--toast-bottom);
   display: grid;
   gap: 8px;
   justify-items: center;
   width: min(440px, calc(100vw - 24px));
   pointer-events: none;
 }
+
+/**
+ * The toast layer is a popover, so it can sit in the top layer alongside a
+ * modal dialog rather than behind it — see `raiseToasts()` in ui.js.
+ *
+ * That means unpicking the geometry the UA gives every popover: `inset: 0` and
+ * `margin: auto` between them stretch it across the viewport and strand it in
+ * the middle. The position has to be restated rather than merely reset, because
+ * this selector outranks `.toasts` and would otherwise win the `inset` it just
+ * cleared.
+ */
+.toasts[popover] {
+  inset: auto;
+  left: 50%;
+  bottom: var(--toast-bottom);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: visible;
+}
+/* Its own rule: a browser that does not know `:popover-open` drops this and
+   keeps the plain fixed layer above, which is exactly the fallback we want. */
+.toasts[popover]:not(:popover-open) { display: none; }
 .toast {
   pointer-events: auto;
   max-width: 100%;
@@ -1511,8 +1686,13 @@ body {
   .model-pills { justify-content: flex-start; }
   .model-card.builtin .model-top { flex-direction: row; align-items: center; }
 
-  /* Toasts sit above the composer rather than over it. */
-  .toasts { bottom: calc(84px + var(--safe-bottom)); }
+  /* Toasts sit above the composer rather than over it. Moving the variable
+     rather than `bottom` keeps the popover copy of the rule in step. */
+  .toasts { --toast-bottom: calc(84px + var(--safe-bottom)); }
+
+  /* Two lines of explanation and a button do not share a phone's width. */
+  .attachment-note { flex-direction: column; align-items: stretch; }
+  .attachment-note .btn { text-align: center; }
 }
 
 /* Small phones (iPhone SE and below, foldables shut). */

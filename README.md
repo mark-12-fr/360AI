@@ -18,7 +18,7 @@ has no way to invent an answer, which is the point.
 ## 2. A free language model — downloaded once
 
 For everything a rules engine cannot do — writing, explaining, open conversation —
-pick one of eight free, openly licensed models. It downloads **once** over Wi-Fi,
+pick one of nine free, openly licensed models. It downloads **once** over Wi-Fi,
 straight from the MLC CDN, and then lives in your browser's Cache Storage on that
 device. From then on it runs on your own GPU through WebGPU, offline, and nothing
 you type ever leaves the machine. The picker groups them by what your device can
@@ -33,12 +33,37 @@ actually run and shows the real download size for each:
 | Gemma 2 — 2B | 1.4 GB | writing and explaining |
 | Llama 3.2 — 3B | 1.7 GB | the balanced choice on a computer |
 | **Qwen 3 — 4B** | **2.1 GB** | **the desktop pick — reasoning and code** |
+| Phi-3.5 Vision | ≈2.3 GB | **pictures** — the only one here that can see |
 | Llama 3.1 — 8B | 4.2 GB | the most capable that fits in a browser |
 
-Sizes are the real repository figures. The memory a model needs to *run* is larger
-than its download and differs between the half- and full-precision builds; 360AI
-probes the GPU, picks the build it can actually use, and warns you when a model
-looks too big for the device rather than failing halfway through.
+Sizes are the real repository figures, except where they are marked `≈`: MLC
+publishes the memory a build needs but not always its download, and the app says
+so rather than quoting a number it cannot stand behind. The memory a model needs
+to *run* is larger than its download and differs between the half- and
+full-precision builds; 360AI probes the GPU, picks the build it can actually use,
+and warns you when a model looks too big for the device rather than failing
+halfway through.
+
+## 3. Pictures
+
+The 🖼 button on the composer attaches a photo — from the camera or the gallery on
+a phone, by paste or drag on a computer. It is scaled to 1024 px and stored with
+the chat in IndexedDB, like everything else here: nothing is uploaded.
+
+What happens next depends on what is answering, and 360AI says which **before** you
+send, not after:
+
+- **Phi-3.5 Vision** reads the picture and answers about it — what is in it, what
+  the text in it says. It is the one model in the catalogue with an image encoder.
+- **360 Brain** cannot see, and says so instead of guessing. It reports what it can
+  establish — the file, its size, its dimensions — and reads any **QR code or
+  barcode** in the picture where the browser supports it, which covers Chrome on
+  Android.
+- **Any other downloaded model** is told a picture was attached that it cannot see,
+  so it answers the question rather than inventing a description.
+
+One picture per message: Phi-3.5 Vision runs with a 4096-token window, and a single
+embedded image already fills most of it.
 
 The WebLLM runtime is six megabytes of JavaScript and is **not** part of the app
 bundle or its offline precache — it is fetched the first time you choose a model,
@@ -54,6 +79,7 @@ so anyone who only ever uses 360 Brain never pays for it.
 | Knows the whole world | no — see below | mostly |
 | Makes things up | **never** | sometimes |
 | Writes an essay for you | no | **yes** |
+| Reads a picture | QR codes only | **yes, on Phi-3.5 Vision** |
 
 Both are offline. Neither sends anything anywhere.
 
@@ -172,6 +198,7 @@ src/
     webllm.js      the downloaded-model backend: load, stream, cancel
   llm-worker.js    hosts the model off the main thread, so the UI stays live
   models.js        the catalogue, the WebGPU probe, and the download cache
+  images.js        scaling an attached picture, and what to say about one
   db.js            IndexedDB: chats, settings, and the facts you teach
   ui.js            markdown, message bubbles, toasts, confirm sheets
 ```

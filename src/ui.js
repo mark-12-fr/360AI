@@ -87,6 +87,12 @@ export function createBubble(role) {
   thinkBody.className = 'thinking-body'
   think.append(summary, thinkBody)
 
+  // Pictures sit above the text, the way they do in the composer that sent
+  // them, so a message reads in the order it was assembled.
+  const media = document.createElement('div')
+  media.className = 'msg-media'
+  media.hidden = true
+
   const body = document.createElement('div')
   body.className = 'msg-body'
 
@@ -98,8 +104,29 @@ export function createBubble(role) {
   actions.className = 'msg-actions'
 
   head.append(who, meta)
-  el.append(head, think, body, actions)
-  return { el, body, think, thinkBody, meta, actions }
+  el.append(head, think, media, body, actions)
+  return { el, body, think, thinkBody, media, meta, actions }
+}
+
+/**
+ * Hangs the attached pictures in a message.
+ *
+ * `alt` is the filename rather than a description: the app has no idea what is
+ * in the picture, and a screen reader is better served by "receipt.jpg" than by
+ * an invented caption.
+ */
+export function renderAttachedImages(host, images) {
+  host.innerHTML = ''
+  host.hidden = !images?.length
+  for (const img of images ?? []) {
+    const fig = document.createElement('img')
+    fig.className = 'msg-image'
+    fig.src = img.url
+    fig.alt = img.name ?? 'Attached picture'
+    fig.title = `${img.name} · ${img.w} × ${img.h}`
+    fig.loading = 'lazy'
+    host.appendChild(fig)
+  }
 }
 
 /**
@@ -160,6 +187,45 @@ export function fmtBytes(bytes) {
 
 /* ------------------------------------------------------------------ toasts */
 
+const POPOVER_SUPPORTED =
+  typeof HTMLElement !== 'undefined' && 'showPopover' in HTMLElement.prototype
+
+/**
+ * Puts the toast layer in the top layer, above any modal dialog.
+ *
+ * This is not cosmetic. A modal `<dialog>` renders in the top layer, which
+ * beats every z-index on the page — so a toast raised while the model picker
+ * was open was painted *behind* the picker's own backdrop and never seen. Every
+ * reason a download can fail to start ("this browser has no WebGPU", "you are
+ * offline", "could not load X") was announced that way, from inside that
+ * dialog, which is why tapping Download could look like it did nothing at all.
+ *
+ * Popovers shown after a modal dialog stack above it, so this is the fix. Where
+ * the API is missing the attribute is inert and the layer renders as it always
+ * did — worse than this, but no worse than before.
+ */
+function raiseToasts(host) {
+  if (!POPOVER_SUPPORTED || !host.hasAttribute('popover')) return
+  if (host.matches(':popover-open')) return
+  try {
+    host.showPopover()
+  } catch {
+    // A toast nobody can see is worse than an unstyled one: drop back to the
+    // plain fixed layer rather than leaving the host hidden.
+    host.removeAttribute('popover')
+  }
+}
+
+function lowerToasts(host) {
+  if (!POPOVER_SUPPORTED || !host.hasAttribute('popover')) return
+  if (host.childElementCount) return
+  try {
+    host.hidePopover()
+  } catch {
+    // Already hidden. Nothing to undo.
+  }
+}
+
 /**
  * A short, non-blocking message.
  *
@@ -171,6 +237,7 @@ export function fmtBytes(bytes) {
 export function toast(message, kind = 'info', ms = 3600) {
   const host = document.getElementById('toasts')
   if (!host) return null
+  raiseToasts(host)
 
   const el = document.createElement('div')
   el.className = `toast toast-${kind}`
@@ -178,12 +245,16 @@ export function toast(message, kind = 'info', ms = 3600) {
   el.textContent = message
   host.appendChild(el)
 
+  const drop = () => {
+    el.remove()
+    lowerToasts(host)
+  }
   const close = () => {
     el.classList.add('leaving')
-    el.addEventListener('animationend', () => el.remove(), { once: true })
+    el.addEventListener('animationend', drop, { once: true })
     // A toast whose animation never fires (reduced motion, a background tab)
     // would otherwise sit there forever.
-    setTimeout(() => el.remove(), 400)
+    setTimeout(drop, 400)
   }
   el.addEventListener('click', close)
   const timer = setTimeout(close, ms)
@@ -212,6 +283,12 @@ ${body ?? ''}`))
   const go = dialog.querySelector('#confirm-go')
   go.textContent = confirmLabel
   go.className = `btn ${danger ? 'btn-danger' : 'btn-primary'}`
+
+  // `returnValue` survives a close, and Escape does not overwrite it — so
+  // without this, dismissing the sheet after any earlier confirmation would
+  // read back as another "yes" and start a multi-gigabyte download nobody
+  // agreed to.
+  dialog.returnValue = ''
 
   return new Promise((resolve) => {
     dialog.addEventListener('close', () => resolve(dialog.returnValue === 'go'), { once: true })
