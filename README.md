@@ -87,6 +87,18 @@ promise is for.
 
 Both are offline. Neither sends anything anywhere.
 
+## How it looks
+
+Warm near-black, or a paper cream in light — the theme follows the system unless
+you choose one in Settings. One terracotta accent, spent on a single thing per
+screen. The empty page opens with a greeting rather than a logotype, the composer
+carries the engine selector beside the field it governs, and the full list of what
+360 Brain answers lives in **Skills** rather than being reprinted every time you
+open the app.
+
+No web fonts: the app has to open with the network off, so the greeting's serif
+and the machine voice's monospace are both system faces.
+
 ## What 360 Brain knows
 
 | Area | Coverage | Ask it |

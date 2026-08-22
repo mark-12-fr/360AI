@@ -465,6 +465,20 @@ function renderMessages() {
  * tells you what this engine can actually do before you spend a question
  * finding out, and the two engines can do very different things.
  */
+/**
+ * A greeting rather than a headline.
+ *
+ * The boundaries are the ordinary ones a person would use, read from the
+ * device's own clock — which is the only clock this app has, and the right one:
+ * it is running on that device, for whoever is holding it.
+ */
+function timeOfDay(now = new Date()) {
+  const h = now.getHours()
+  if (h < 12) return 'Good morning'
+  if (h < 18) return 'Good afternoon'
+  return 'Good evening'
+}
+
 function buildEmptyState() {
   const entry = activeEntry()
   const isBrain = state.engineId === 'brain'
@@ -472,12 +486,19 @@ function buildEmptyState() {
   const wrap = document.createElement('div')
   wrap.className = 'empty-state'
 
-  const mark = document.createElement('div')
+  // The mark and the greeting on one line, the way a person is greeted rather
+  // than a product announced. The app's name is in the sidebar and the tab; it
+  // does not need saying again to someone who already opened it.
+  const hello = document.createElement('div')
+  hello.className = 'greeting'
+
+  const mark = document.createElement('span')
   mark.className = 'orbit orbit-lg'
   mark.setAttribute('aria-hidden', 'true')
 
   const h = document.createElement('h1')
-  h.textContent = '360AI'
+  h.textContent = timeOfDay()
+  hello.append(mark, h)
 
   const p = document.createElement('p')
   p.textContent = isBrain
@@ -486,37 +507,50 @@ function buildEmptyState() {
     : `${entry.name} is running on this device. It was downloaded once and now answers ` +
       'with no internet, no account and nothing leaving your phone.'
 
-  wrap.append(mark, h, p)
+  wrap.append(hello, p)
 
+  /**
+   * A handful of examples, not a wall of them.
+   *
+   * The full map of what 360 Brain answers lives in **Skills**, which is one
+   * tap away and built for exactly that. Reprinting it on every empty screen
+   * pushed the greeting off a phone entirely and made opening the app feel
+   * like reading a menu — so this takes the first example from each group,
+   * which still shows the breadth, and points at the rest.
+   */
   const groups = document.createElement('div')
-  groups.className = 'suggestion-groups'
+  groups.className = 'suggestions'
 
   const suggestions = isBrain
     ? BRAIN_SUGGESTIONS
     : [...(entry.vision ? VISION_SUGGESTIONS : []), ...MODEL_SUGGESTIONS]
 
-  for (const [heading, examples] of suggestions) {
-    const group = document.createElement('section')
-    group.className = 'suggestion-group'
+  for (const [, examples] of suggestions) {
+    const example = examples[0]
+    const chip = document.createElement('button')
+    chip.type = 'button'
+    chip.className = 'suggestion'
+    chip.textContent = example
+    chip.addEventListener('click', () => {
+      const input = $('#input')
+      input.value = example
+      autosize(input)
+      input.focus()
+    })
+    groups.appendChild(chip)
+  }
 
-    const title = document.createElement('h2')
-    title.textContent = heading
-    group.appendChild(title)
-
-    for (const example of examples) {
-      const chip = document.createElement('button')
-      chip.type = 'button'
-      chip.className = 'suggestion'
-      chip.textContent = example
-      chip.addEventListener('click', () => {
-        const input = $('#input')
-        input.value = example
-        autosize(input)
-        input.focus()
-      })
-      group.appendChild(chip)
-    }
-    groups.appendChild(group)
+  if (isBrain) {
+    const more = document.createElement('button')
+    more.type = 'button'
+    more.className = 'suggestion suggestion-more'
+    more.textContent = 'Everything it can do →'
+    more.addEventListener('click', () => {
+      renderSkillList()
+      renderFactList()
+      $('#skills-dialog').showModal()
+    })
+    groups.appendChild(more)
   }
 
   wrap.appendChild(groups)
@@ -1592,7 +1626,7 @@ function applyTheme(theme) {
   const dark =
     theme === 'dark' ||
     (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-  $('#theme-color').content = dark ? '#0a0e15' : '#ffffff'
+  $('#theme-color').content = dark ? '#262624' : '#faf9f5'
 }
 
 async function refreshStorageInfo() {
@@ -1692,8 +1726,8 @@ const narrow = matchMedia('(max-width: 760px)')
  */
 function applyComposerPlaceholder() {
   $('#input').placeholder = narrow.matches
-    ? 'Ask anything…'
-    : 'Ask anything…  (Enter to send, Shift+Enter for a new line)'
+    ? 'How can I help you today?'
+    : 'How can I help you today?  (Enter to send, Shift+Enter for a new line)'
 }
 
 function wireEvents() {
