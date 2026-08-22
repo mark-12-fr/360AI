@@ -305,7 +305,22 @@ export function visionModel(downloaded) {
 }
 
 /**
- * A guess at whether this will run, deliberately generous.
+ * The most memory a model may want before this device is warned about it.
+ *
+ * iOS is its own number, and a much smaller one, because the failure there is
+ * categorically worse. Safari gives one page a fixed memory budget and kills
+ * the web-content process outright when it is passed — no exception, no error,
+ * the page is simply gone. Everywhere else an oversized model fails with a
+ * message you can read and act on.
+ *
+ * 1 GB is drawn to admit SmolLM2 in both builds and Llama 3.2 1B on an iPhone
+ * whose GPU has `shader-f16`, and to keep everything heavier behind a warning.
+ */
+const CEILING_MB = { ios: 1000, mobile: 2600 }
+
+/**
+ * A guess at whether this will run, deliberately generous — except on iOS,
+ * where being wrong optimistically costs the whole page rather than a message.
  *
  * WebGPU never reports true VRAM, so the storage-binding limit is the only
  * signal there is — and it caps one buffer rather than the total, which is why
@@ -314,13 +329,21 @@ export function visionModel(downloaded) {
  */
 export function fitsDevice(entry, gpu, device) {
   const mb = ramFor(entry, gpu)
-  if (device?.mobile && mb > 2600) return false
+  if (device?.ios && mb > CEILING_MB.ios) return false
+  if (device?.mobile && mb > CEILING_MB.mobile) return false
   if (!gpu?.maxStorageBindingMB) return true
   return mb <= gpu.maxStorageBindingMB * 4
 }
 
-/** The model a first-time visitor should probably take, given the device. */
+/**
+ * The model a first-time visitor should probably take, given the device.
+ *
+ * iPhones and iPads get the smallest one there is. Not because they are slow —
+ * they are not — but because Safari's per-page memory budget is the binding
+ * constraint, and the cost of guessing high there is the app closing itself.
+ */
 export function suggestFor(device) {
+  if (device?.ios) return findModel('smollm2-360m')
   return findModel(device?.mobile ? 'llama32-1b' : 'qwen3-4b')
 }
 

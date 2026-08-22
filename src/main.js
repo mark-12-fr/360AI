@@ -7,6 +7,10 @@ import {
   listDownloaded, probeGPU, ramFor, suggestFor, visionModel,
 } from './models.js'
 import { MAX_IMAGES, prepareImage } from './images.js'
+import {
+  STRIKE_LIMIT, beginRisk, clearStrikes, deathKind, endRisk, isUnsafe, strikesFor,
+  takeUncleanExit,
+} from './survival.js'
 
 import {
   DEFAULT_SETTINGS, clearFacts, createChat, deleteChat, deleteFact, deriveTitle, exportAll,
@@ -71,6 +75,8 @@ const state = {
   loadingId: null,
   /** `{ id, message }` for the last failed load, shown on that model's card. */
   loadError: null,
+  /** `{ kind, model, strikes }` when the previous session was killed, else null. */
+  died: null,
   gpu: null,
   downloaded: new Set(),
   storageBlocked: false,
@@ -185,6 +191,12 @@ function withTimeout(promise, ms, message) {
  * wrong failure for an app whose whole promise is that it works everywhere.
  */
 async function boot() {
+  // First thing, before anything can start a risky span of its own: did the
+  // last session die mid-load or mid-answer? On iOS that is how a model too
+  // big for the device ends — the process is killed outright — and restoring
+  // that model now would just do it again.
+  state.died = takeUncleanExit()
+
   state.settings = { ...DEFAULT_SETTINGS }
   state.brain = new BrainBackend(createMemory())
   state.chat = createChat()
@@ -261,7 +273,54 @@ async function restoreChosenModel() {
     renderEngineLabels()
     return
   }
+
+  // The whole point of the survival record: a model that has taken this tab
+  // down twice is not loaded again on its own. Restoring it here is what turned
+  // one crash into a page that could never be opened at all.
+  if (isUnsafe(entry.id)) {
+    showSystemNote(unsafeNote(entry))
+    state.settings.engine = 'brain'
+    await setSetting('engine', 'brain')
+    renderEngineLabels()
+    return
+  }
+
   await useModel(entry, { silent: true })
+}
+
+/**
+ * The explanation for a model this device cannot actually run.
+ *
+ * It has to say what happened, because from the outside a killed tab looks
+ * like the app breaking rather than the model being too big — and it has to
+ * name the way out, because the model is still sitting there taking up space
+ * and will be picked again otherwise.
+ */
+function unsafeNote(entry) {
+  const smaller = smallerThan(entry)
+  return (
+    `⚠️ **${entry.name} is too big for this device.** Loading it ran the browser ` +
+    'out of memory and closed the page — twice — so 360 Brain is answering instead ' +
+    'and that model will not be loaded again on its own.\n\n' +
+    'This is a limit of the browser, not a fault you can clear: it hands one page ' +
+    'a fixed amount of memory and stops the page dead when it is passed. ' +
+    (smaller
+      ? `Open **Choose your AI**, remove it to free the space, and try **${smaller.name}** ` +
+        `(${downloadSize(smaller)}) instead — it needs about ` +
+        `${fmtSize(ramFor(smaller, state.gpu))} to run.`
+      : 'Open **Choose your AI** and remove it to free the space. 360 Brain needs no ' +
+        'memory at all and answers everything it knows instantly.')
+  )
+}
+
+/** The largest model that is meaningfully lighter than `entry`, if any. */
+function smallerThan(entry) {
+  const ceiling = ramFor(entry, state.gpu)
+  return (
+    [...MODELS]
+      .filter((m) => m.id !== entry.id && ramFor(m, state.gpu) < ceiling * 0.6)
+      .sort((a, b) => ramFor(b, state.gpu) - ramFor(a, state.gpu))[0] ?? null
+  )
 }
 
 /* --------------------------------------------------------------- chat io */
@@ -632,6 +691,12 @@ async function runCompletion() {
     scrollToBottom()
   }
 
+  // Generating is the other span that can take the process down: the weights
+  // are already resident and the KV cache grows on top of them, so a model that
+  // loaded comfortably can still die on the first long answer.
+  const risky = state.engineId !== 'brain'
+  if (risky) beginRisk('answer', state.engineId)
+
   try {
     const stream = backend().stream(payload, { verbosity: state.settings.replyLength })
     for await (const chunk of stream) {
@@ -648,6 +713,13 @@ async function runCompletion() {
     }
   } catch (err) {
     raw += `\n\n**⚠️ Error:** ${reason(err)}`
+  } finally {
+    if (risky) {
+      endRisk()
+      // An answer that arrived in full is proof this model runs here, so any
+      // earlier suspicion — a backgrounded tab counted as a crash — is dropped.
+      clearStrikes(state.engineId)
+    }
   }
 
   paint()
@@ -836,10 +908,22 @@ function renderDeviceNote() {
   const bits = []
   if (gpu?.description || gpu?.vendor) bits.push(gpu.description || gpu.vendor)
   bits.push(gpu?.f16 ? 'half-precision supported' : 'full-precision builds')
-  note.className = 'device-note'
+
+  // The one platform where the memory limit has to be said before anything is
+  // chosen, rather than warned about per card: on iOS the penalty for picking
+  // wrong is the page closing, and someone scrolling a list of nine models
+  // should know that before the first tap.
+  const ios = state.device.ios
+    ? ' **Safari hands one page a limited amount of memory and closes it when that ' +
+      'is passed**, so only the smallest models here run on an iPhone or iPad — the ' +
+      'rest are marked.'
+    : ''
+
+  note.className = state.device.ios ? 'device-note warn' : 'device-note'
   note.innerHTML = renderMarkdown(
     `Detected **${state.device.name}** — ${bits.join(' · ')}. ` +
-      'The first download needs Wi-Fi; everything after that is offline.',
+      'The first download needs Wi-Fi; everything after that is offline.' +
+      ios,
   )
 }
 
@@ -949,18 +1033,38 @@ function buildModelCard(entry, usable) {
       .join('')}</div>
   `
 
+  const strikes = strikesFor(entry.id)
+
   if (!usable) {
     const why = document.createElement('p')
     why.className = 'model-warn'
     why.textContent = 'Needs WebGPU, which this browser does not have.'
     card.appendChild(why)
+  } else if (strikes >= STRIKE_LIMIT) {
+    // Said in the past tense and without hedging, because this is not a
+    // prediction from a specification — it is what already happened here.
+    const why = document.createElement('p')
+    why.className = 'model-error'
+    why.innerHTML = renderMarkdown(
+      `**This model closed the page on this device.** It ran the browser out of ` +
+        `memory while ${deathKind(entry.id) === 'answer' ? 'answering' : 'loading'}, ` +
+        `${strikes} times. Removing it frees ${size}; something smaller, or 360 Brain, ` +
+        'will work where this cannot.',
+    )
+    card.appendChild(why)
   } else if (!fits) {
     const why = document.createElement('p')
     why.className = 'model-warn'
     const needs = fmtSize(ramFor(entry, state.gpu))
-    why.textContent = state.device.mobile
-      ? `Needs about ${needs} of memory, which is probably more than this phone has. You can still try it.`
-      : `Needs about ${needs} of memory, which may be more than this GPU can hold. You can still try it.`
+    // iOS gets its own sentence because its failure mode is different in kind:
+    // the page is killed rather than told, so "you can still try it" would be
+    // inviting someone to close their own app without saying so.
+    why.textContent = state.device.ios
+      ? `Needs about ${needs} of memory, more than Safari gives one page. It will very ` +
+        'likely close 360AI while loading rather than refuse.'
+      : state.device.mobile
+        ? `Needs about ${needs} of memory, which is probably more than this phone has. You can still try it.`
+        : `Needs about ${needs} of memory, which may be more than this GPU can hold. You can still try it.`
     card.appendChild(why)
   }
 
@@ -1069,6 +1173,22 @@ async function useModel(entry, { silent = false } = {}) {
   state.loadError = null
   renderModels()
 
+  // Picking it by hand after it has killed the tab is allowed — a device can
+  // free up, and refusing outright would be the app deciding for them — but not
+  // silently, and not without saying what happened last time.
+  if (isUnsafe(entry.id) && !silent) {
+    const ok = await confirmSheet({
+      title: `Try ${entry.name} again?`,
+      body:
+        'This model ran the browser out of memory and closed the page here before. ' +
+        'It may well do it again — nothing is lost if it does, but the app will ' +
+        'close and reopen on 360 Brain.',
+      confirmLabel: 'Try it anyway',
+      danger: true,
+    })
+    if (!ok) return
+  }
+
   if (!have && !silent) {
     if (!navigator.onLine) {
       failLoad(
@@ -1114,6 +1234,10 @@ async function useModel(entry, { silent = false } = {}) {
   showLoad(have ? `Loading ${entry.name}` : `Downloading ${entry.name}`, silent)
 
   try {
+    // Marked before the load, not after: if the device kills the process while
+    // the weights go onto the GPU there is no `catch` to reach, and this mark
+    // is the only thing that will still be there at the next launch.
+    beginRisk('load', entry.id)
     await state.llm.load(entry, ({ progress, text }) => updateLoad(progress, text))
 
     state.engineId = entry.id
@@ -1144,6 +1268,9 @@ async function useModel(entry, { silent = false } = {}) {
     // A half-loaded model must never be left as the chosen engine.
     if (state.engineId === entry.id) state.engineId = 'brain'
   } finally {
+    // Reached at all — success or a caught error — means the page is still
+    // alive, which is the only thing the mark was ever asking about.
+    endRisk()
     state.loadingId = null
     guardDownload(false)
     hideLoad()
