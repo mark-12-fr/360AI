@@ -107,7 +107,10 @@ and the machine voice's monospace are both system faces.
 | **College courses** | 45 programs — description, length, major subjects, GE minors, careers | `what is BSIT` · `major subjects in nursing` · `how many years is architecture` · `careers after criminology` |
 | **Chemistry** | all 118 elements — symbol, atomic number, mass, category | `chemical symbol of gold` · `what is element 26` · `list the noble gases` |
 | **Definitions** | ~200 terms across biology, chemistry, physics, maths, computing, business, law, health | `what is photosynthesis` · `define compound interest` · `explain quantum mechanics` |
-| **Reference lists** | planets, continents, oceans, rivers, mountains, body systems, water cycle, parts of speech, world wars, Philippine facts | `what are the planets` · `tallest mountain` · `parts of speech` |
+| **Reference lists** | planets, continents, oceans, rivers, mountains, body systems, water cycle, parts of speech, world wars | `what are the planets` · `tallest mountain` · `parts of speech` |
+| **Formulas** | area, perimeter, volume, surface area, algebra identities and the quadratic formula, trigonometry, motion, forces, electricity | `volume of a cylinder` · `quadratic formula` · `sohcahtoa` · `formula for kinetic energy` |
+| **The Philippines** | the 18 regions, all 82 provinces, a dated history, the official national symbols, emergency numbers | `regions of the philippines` · `mga probinsya sa pilipinas` · `philippine history timeline` · `national flower` |
+| **First aid** | choking, CPR, serious bleeding, burns, fainting, fractures, heat stroke | `what to do when someone is choking` · `how to do cpr` · `first aid for burns` |
 | **Maths** | expressions, percentages, statistics | `17% of 4,850` · `(1250 + 380) * 3` · `average of 12, 19, 7, 30` |
 | **Conversions** | length, mass, volume, temperature, data, speed, area, time | `5 km to miles` · `30 C to F` · `2.5 kg to lbs` |
 | **Dates** | today, weekdays, countdowns, ages, date arithmetic | `how many days until Christmas` · `age if born May 4, 1998` |
@@ -220,7 +223,10 @@ src/
       strands.js     10 SHS strands + the core and applied subjects
       law.js         30 Philippine law topics
       code.js        18 languages x 12 tasks
-      reference.js   the definitions glossary and reference lists
+      reference.js   the definitions glossary, and the core reference lists
+      formulas.js    area, volume, algebra, trigonometry, physics sheets
+      philippines.js regions, provinces, history, symbols, emergency numbers
+      firstaid.js    choking, CPR, bleeding, burns, fainting, fractures, heat
     skills/        knowledge · math · units · datetime · geography · chemistry
                    academics · strands · law · code · define · text · chance · smalltalk
   backends/
