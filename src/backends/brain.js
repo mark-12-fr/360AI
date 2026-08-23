@@ -2,9 +2,13 @@
  * Adapter between the chat UI and 360 Brain.
  *
  * The UI was written against a streaming LLM, and there is no reason to change
- * that: the brain answers in well under a millisecond, so the "streaming" here
- * is purely cosmetic — the answer is typed out at reading speed because a wall
- * of text appearing instantly reads as a canned response rather than a reply.
+ * that: the brain answers a normal question in a few milliseconds, so the
+ * "streaming" here is purely cosmetic — the answer is typed out at reading
+ * speed because a wall of text appearing instantly reads as a canned response
+ * rather than a reply.
+ *
+ * A pasted essay is not a normal question, and costs far more than that. The
+ * engine yields the main thread while it works rather than blocking on it.
  */
 
 import { answer } from '../brain/index.js'
@@ -62,7 +66,7 @@ export class BrainBackend {
       return
     }
 
-    const result = answer(last?.content ?? '', {
+    const result = await answer(last?.content ?? '', {
       memory: this.memory,
       context: this.context,
       now: new Date(),
