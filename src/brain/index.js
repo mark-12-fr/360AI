@@ -25,6 +25,7 @@ import geography from './skills/geography.js'
 import knowledge from './skills/knowledge.js'
 import law from './skills/law.js'
 import math from './skills/math.js'
+import profiles from './skills/profiles.js'
 import smalltalk from './skills/smalltalk.js'
 import strands from './skills/strands.js'
 import text from './skills/text.js'
@@ -41,6 +42,7 @@ export const SKILLS = [
   strands,
   law,
   code,
+  profiles,
   define,
   text,
   chance,
