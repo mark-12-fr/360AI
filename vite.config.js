@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -15,8 +16,28 @@ const base = process.env.BASE_PATH ?? '/'
  * An offline-first app is by design running from a cache, which means "have
  * you got the fix yet?" is a real question with no way to answer it from the
  * outside. A visible stamp turns a screenshot into evidence.
+ *
+ * The time alone is not enough to do that: two deploys inside the same minute
+ * would carry the same stamp, and during a run of fixes that is not
+ * hypothetical. The commit is what actually names the code; the time is kept
+ * beside it because it is the half a person can read at a glance.
  */
-const build = new Date().toISOString().slice(0, 16).replace('T', ' ')
+function buildId() {
+  const stamp = new Date().toISOString().slice(0, 19).replace('T', ' ')
+  let sha = process.env.VERCEL_GIT_COMMIT_SHA ?? ''
+  if (!sha) {
+    try {
+      sha = execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
+        .toString()
+        .trim()
+    } catch {
+      // A tarball with no git history and no CI variables: the time will do.
+    }
+  }
+  return sha ? `${stamp} · ${sha.slice(0, 7)}` : stamp
+}
+
+const build = buildId()
 
 export default defineConfig({
   base,
