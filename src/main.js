@@ -1496,6 +1496,20 @@ function armStall() {
   stallTimer = setTimeout(() => setLoadText(STALL_NOTE, 'stalled'), STALL_MS)
 }
 
+/**
+ * WebLLM ends every progress line with the same two sentences about the cache
+ * being populated on first visit. They are true once and repeated on every
+ * shard of every download, and on a phone they are most of the line — so the
+ * part that actually changes, which shard and how far along, gets pushed out
+ * of view. Keep the news, drop the standing notice.
+ */
+const CACHE_NOTICE = /\s*it can take a while when we first visit.*$/is
+
+function tidyProgress(text) {
+  const trimmed = String(text).replace(CACHE_NOTICE, '').trim()
+  return trimmed || String(text).trim()
+}
+
 /** Writes one line of progress text to both copies of the bar. */
 function setLoadText(text, kind = '') {
   for (const el of [$('#load-text'), $('#card-load-text')]) {
@@ -1529,7 +1543,7 @@ function updateLoad(progress, text) {
   }
   // MLC's own progress text names the shard and the elapsed time, which is
   // exactly the reassurance a long download needs.
-  if (text) setLoadText(text)
+  if (text) setLoadText(tidyProgress(text))
   armStall()
 }
 
