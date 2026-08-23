@@ -49,6 +49,8 @@ export const SKILLS = [
   smalltalk,
 ]
 
+const now = () => (typeof performance === 'undefined' ? Date.now() : performance.now())
+
 /** Below this, no skill is trusted and the honest fallback runs instead. */
 const THRESHOLD = 0.5
 
@@ -165,7 +167,15 @@ function fallback() {
  * caller to write one back, because storage is the app's job, not the brain's.
  * `context` carries the previous subject so follow-up questions resolve.
  */
-export function answer(input, options = {}) {
+/**
+ * How long the engine may hold the main thread before handing it back.
+ *
+ * Long enough that an ordinary question — which is answered in a few
+ * milliseconds — never yields at all and pays nothing for this.
+ */
+const YIELD_AFTER_MS = 25
+
+export async function answer(input, options = {}) {
   const raw = String(input ?? '').trim()
   if (!raw) return { skill: 'empty', score: 1, text: 'Ask me something.' }
 
@@ -207,7 +217,18 @@ export function answer(input, options = {}) {
   }
 
   let best = null
+  let held = now()
   for (const skill of SKILLS) {
+    // A long message can keep a single skill busy for tens of milliseconds,
+    // and fifteen of those back to back is a page that has stopped responding.
+    // iOS does not wait politely for that — it kills the tab — and a tab killed
+    // on every prompt is an app that cannot be opened at all, which is exactly
+    // what was reported. Handing the thread back keeps a slow answer slow
+    // instead of fatal.
+    if (now() - held > YIELD_AFTER_MS) {
+      await new Promise((resolve) => setTimeout(resolve))
+      held = now()
+    }
     let result
     try {
       result = skill.match(ctx)

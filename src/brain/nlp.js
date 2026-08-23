@@ -91,19 +91,34 @@ export function extractNumbers(text) {
 }
 
 /** Levenshtein distance — used for typo tolerance on short keys. */
-export function editDistance(a, b) {
+/**
+ * `max` is a budget, not a limit on the answer: once the distance is known to
+ * exceed it the exact value stops mattering to every caller here, and the
+ * matrix can be abandoned. Callers that want the true distance leave it out.
+ */
+export function editDistance(a, b, max = Infinity) {
   if (a === b) return 0
   if (!a.length || !b.length) return Math.max(a.length, b.length)
+  // A difference in length is a lower bound on the distance, so a pair already
+  // too far apart never needs a matrix built for it at all.
+  if (Math.abs(a.length - b.length) > max) return max + 1
+
   let prev = Array.from({ length: b.length + 1 }, (_, i) => i)
   for (let i = 1; i <= a.length; i++) {
     const row = [i]
+    let least = i
     for (let j = 1; j <= b.length; j++) {
-      row[j] = Math.min(
+      const cell = Math.min(
         prev[j] + 1,
         row[j - 1] + 1,
         prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
       )
+      row[j] = cell
+      if (cell < least) least = cell
     }
+    // The smallest value in a row never falls as the rows go down, so once the
+    // whole row is over budget the final cell will be too.
+    if (least > max) return max + 1
     prev = row
   }
   return prev[b.length]
@@ -114,6 +129,25 @@ export function similarity(a, b) {
   const max = Math.max(a.length, b.length)
   if (!max) return 1
   return 1 - editDistance(a, b) / max
+}
+
+/**
+ * `similarity(a, b) >= min`, without paying for the exact score.
+ *
+ * Identical in outcome to comparing `similarity` against `min`, but it can
+ * usually answer from the two lengths alone: reaching `min` allows at most
+ * `(1 - min) x max` edits, and two strings whose lengths differ by more than
+ * that cannot possibly qualify. On a long question that rejects nearly every
+ * pair before any matrix is built.
+ */
+export function similarAtLeast(a, b, min) {
+  const max = Math.max(a.length, b.length)
+  if (!max) return true
+  // The nudge is for binary floating point: (1 - 0.8) * 5 is 1.0000000000000002
+  // here and 0.9999999999999999 elsewhere, and the floor must not follow it.
+  const budget = Math.floor((1 - min) * max + 1e-9)
+  if (Math.abs(a.length - b.length) > budget) return false
+  return editDistance(a, b, budget) <= budget
 }
 
 /**
@@ -134,7 +168,7 @@ export function overlapScore(queryTokens, targetTokens) {
       continue
     }
     for (const cand of target) {
-      if (cand.length > 3 && t.length > 3 && similarity(t, cand) >= 0.8) {
+      if (cand.length > 3 && t.length > 3 && similarAtLeast(t, cand, 0.8)) {
         hits += 0.7
         break
       }
@@ -273,27 +307,39 @@ export function canonicalise(text) {
  * Dice coefficient over character bigrams: better than edit distance for
  * multi-word names, and cheap. "philipines" vs "philippines" scores ~0.95.
  */
-export function diceSimilarity(a, b) {
-  const bigrams = (str) => {
-    const out = new Map()
-    for (let i = 0; i < str.length - 1; i++) {
-      const g = str.slice(i, i + 2)
-      out.set(g, (out.get(g) ?? 0) + 1)
-    }
-    return out
+function bigramsOf(str) {
+  const out = new Map()
+  for (let i = 0; i < str.length - 1; i++) {
+    const g = str.slice(i, i + 2)
+    out.set(g, (out.get(g) ?? 0) + 1)
   }
+  return out
+}
+
+/** The shared body, so a caller holding a prepared bigram map can skip rebuilding it. */
+function diceFrom(A, aTotal, B, bTotal) {
+  let hits = 0
+  for (const [g, count] of A) hits += Math.min(count, B.get(g) ?? 0)
+  return (2 * hits) / (aTotal + bTotal)
+}
+
+/**
+ * Can two strings of these bigram counts reach `min`?
+ *
+ * Overlap can never exceed the smaller of the two counts, so the score is at
+ * most `2 x min(a, b) / (a + b)`. Checking that first rejects nothing that
+ * would have qualified, and on a long question it rejects almost everything
+ * before a single bigram is counted.
+ */
+function diceCanReach(aTotal, bTotal, min) {
+  if (aTotal < 1 || bTotal < 1) return false
+  return (2 * Math.min(aTotal, bTotal)) / (aTotal + bTotal) >= min
+}
+
+export function diceSimilarity(a, b) {
   if (a === b) return 1
   if (a.length < 2 || b.length < 2) return 0
-  const A = bigrams(a)
-  const B = bigrams(b)
-  let hits = 0
-  let total = 0
-  for (const [g, count] of A) {
-    total += count
-    hits += Math.min(count, B.get(g) ?? 0)
-  }
-  for (const count of B.values()) total += count
-  return (2 * hits) / total
+  return diceFrom(bigramsOf(a), a.length - 1, bigramsOf(b), b.length - 1)
 }
 
 /**
@@ -303,28 +349,70 @@ export function diceSimilarity(a, b) {
  * "korea"; otherwise the best fuzzy match above `threshold` is used, which is
  * what carries typos like "japn" or "phillipines".
  */
+/**
+ * Everything about a name that does not depend on the question.
+ *
+ * The name lists are module-level constants shared by every question, so
+ * normalising them and building their word-boundary pattern and bigram counts
+ * belongs once per name, not once per name per question.
+ */
+const NAME_CACHE = new Map()
+
+function preparedName(name) {
+  let prepared = NAME_CACHE.get(name)
+  if (!prepared) {
+    const n = normalise(name)
+    prepared = {
+      n,
+      re: n.length < 3 ? null : new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`),
+      grams: n.length < 2 ? null : bigramsOf(n),
+      total: n.length - 1,
+    }
+    NAME_CACHE.set(name, prepared)
+  }
+  return prepared
+}
+
+/**
+ * How far into a long message the fuzzy pass looks.
+ *
+ * The exact pass below scans all of it, so a name spelled correctly is found
+ * wherever it sits. This bounds only where a *misspelled* one is looked for,
+ * and it exists because the fuzzy pass compares every name against every word
+ * and adjacent word-pair: on a pasted essay that is hundreds of thousands of
+ * comparisons, seconds of a frozen page, and — on a phone, where the page is
+ * killed for being unresponsive — a crash rather than an answer. A question's
+ * subject is in its first few dozen words. Anything longer is not a question
+ * with a typo in it.
+ */
+const FUZZY_WORDS = 60
+
 export function findEntity(text, names, { threshold = 0.82 } = {}) {
   const haystack = normalise(text)
   const sorted = [...names].sort((a, b) => b.length - a.length)
 
   for (const name of sorted) {
-    const n = normalise(name)
-    if (n.length < 3) continue
-    if (new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(haystack)) {
-      return { name, exact: true, score: 1 }
-    }
+    const { re } = preparedName(name)
+    if (re && re.test(haystack)) return { name, exact: true, score: 1 }
   }
 
   // Fuzzy: compare each word (and each adjacent pair of words) to every name.
-  const words = haystack.split(' ').filter((w) => w.length > 2)
+  const words = haystack.split(' ').filter((w) => w.length > 2).slice(0, FUZZY_WORDS)
   const candidates = [...words]
   for (let i = 0; i < words.length - 1; i++) candidates.push(`${words[i]} ${words[i + 1]}`)
 
+  const prepared = candidates
+    .filter((c) => c.length >= 2)
+    .map((c) => ({ grams: bigramsOf(c), total: c.length - 1 }))
+
   let best = null
   for (const name of names) {
-    const n = normalise(name)
-    for (const candidate of candidates) {
-      const score = diceSimilarity(candidate, n)
+    const { grams, total } = preparedName(name)
+    if (!grams) continue
+    for (const candidate of prepared) {
+      // Cheapest test first: most pairs are ruled out on their lengths alone.
+      if (!diceCanReach(candidate.total, total, threshold)) continue
+      const score = diceFrom(candidate.grams, candidate.total, grams, total)
       if (score >= threshold && (!best || score > best.score)) best = { name, exact: false, score }
     }
   }
