@@ -183,14 +183,62 @@ function activeEntry() {
  */
 function reason(err) {
   if (!err) return 'Unknown error.'
-  if (typeof err === 'string') return err
-  const text = err.message || err.msg || err.name || err.detail
-  if (text) return String(text)
-  try {
-    return JSON.stringify(err)
-  } catch {
-    return String(err)
+  if (typeof err === 'string') return err.trim() || 'Unknown error.'
+
+  // Only a *string* counts. The old version took `err.message` whatever it
+  // was and called String() on it, so an error whose message was itself an
+  // object printed the words "[object Object]" — which is how a real failure
+  // on a real phone came back with its cause thrown away.
+  for (const key of ['message', 'msg', 'detail', 'reason', 'description']) {
+    const value = err[key]
+    if (typeof value === 'string' && value.trim()) return value.trim()
   }
+
+  // Some errors carry the real one inside: an ErrorEvent has `.error`, a
+  // rethrow has `.cause`, and a structured-cloned worker rejection often has
+  // one nested object and nothing else.
+  for (const key of ['error', 'cause', 'data', 'content']) {
+    const inner = err[key]
+    if (inner && inner !== err && (typeof inner === 'string' || typeof inner === 'object')) {
+      const nested = reason(inner)
+      if (nested && nested !== 'Unknown error.') return nested
+    }
+  }
+
+  // `name` last of the readable options: "Error" is technically the name of
+  // almost everything and tells nobody anything, so a nested cause beats it.
+  if (typeof err.name === 'string' && err.name.trim()) return err.name.trim()
+
+  try {
+    const dump = JSON.stringify(err)
+    // `{}` is what an Error subclass serialises to — true, and useless.
+    if (dump && dump !== '{}' && dump !== 'null') return dump.slice(0, 300)
+  } catch {
+    // Circular, or something with a throwing getter. Fall through.
+  }
+
+  const kind = err.constructor?.name
+  return kind ? `${kind} (no message given)` : 'Unknown error — nothing was reported.'
+}
+
+/**
+ * One line about the graphics adapter, for an error that needs diagnosing.
+ *
+ * A model that downloads and then will not start is almost always a limit of
+ * this device rather than anything the user did, and the limit is invisible
+ * without these numbers — particularly on iOS, where the per-buffer cap is far
+ * lower than the memory the model appears to need.
+ */
+function gpuLine() {
+  const gpu = state.gpu
+  if (!gpu?.ok) return ''
+  const bits = [
+    gpu.description || gpu.vendor || null,
+    gpu.f16 ? 'half precision' : 'full precision only',
+    gpu.maxBufferMB ? `${fmtSize(gpu.maxBufferMB)} max buffer` : null,
+    gpu.maxStorageBindingMB ? `${fmtSize(gpu.maxStorageBindingMB)} max binding` : null,
+  ].filter(Boolean)
+  return bits.length ? `\n\n*This device: ${bits.join(' · ')}.*` : ''
 }
 
 /** Refuses a turn while a model is still coming down the wire. */
@@ -1330,13 +1378,20 @@ async function useModel(entry, { silent = false } = {}) {
       toast('Download cancelled. What arrived is kept, so resuming is quicker.', 'warn', 5000)
     } else {
       console.error(err)
-      failLoad(
-        entry,
-        `**${entry.name} could not start.** ${reason(err)}\n\n` +
+      // Blaming the connection is right for a download that broke off, and
+      // wrong for a model that is already here and will not start — which is
+      // a limit of the device, and needs different advice.
+      const why = have
+        ? `**${entry.name} is on this device but would not start.** ${reason(err)}\n\n` +
+          'That is the graphics side failing rather than the download — usually a ' +
+          'model asking for more memory in one piece than this browser will give ' +
+          'it. A smaller model is the reliable fix; 360 Brain needs none at all.' +
+          gpuLine()
+        : `**${entry.name} could not start.** ${reason(err)}\n\n` +
           'A dropped connection during the download is the usual cause. Whatever ' +
-          'arrived is kept, so trying again picks up where it stopped.',
-        `Could not load ${entry.name}: ${reason(err)}`,
-      )
+          'arrived is kept, so trying again picks up where it stopped.' +
+          gpuLine()
+      failLoad(entry, why, `Could not load ${entry.name}: ${reason(err)}`)
     }
     // A half-loaded model must never be left as the chosen engine.
     if (state.engineId === entry.id) state.engineId = 'brain'
@@ -1441,6 +1496,20 @@ function armStall() {
   stallTimer = setTimeout(() => setLoadText(STALL_NOTE, 'stalled'), STALL_MS)
 }
 
+/**
+ * WebLLM ends every progress line with the same two sentences about the cache
+ * being populated on first visit. They are true once and repeated on every
+ * shard of every download, and on a phone they are most of the line — so the
+ * part that actually changes, which shard and how far along, gets pushed out
+ * of view. Keep the news, drop the standing notice.
+ */
+const CACHE_NOTICE = /\s*it can take a while when we first visit.*$/is
+
+function tidyProgress(text) {
+  const trimmed = String(text).replace(CACHE_NOTICE, '').trim()
+  return trimmed || String(text).trim()
+}
+
 /** Writes one line of progress text to both copies of the bar. */
 function setLoadText(text, kind = '') {
   for (const el of [$('#load-text'), $('#card-load-text')]) {
@@ -1474,7 +1543,7 @@ function updateLoad(progress, text) {
   }
   // MLC's own progress text names the shard and the elapsed time, which is
   // exactly the reassurance a long download needs.
-  if (text) setLoadText(text)
+  if (text) setLoadText(tidyProgress(text))
   armStall()
 }
 
