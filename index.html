@@ -95,6 +95,19 @@
         </div>
 
         <div class="composer-wrap">
+          <!-- A new version has installed but this page is still running the
+               old one. Installed on a home screen, that can go unnoticed for
+               weeks, so it is said out loud rather than waited on. -->
+          <div id="update-bar" class="update-bar" hidden>
+            <span class="update-text">
+              <strong>360AI has updated.</strong>
+              Restart to use the new version.
+            </span>
+            <button id="update-go" type="button" class="btn btn-primary btn-compact">
+              Restart
+            </button>
+          </div>
+
           <!-- Download progress. Lives above the composer so a multi-gigabyte
                fetch never hides the conversation it is for. -->
           <div id="load-bar" class="load-bar" hidden>
@@ -211,7 +224,7 @@
         <div id="fact-list" class="fact-list"></div>
 
         <footer class="dialog-foot">
-          <span></span>
+          <span id="build-stamp" class="build-stamp"></span>
           <button type="button" class="btn" data-close>Close</button>
         </footer>
       </div>
@@ -271,7 +284,7 @@
         </div>
 
         <footer class="dialog-foot">
-          <span></span>
+          <span id="build-stamp" class="build-stamp"></span>
           <button type="button" class="btn" data-close>Close</button>
         </footer>
       </div>

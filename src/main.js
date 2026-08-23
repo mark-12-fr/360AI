@@ -319,6 +319,10 @@ async function boot() {
   renderFactList()
   refreshStorageInfo()
 
+  // Which build this is, and whether it is still the newest one.
+  $('#build-stamp').textContent = `build ${__BUILD__}`
+  watchForUpdates()
+
   // What we believe is downloaded, from our own record. Checking the real
   // cache would mean pulling the WebLLM runtime on every visit, including for
   // the many people who will only ever use 360 Brain.
@@ -1475,6 +1479,66 @@ async function removeModel(entry) {
   toast(`${entry.name} removed — ${size} freed.`, 'ok')
 }
 
+/* --------------------------------------------------------------- updates */
+
+/**
+ * Tells the user when the app itself has been replaced underneath them.
+ *
+ * The service worker installs a new build in the background and, with
+ * `skipWaiting`, takes over straight away. What it cannot do is change the
+ * JavaScript this page is already running — that only happens on a reload. In
+ * a browser tab one comes along soon enough. Added to a home screen, the app
+ * is suspended and resumed rather than reloaded, so it can sit on a months-old
+ * build indefinitely, hitting bugs that were fixed long ago and reporting them
+ * from a version that no longer exists.
+ *
+ * Nothing reloads on its own: doing that during a multi-gigabyte download
+ * would be a worse bug than the one it is delivering the fix for. The user is
+ * told, and chooses.
+ */
+function watchForUpdates() {
+  if (!('serviceWorker' in navigator)) return
+
+  // No previous controller means this is a first install, not an update.
+  // Announcing "360AI has updated" on someone's first visit would be a lie.
+  const hadController = !!navigator.serviceWorker.controller
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController) offerRestart()
+  })
+
+  navigator.serviceWorker.ready
+    .then((reg) => {
+      // A build that installed while the page was closed is already waiting by
+      // the time this runs, and fires no event of its own.
+      if (reg.waiting && hadController) offerRestart()
+
+      // The browser checks for a new worker on navigation, which is exactly
+      // what an installed app never does. Ask directly instead: whenever the
+      // app comes back to the foreground, and hourly while it is open.
+      const check = () => reg.update().catch(() => {})
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) check()
+      })
+      setInterval(check, 60 * 60 * 1000)
+      check()
+    })
+    .catch(() => {})
+}
+
+function offerRestart() {
+  const bar = $('#update-bar')
+  if (!bar || !bar.hidden) return
+  bar.hidden = false
+  // The bar sits above the composer, which is behind the backdrop whenever a
+  // dialog is open — the same trap that once made a failed download look like
+  // nothing had happened at all. The toast layer is in the top layer, so it
+  // carries where the bar cannot.
+  if (document.querySelector('dialog[open]')) {
+    toast('360AI has updated — close this and restart to use the new version.', 'ok', 7000)
+  }
+}
+
 /* ------------------------------------------------------------- load bar */
 
 /**
@@ -1879,6 +1943,9 @@ function wireEvents() {
 
   $('#stop').addEventListener('click', () => backend()?.stop())
   $('#load-cancel').addEventListener('click', () => state.llm?.cancelLoad())
+  // A plain reload is all that is needed: the new worker is already in control,
+  // so the next load of every file comes from the build it is serving.
+  $('#update-go').addEventListener('click', () => location.reload())
 
   $('#new-chat').addEventListener('click', () => {
     openChat(null)

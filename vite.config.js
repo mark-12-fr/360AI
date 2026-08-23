@@ -9,8 +9,18 @@ import { VitePWA } from 'vite-plugin-pwa'
  */
 const base = process.env.BASE_PATH ?? '/'
 
+/**
+ * Which build this is, stamped in at compile time.
+ *
+ * An offline-first app is by design running from a cache, which means "have
+ * you got the fix yet?" is a real question with no way to answer it from the
+ * outside. A visible stamp turns a screenshot into evidence.
+ */
+const build = new Date().toISOString().slice(0, 16).replace('T', ' ')
+
 export default defineConfig({
   base,
+  define: { __BUILD__: JSON.stringify(build) },
   // 0.0.0.0 so a phone on the same Wi-Fi can reach `npm run dev` directly —
   // the brain needs no secure context, so plain http:// over the LAN is fine.
   // Installing it as an app still wants the deployed HTTPS build.
