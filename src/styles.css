@@ -1059,6 +1059,47 @@ body {
 .disclaimer p { margin: 0; }
 .disclaimer strong { color: var(--fg-dim); font-weight: 600; }
 
+/* -------------------------------------------------------------- update bar */
+
+/**
+ * An offline-first app is, by design, running from a cache. That is the point
+ * of it — and it is also how a phone ends up on a build whose bugs were fixed
+ * weeks ago, with nothing on screen to say so. The service worker swaps itself
+ * out quietly; the page it is serving goes on running the JavaScript it
+ * started with until someone reloads it, and on a home-screen app nobody ever
+ * does. So the app says so, above the composer, and does not take it back
+ * until it is acted on.
+ */
+.update-bar {
+  max-width: var(--reading);
+  margin: 0 auto 12px;
+  background: color-mix(in srgb, var(--orbit) 12%, var(--panel-2));
+  border: 1px solid color-mix(in srgb, var(--orbit) 42%, var(--line));
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.update-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--fg-dim);
+}
+.update-text strong { color: var(--fg); font-weight: 600; }
+.update-bar .btn { flex: none; }
+
+/* Which build this actually is. Small, out of the way, and the first thing
+   worth knowing when a phone behaves like a version that no longer exists. */
+.build-stamp {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-faint);
+}
+
 /* ---------------------------------------------------------------- load bar */
 
 .load-bar {
