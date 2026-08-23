@@ -10,7 +10,7 @@ with → Change** in the sidebar.
 ## 1. 360 Brain — nothing to download
 
 The default. A **rules engine with a knowledge base**, written in plain JavaScript
-and shipped inside the app: about 440 KB, no WebGPU, no memory floor. It works out
+and shipped inside the app: about 480 KB, no WebGPU, no memory floor. It works out
 what you are asking, computes the answer, and looks things up in the data that
 ships with it or that you teach it. When it does not know something it says so — it
 has no way to invent an answer, which is the point.
@@ -103,6 +103,8 @@ and the machine voice's monospace are both system faces.
 
 | Area | Coverage | Ask it |
 | --- | --- | --- |
+| **People** | 115 figures — Philippine heroes and presidents, scientists, world leaders, artists, philosophers. Dates, field, nationality and what they are known for | `who is Jose Rizal` · `who was Albert Einstein` · `sino si Mabini` · `when did Rizal die` |
+| **Animals** | 49 animals including the Philippine ones no other reference bothers with — carabao, tarsier, tamaraw, butanding, Philippine eagle. Group, diet, habitat, lifespan | `what is a carabao` · `how long do elephants live` · `what do pandas eat` · `where do penguins live` |
 | **Countries** | all 195 — capital, currency, language, continent, area, population | `capital of Japan` · `what currency does Brazil use` · `which countries are in Europe` · `largest country in Asia` |
 | **College courses** | 45 programs — description, length, major subjects, GE minors, careers | `what is BSIT` · `major subjects in nursing` · `how many years is architecture` · `careers after criminology` |
 | **Chemistry** | all 118 elements — symbol, atomic number, mass, category | `chemical symbol of gold` · `what is element 26` · `list the noble gases` |
@@ -218,6 +220,8 @@ src/
     facts.js       hand-written Q&A entries about the app itself
     data/
       countries.js   195 countries
+      people.js      115 notable figures
+      animals.js     49 animals
       elements.js    118 elements
       courses.js     45 college programs + the shared GE core
       strands.js     10 SHS strands + the core and applied subjects
@@ -228,6 +232,7 @@ src/
       philippines.js regions, provinces, history, symbols, emergency numbers
       firstaid.js    choking, CPR, bleeding, burns, fainting, fractures, heat
     skills/        knowledge · math · units · datetime · geography · chemistry
+                   profiles (people and animals) ·
                    academics · strands · law · code · define · text · chance · smalltalk
   backends/
     brain.js       adapter between the chat UI and the brain
