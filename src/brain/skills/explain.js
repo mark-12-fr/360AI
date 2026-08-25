@@ -53,6 +53,16 @@ const CODE_EXPLAIN_PATTERNS = [
   /\b(health|nutrition|exercise|vitamin|protein|business|marketing|investment|entrepreneurship)\b/i,
   // technology concepts
   /\b(blockchain|cryptocurrency|machine learning|artificial intelligence|quantum|5g|iot)\b/i,
+  // more general patterns
+  /\b(why does|why do|what causes|what happens|what is the difference|compare|contrast)\b/i,
+  /\b(list|name|give examples|types of|kinds of|varieties)\b/i,
+  /\b(reason|cause|effect|impact|benefit|advantage|disadvantage|pros and cons)\b/i,
+  /\b(step by step|process|procedure|method|technique|approach|strategy)\b/i,
+  /\b(recipe|ingredient|how to make|how to cook|how to prepare)\b/i,
+  /\b(symptom|treatment|cure|prevention|remedy|remedy)\b/i,
+  /\b(tip|trick|hack|shortcut|efficient|effective|better)\b/i,
+  /\b(rule|law|regulation|requirement|guideline|standard)\b/i,
+  /\b(definition|meaning|importance|purpose|function|role|job)\b/i,
 ]
 
 export default {

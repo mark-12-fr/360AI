@@ -1017,6 +1017,436 @@ export const FACTS = [
     a:
       '**Pakikisama** is a Filipino value of smooth interpersonal relationships. It means getting along with others, being cooperative, avoiding conflict, and maintaining harmony in social interactions.',
   },
+
+  /* ------------------------------------------------------- more science */
+  {
+    q: ['what is photosynthesis', 'how do plants make food', 'ano ang photosynthesis'],
+    a: '**Photosynthesis** is how plants convert sunlight, water, and carbon dioxide into glucose and oxygen. It happens in chloroplasts using chlorophyll. 6CO2 + 6H2O + light = C6H12O6 + 6O2.',
+  },
+  {
+    q: ['what is osmosis', 'osmosis explained', 'ano ang osmosis'],
+    a: '**Osmosis** is the movement of water across a semipermeable membrane from low solute concentration to high solute concentration. It is how cells absorb water and nutrients.',
+  },
+  {
+    q: ['what is mitosis', 'mitosis explained', 'ano ang mitosis'],
+    a: '**Mitosis** is cell division that produces two identical daughter cells. It is used for growth and repair. Stages: prophase, metaphase, anaphase, telophase.',
+  },
+  {
+    q: ['what is meiosis', 'meiosis explained', 'ano ang meiosis'],
+    a: '**Meiosis** produces four genetically unique sex cells (gametes) with half the chromosomes. It involves two divisions and creates genetic diversity through crossing over.',
+  },
+  {
+    q: ['what is cell', 'what is a cell', 'ano ang cell'],
+    a: 'A **cell** is the basic unit of life. All living things are made of cells. They have a membrane, cytoplasm, and DNA. Animal cells and plant cells have different structures.',
+  },
+  {
+    q: ['what is ecosystem', 'ecosystem explained', 'ano ang ecosystem'],
+    a: 'An **ecosystem** is a community of living organisms interacting with their physical environment. It includes biotic (plants, animals) and abiotic (water, soil, sunlight) components.',
+  },
+  {
+    q: ['what is food chain', 'food chain explained', 'ano ang food chain'],
+    a: 'A **food chain** shows how energy moves through organisms: producers (plants) -> primary consumers (herbivores) -> secondary consumers (carnivores) -> decomposers.',
+  },
+  {
+    q: ['what is natural selection', 'natural selection explained', 'ano ang natural selection'],
+    a: '**Natural selection** is the process where organisms with favorable traits survive and reproduce more. Over time, these traits become more common in the population.',
+  },
+  {
+    q: ['what is genetic mutation', 'mutation explained', 'ano ang mutation'],
+    a: 'A **genetic mutation** is a change in DNA sequence. Mutations can be caused by radiation, chemicals, or errors in DNA replication. Some are harmful, some neutral, some beneficial.',
+  },
+  {
+    q: ['what is solar system', 'solar system facts', 'ano ang solar system'],
+    a: 'The **Solar System** consists of the Sun and everything orbiting it: 8 planets, dwarf planets, moons, asteroids, and comets. It formed about 4.6 billion years ago.',
+  },
+  {
+    q: ['what is galaxy', 'galaxy explained', 'ano ang galaxy'],
+    a: 'A **galaxy** is a massive system of stars, gas, dust, and dark matter held together by gravity. Our Milky Way galaxy contains 100-400 billion stars.',
+  },
+  {
+    q: ['what is black hole', 'black hole explained', 'ano ang black hole'],
+    a: 'A **black hole** is a region of space where gravity is so strong that nothing, not even light, can escape. They form when massive stars collapse at the end of their life.',
+  },
+  {
+    q: ['what is DNA replication', 'how does DNA replicate', 'DNA replication process'],
+    a: '**DNA replication** is the process of copying DNA before cell division. The double helix unwinds, each strand serves as a template, and enzymes build new complementary strands.',
+  },
+  {
+    q: ['what is chromosomes', 'chromosomes explained', 'ano ang chromosomes'],
+    a: '**Chromosomes** are structures of DNA and proteins that carry genetic information. Humans have 23 pairs (46 total). They determine traits like eye color and blood type.',
+  },
+  {
+    q: ['what is enzyme', 'enzyme explained', 'ano ang enzyme'],
+    a: 'An **enzyme** is a protein that speeds up chemical reactions in the body. They are specific to substrates (like a key fits a lock). Without enzymes, reactions would be too slow for life.',
+  },
+  {
+    q: ['what is pH', 'pH scale explained', 'ano ang pH'],
+    a: 'The **pH scale** measures how acidic or basic a solution is, from 0 to 14. Below 7 is acidic, 7 is neutral, above 7 is basic. Stomach acid is about pH 2; baking soda is about pH 9.',
+  },
+  {
+    q: ['what is chemical reaction', 'chemical reaction explained', 'ano ang chemical reaction'],
+    a: 'A **chemical reaction** is a process that transforms substances into new ones. It involves breaking and forming chemical bonds. Examples: burning, rusting, cooking, digestion.',
+  },
+
+  /* ------------------------------------------------------ more math */
+  {
+    q: ['what is perimeter', 'perimeter explained', 'ano ang perimeter'],
+    a: '**Perimeter** is the total distance around the outside of a shape. For a rectangle: 2 x (length + width). For a circle: 2 x pi x radius.',
+  },
+  {
+    q: ['what is area', 'area explained', 'ano ang area'],
+    a: '**Area** is the amount of space inside a shape. Rectangle: length x width. Triangle: 1/2 x base x height. Circle: pi x radius squared.',
+  },
+  {
+    q: ['what is volume', 'volume explained', 'ano ang volume'],
+    a: '**Volume** is the amount of space inside a 3D object. Cube: side cubed. Cylinder: pi x radius squared x height. It is measured in cubic units.',
+  },
+  {
+    q: ['what is integer', 'integer explained', 'ano ang integer'],
+    a: 'An **integer** is a whole number (positive, negative, or zero). Examples: -3, -2, -1, 0, 1, 2, 3. Integers do not include fractions or decimals.',
+  },
+  {
+    q: ['what is decimal', 'decimal explained', 'ano ang decimal'],
+    a: 'A **decimal** is a number with a decimal point. The digits after the decimal represent tenths, hundredths, thousandths. Example: 3.14 = 3 + 1/10 + 4/100.',
+  },
+  {
+    q: ['what is ratio', 'ratio explained', 'ano ang ratio'],
+    a: 'A **ratio** compares two quantities. It can be written as 3:4, 3/4, or 3 to 4. Ratios are used in recipes, maps, and scaling.',
+  },
+  {
+    q: ['what is proportion', 'proportion explained', 'ano ang proportion'],
+    a: 'A **proportion** states that two ratios are equal. Example: 2/4 = 3/6. Cross-multiplication can solve for unknowns in proportions.',
+  },
+  {
+    q: ['what is exponent', 'exponent explained', 'ano ang exponent'],
+    a: 'An **exponent** tells you how many times to multiply a number by itself. 2^3 = 2 x 2 x 2 = 8. The base is 2, the exponent is 3.',
+  },
+  {
+    q: ['what is slope', 'slope explained', 'ano ang slope'],
+    a: '**Slope** measures the steepness of a line. It is the change in y divided by the change in x (rise/run). Positive slope goes up, negative goes down.',
+  },
+  {
+    q: ['what is function', 'function in math', 'ano ang function'],
+    a: 'A **function** is a rule that assigns each input exactly one output. Example: f(x) = 2x + 1 means for every x value, multiply by 2 and add 1.',
+  },
+  {
+    q: ['what is standard deviation', 'standard deviation explained', 'ano ang standard deviation'],
+    a: '**Standard deviation** measures how spread out numbers are from the average. A low standard deviation means data is close to the mean; high means it is spread out.',
+  },
+  {
+    q: ['what is absolute value', 'absolute value explained', 'ano ang absolute value'],
+    a: '**Absolute value** is the distance of a number from zero on the number line. It is always positive. |-5| = 5, |5| = 5, |0| = 0.',
+  },
+  {
+    q: ['what is negative number', 'negative numbers explained', 'ano ang negative number'],
+    a: 'A **negative number** is any number less than zero. It is written with a minus sign: -1, -2, -3. On a number line, negative numbers are to the left of zero.',
+  },
+
+  /* --------------------------------------------------- more tech */
+  {
+    q: ['what is programming', 'programming explained', 'ano ang programming'],
+    a: '**Programming** is writing instructions for computers to follow. It uses specific languages (Python, JavaScript, Java) to create software, websites, and apps.',
+  },
+  {
+    q: ['what is software', 'software explained', 'ano ang software'],
+    a: '**Software** is a set of instructions that tells a computer what to do. It includes applications (Word, Chrome), operating systems (Windows, macOS), and apps.',
+  },
+  {
+    q: ['what is hardware', 'hardware explained', 'ano ang hardware'],
+    a: '**Hardware** is the physical parts of a computer: monitor, keyboard, mouse, processor, memory, storage. Without hardware, software cannot run.',
+  },
+  {
+    q: ['what is cloud', 'what is the cloud', 'ano ang cloud computing'],
+    a: 'The **cloud** means remote servers accessed over the internet. Instead of storing files on your computer, they are stored on servers owned by companies like Google, Amazon, or Microsoft.',
+  },
+  {
+    q: ['what is wifi', 'wifi explained', 'ano ang wifi'],
+    a: '**WiFi** is a wireless technology that lets devices connect to the internet using radio waves. It works within a limited range (about 30-50 meters indoors).',
+  },
+  {
+    q: ['what is bluetooth', 'bluetooth explained', 'ano ang bluetooth'],
+    a: '**Bluetooth** is a short-range wireless technology for connecting devices. It is used for headphones, speakers, keyboards, and file transfer. Range is about 10 meters.',
+  },
+  {
+    q: ['what is url', 'url explained', 'ano ang url'],
+    a: 'A **URL** (Uniform Resource Locator) is the address of a webpage. Example: https://www.google.com. It tells the browser where to find the website on the internet.',
+  },
+  {
+    q: ['what is browser', 'browser explained', 'ano ang browser'],
+    a: 'A **browser** is software for accessing websites. Popular browsers: Chrome, Firefox, Safari, Edge. They render HTML, CSS, and JavaScript into visual web pages.',
+  },
+  {
+    q: ['what is operating system', 'operating system explained', 'ano ang operating system'],
+    a: 'An **operating system** is software that manages computer hardware and provides a user interface. Examples: Windows, macOS, Linux, Android, iOS.',
+  },
+  {
+    q: ['what is cpu', 'cpu explained', 'ano ang cpu'],
+    a: 'The **CPU** (Central Processing Unit) is the brain of the computer. It executes instructions and performs calculations. Speed is measured in GHz (gigahertz).',
+  },
+  {
+    q: ['what is ram', 'ram explained', 'ano ang ram'],
+    a: '**RAM** (Random Access Memory) is temporary storage for data the computer is actively using. More RAM means more programs can run simultaneously without slowing down.',
+  },
+  {
+    q: ['what is algorithm', 'what is an algorithm', 'ano ang algorithm'],
+    a: 'An **algorithm** is a step-by-step procedure for solving a problem. In programming, algorithms are sets of instructions that process data and produce results.',
+  },
+
+  /* --------------------------------------------------- more health */
+  {
+    q: ['how many steps per day', 'daily step goal', 'pila ka lakad kada adlaw'],
+    a: 'The recommended daily step count is **10,000 steps** for adults, though 7,500-10,000 is a good range. Walking 10,000 steps is about 8 km or 5 miles.',
+  },
+  {
+    q: ['what is BMI', 'how to calculate BMI', 'body mass index'],
+    a: '**BMI** = weight in kg divided by height in meters squared. Under 18.5 is underweight, 18.5-24.9 is normal, 25-29.9 is overweight, 30+ is obese.',
+  },
+  {
+    q: ['what are macronutrients', 'macronutrients explained', 'ano ang macronutrients'],
+    a: '**Macronutrients** are nutrients the body needs in large amounts: **protein** (builds muscle), **carbohydrates** (energy), and **fats** (hormones, cell structure).',
+  },
+  {
+    q: ['what is metabolic rate', 'metabolism explained', 'ano ang metabolism'],
+    a: '**Metabolism** is the process of converting food into energy. Your **basal metabolic rate** (BMR) is the calories your body burns at rest. It varies based on age, sex, and muscle mass.',
+  },
+  {
+    q: ['what is immune system', 'immune system explained', 'ano ang immune system'],
+    a: 'The **immune system** protects the body from infections. It includes white blood cells, antibodies, and lymph nodes. It has innate (general) and adaptive (specific) responses.',
+  },
+  {
+    q: ['what is vitamin C', 'vitamin C explained', 'ano ang vitamin C'],
+    a: '**Vitamin C** (ascorbic acid) is an antioxidant that supports the immune system, helps heal wounds, and aids iron absorption. Found in citrus fruits, tomatoes, and bell peppers.',
+  },
+  {
+    q: ['what is vitamin D', 'vitamin D explained', 'ano ang vitamin D'],
+    a: '**Vitamin D** helps the body absorb calcium and maintain bone health. The body produces it from sunlight. Found in fatty fish, egg yolks, and fortified foods.',
+  },
+  {
+    q: ['what is iron', 'iron nutrient explained', 'ano ang iron'],
+    a: '**Iron** is a mineral that helps red blood cells carry oxygen. Low iron causes anemia (fatigue, weakness). Found in red meat, spinach, beans, and fortified cereals.',
+  },
+  {
+    q: ['what is dehydration', 'dehydration explained', 'ano ang dehydration'],
+    a: '**Dehydration** occurs when the body loses more fluid than it takes in. Symptoms: thirst, dry mouth, dark urine, fatigue. Severe dehydration requires medical attention.',
+  },
+  {
+    q: ['what is calories', 'calories explained', 'ano ang calories'],
+    a: 'A **calorie** is a unit of energy. It measures how much energy food provides when your body breaks it down. The body needs about 2,000-2,500 calories per day.',
+  },
+
+  /* --------------------------------------------------- more history */
+  {
+    q: ['who invented the light bulb', 'inventor of light bulb', 'who made the light bulb'],
+    a: '**Thomas Edison** is credited with inventing a practical incandescent light bulb in 1879. However, earlier inventors like **Humphry Davy** and **Joseph Swan** also worked on electric lighting.',
+  },
+  {
+    q: ['what is Renaissance', 'Renaissance explained', 'ano ang Renaissance'],
+    a: 'The **Renaissance** was a cultural movement (14th-17th century) that began in Italy. It marked a revival of art, science, and learning after the Middle Ages. Key figures: Leonardo da Vinci, Michelangelo.',
+  },
+  {
+    q: ['what is Industrial Revolution', 'Industrial Revolution explained', 'ano ang Industrial Revolution'],
+    a: 'The **Industrial Revolution** (1760-1840) was the transition to machine manufacturing. It began in Britain and spread worldwide. It changed farming, manufacturing, and transportation.',
+  },
+  {
+    q: ['who invented the airplane', 'inventors of airplane', 'first flight'],
+    a: '**Orville and Wilbur Wright** made the first successful airplane flight on December 17, 1903, at Kitty Hawk, North Carolina. The flight lasted 12 seconds and covered 120 feet.',
+  },
+  {
+    q: ['what is ancient Egypt', 'ancient Egypt facts', 'ano ang ancient Egypt'],
+    a: 'Ancient **Egypt** was a civilization along the Nile River (3100-30 BC). It is known for pyramids, pharaohs, hieroglyphics, and mummies. The Great Pyramid of Giza was built around 2560 BC.',
+  },
+  {
+    q: ['what is World War II', 'WW2 facts', 'ano ang World War II'],
+    a: 'World War II (1939-1945) was the deadliest conflict in history, involving most of the world. It ended with the defeat of Nazi Germany and Japan. Over 70 million people died.',
+  },
+  {
+    q: ['who invented the computer', 'inventor of computer', 'who made the first computer'],
+    a: '**Charles Babbage** designed the first mechanical computer (Analytical Engine) in the 1830s. **Alan Turing** laid the theoretical foundations. The first electronic computer was ENIAC (1945).',
+  },
+  {
+    q: ['what is Cold War', 'Cold War explained', 'ano ang Cold War'],
+    a: 'The **Cold War** (1947-1991) was a geopolitical tension between the US and Soviet Union. It involved proxy wars, arms races, and space competition but never direct military conflict.',
+  },
+  {
+    q: ['who is Jose Rizal', 'Jose Rizal facts', 'ano ang Jose Rizal'],
+    a: '**Jose Rizal** (1861-1896) is the national hero of the Philippines. He was a writer, physician, and reformist. His novels Noli Me Tangere and El Filibusterismo inspired the Philippine Revolution.',
+  },
+  {
+    q: ['what is Katipunan', 'Katipunan explained', 'ano ang Katipunan'],
+    a: 'The **Katipunan** (KKK) was a Philippine revolutionary society founded in 1892. It aimed for independence from Spain through armed revolt. Led by Andres Bonifacio.',
+  },
+
+  /* -------------------------------------------------- more geography */
+  {
+    q: ['what is the largest ocean', 'biggest ocean', 'largest ocean in the world'],
+    a: 'The **Pacific Ocean** is the largest ocean, covering about 165 million square kilometers. It is larger than all land on Earth combined.',
+  },
+  {
+    q: ['what is the largest desert', 'biggest desert', 'largest desert in the world'],
+    a: 'The **Sahara** is the largest hot desert (9 million km2). The largest desert overall is **Antarctica** (14 million km2), as deserts are defined by low precipitation.',
+  },
+  {
+    q: ['what is the largest island', 'biggest island', 'largest island in the world'],
+    a: '**Greenland** is the largest island (2.17 million km2). Australia is sometimes considered a continent rather than an island.',
+  },
+  {
+    q: ['what is the longest road', 'longest road in the world', 'longest highway'],
+    a: 'The **Pan-American Highway** is the longest road at about 48,000 km, running from Alaska to Argentina. A gap in Panama (Darien Gap) breaks the road.',
+  },
+  {
+    q: ['what is the deepest lake', 'deepest lake in the world', 'deepest lake'],
+    a: '**Lake Baikal** in Russia is the deepest lake at 1,642 meters. It is also the oldest and largest freshwater lake by volume.',
+  },
+  {
+    q: ['what is the largest country by population', 'most populated country', 'biggest population'],
+    a: '**India** is the most populous country with over 1.4 billion people. China is second. Together they account for about 35% of the world population.',
+  },
+  {
+    q: ['what is the smallest country by area', 'tiniest country', 'smallest country'],
+    a: '**Vatican City** is the smallest country at 0.44 km2. It is the spiritual center of the Roman Catholic Church and home to the Pope.',
+  },
+  {
+    q: ['what is the coldest place', 'coldest place on earth', 'coldest temperature'],
+    a: '**Antarctica** is the coldest continent. The lowest temperature recorded was -89.2C at Vostok Station in 1983. The coldest inhabited place is Oymyakon, Russia (-67.7C).',
+  },
+  {
+    q: ['what is the hottest place', 'hottest place on earth', 'highest temperature'],
+    a: '**Death Valley**, California holds the record for highest air temperature: 56.7C (134F) in 1913. The hottest inhabited place is Dallol, Ethiopia.',
+  },
+  {
+    q: ['what is the Philippines famous for', 'Philippines known for', 'what makes Philippines special'],
+    a: 'The Philippines is known for: beautiful beaches (Boracay, Palawan), friendly people, jeepneys, karaoke, adobo and sinigang, festivals (Sinulog, Ati-Atihan), and call centers.',
+  },
+
+  /* ------------------------------------------------- everyday tips */
+  {
+    q: ['how to remove stains', 'stain removal tips', 'how to get stains out'],
+    a: '**Stain removal tips**: Act quickly. Blot (do not rub). Use cold water for blood. Use warm water for grease. Pre-treat with detergent. Check garment label. Test hidden area first.',
+  },
+  {
+    q: ['how to remove odors', 'odor removal tips', 'how to get rid of smell'],
+    a: '**Odor removal**: Baking soda absorbs odors. Vinegar neutralizes smells. Sunlight kills bacteria. Coffee grounds deodorize. Activated charcoal absorbs odors. Lemon cuts grease smells.',
+  },
+  {
+    q: ['how to clean silver', 'clean silver jewelry', 'silver polishing tips'],
+    a: '**Clean silver** with baking soda paste (baking soda + water). Rub gently with a soft cloth. Rinse and dry. Or use a mixture of warm water and dish soap.',
+  },
+  {
+    q: ['how to sharpen knives', 'knife sharpening tips', 'how to sharpen a knife'],
+    a: '**Sharpen knives** with a whetstone (best), honing steel (maintenance), or pull-through sharpener. Hold at 20-degree angle. Use consistent strokes. Hone before each use.',
+  },
+  {
+    q: ['how to remove fruit flies', 'get rid of fruit flies', 'fruit fly trap'],
+    a: '**Remove fruit flies** with apple cider vinegar trap (bowl + vinegar + soap). Cover trash cans. Refrigerate ripe fruit. Clean drains. Check for rotting produce.',
+  },
+  {
+    q: ['how to preserve food', 'food preservation tips', 'how to store food'],
+    a: '**Food preservation**: Refrigerate within 2 hours. Freeze for long-term. Use airtight containers. Label with dates. Follow FIFO (first in, first out). Check for spoilage.',
+  },
+
+  /* -------------------------------------------------- more Philippines */
+  {
+    q: ['what is Philippine peso', 'Philippine currency', 'ano ang piso'],
+    a: 'The **Philippine Peso** (PHP) is the currency of the Philippines. Coins come in 1, 5, 10, 25 centavos and 1, 5, 10, 20 pesos. Bills range from 20 to 1,000 pesos.',
+  },
+  {
+    q: ['what is GCash', 'GCash explained', 'ano ang GCash'],
+    a: '**GCash** is a mobile wallet in the Philippines. It allows sending money, paying bills, buying load, online shopping, and QR payments. It is widely used across the country.',
+  },
+  {
+    q: ['what is Shopee', 'Shopee explained', 'ano ang Shopee'],
+    a: '**Shopee** is an e-commerce platform popular in Southeast Asia. It allows buying and selling products online. It features flash sales, free shipping, and buyer protection.',
+  },
+  {
+    q: ['what is jeepney', 'what is a jeepney', 'ano ang jeepney'],
+    a: 'A **jeepney** is an iconic Filipino public utility vehicle. Originally from surplus US military jeps, they are known for colorful designs and crowded seating.',
+  },
+  {
+    q: ['what is sari sari store', 'sari sari store explained', 'ano ang sari sari store'],
+    a: 'A **sari-sari store** is a small neighborhood convenience store in the Philippines. It sells everyday essentials and operates from the owner\'s home.',
+  },
+  {
+    q: ['what is palengke', 'palengke explained', 'ano ang palengke'],
+    a: 'A **palengke** is a wet market in the Philippines where fresh produce, meat, and seafood are sold. It is usually cheaper than supermarkets.',
+  },
+  {
+    q: ['what is kare kare', 'kare kare explained', 'ano ang kare kare'],
+    a: '**Kare-kare** is a Filipino stew made with oxtail, peanut sauce, and vegetables (eggplant, string beans, banana blossom). Served with bagoong (shrimp paste).',
+  },
+  {
+    q: ['what is lechon', 'lechon explained', 'ano ang lechon'],
+    a: '**Lechon** is a whole roasted pig, a Filipino celebration dish. Known for its crispy skin and tender meat. Cebu and Pampanga are famous for their lechon.',
+  },
+  {
+    q: ['what is halo halo', 'halo halo explained', 'ano ang halo halo'],
+    a: '**Halo-halo** is a popular Filipino dessert with shaved ice, evaporated milk, sweet beans, jellies, fruits, leche flan, and ube ice cream. Mix everything before eating.',
+  },
+  {
+    q: ['what is balut', 'balut explained', 'ano ang balut'],
+    a: '**Balut** is a fertilized duck egg with a partially developed embryo, boiled and eaten from the shell. It is a popular street food in the Philippines.',
+  },
+  {
+    q: ['what is teriyaki', 'teriyaki explained', 'ano ang teriyaki'],
+    a: '**Teriyaki** is a Japanese cooking technique where food is grilled or broiled with a sweet soy sauce glaze. Common with chicken, beef, and fish.',
+  },
+  {
+    q: ['what is sushi', 'sushi explained', 'ano ang sushi'],
+    a: '**Sushi** is a Japanese dish of vinegared rice combined with seafood, vegetables, and sometimes tropical fruits. It is not raw fish (that is sashimi).',
+  },
+  {
+    q: ['what is ramen', 'ramen explained', 'ano ang ramen'],
+    a: '**Ramen** is a Japanese noodle soup with wheat noodles, broth, and toppings like pork, eggs, and seaweed. It originated from Chinese noodle soup.',
+  },
+
+  /* -------------------------------------------------- programming 2 */
+  {
+    q: ['what is variable', 'variable explained', 'ano ang variable'],
+    a: 'A **variable** is a named container that stores data. In JavaScript: let name = "John";. Variables can hold numbers, strings, objects, and more.',
+  },
+  {
+    q: ['what is array', 'array explained', 'ano ang array'],
+    a: 'An **array** is an ordered list of items. In JavaScript: let colors = ["red", "blue", "green"]. Items are accessed by index starting from 0.',
+  },
+  {
+    q: ['what is object', 'object explained', 'ano ang object'],
+    a: 'An **object** stores data as key-value pairs. In JavaScript: let person = {name: "John", age: 30}. Objects organize related data together.',
+  },
+  {
+    q: ['what is string', 'string explained', 'ano ang string'],
+    a: 'A **string** is text data enclosed in quotes. Example: "Hello World". Strings can be manipulated (concatenated, sliced, searched) using built-in methods.',
+  },
+  {
+    q: ['what is loop', 'loop explained', 'ano ang loop'],
+    a: 'A **loop** repeats a block of code. Types: **for** (known iterations), **while** (condition-based), **for...of** (iterating arrays). Use break to exit early.',
+  },
+  {
+    q: ['what is conditional', 'if else explained', 'ano ang conditional'],
+    a: 'A **conditional** runs different code based on conditions. if (condition) { ... } else if (condition2) { ... } else { ... }. It is a fundamental programming concept.',
+  },
+  {
+    q: ['what is function declaration', 'function explained', 'ano ang function'],
+    a: 'A **function** is a reusable block of code. Declared with: function greet(name) { return "Hello " + name; }. Called with: greet("John").',
+  },
+  {
+    q: ['what is class', 'class explained', 'ano ang class'],
+    a: 'A **class** is a blueprint for creating objects. It defines properties and methods. In JavaScript: class Car { constructor(color) { this.color = color; } }.',
+  },
+  {
+    q: ['what is DOM manipulation', 'DOM manipulation explained', 'ano ang DOM manipulation'],
+    a: '**DOM manipulation** is using JavaScript to change HTML elements. Methods: getElementById, querySelector, addEventListener, innerHTML, style.',
+  },
+  {
+    q: ['what is event listener', 'event listener explained', 'ano ang event listener'],
+    a: 'An **event listener** waits for user actions (clicks, key presses, scrolls). In JavaScript: button.addEventListener("click", function() { ... }).',
+  },
+  {
+    q: ['what is API call', 'API call explained', 'ano ang API call'],
+    a: 'An **API call** is a request from one program to another. In JavaScript: fetch("https://api.example.com/data") returns a Promise with the response.',
+  },
+  {
+    q: ['what is error handling', 'error handling explained', 'ano ang error handling'],
+    a: '**Error handling** manages runtime errors. Use try { ... } catch (error) { ... } to handle errors gracefully. Always validate user input.',
+  },
 ]
 /**
  * Everything above, flattened into one lookup list. `source` distinguishes the

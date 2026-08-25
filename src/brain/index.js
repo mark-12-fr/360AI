@@ -19,6 +19,7 @@ import academics from './skills/academics.js'
 import chance from './skills/chance.js'
 import chemistry from './skills/chemistry.js'
 import code from './skills/code.js'
+import creative from './skills/creative.js'
 import datetime from './skills/datetime.js'
 import debug from './skills/debug.js'
 import define from './skills/define.js'
@@ -49,6 +50,7 @@ export const SKILLS = [
   explain,
   reasoning,
   general,
+  creative,
   code,
   profiles,
   define,

@@ -1920,5 +1920,1325 @@ Ethical reasoning does not always give clear answers, but it provides a structur
 - Evaluate evidence: Is it strong, relevant, and sufficient?
 - Consider alternatives: Are there other explanations?
 - Draw your own conclusion based on the analysis`
-  }
+  },
+  {
+    id: "workplace-ethics-dilemma",
+    category: "Ethics",
+    q: ["Workplace ethics dilemma", "Ethical problem at work", "Should I report my boss?"],
+    title: "Workplace Ethics Dilemma",
+    body: `Workplace ethics dilemmas require balancing personal integrity with professional relationships and consequences.
+
+## Scenario
+
+You discover your manager is inflating expense reports, claiming personal meals as business meetings. You have a good relationship with them and they recently recommended you for a promotion.
+
+## Stakeholders Affected
+
+1. **You**: Your career, integrity, and relationship with manager
+2. **Manager**: Job, reputation, and livelihood
+3. **Company**: Financial resources and trust
+4. **Team**: Work environment and morale
+5. **Shareholders/Owners**: Company resources
+
+## Ethical Frameworks Applied
+
+### Utilitarian Analysis
+- **Action**: Report the behavior
+- **Consequences**: Company saves money, manager faces consequences, you may face retaliation
+- **Net outcome**: Greater good for company, but personal cost
+
+### Deontological Analysis
+- **Duty**: You have a duty to be honest and protect company resources
+- **Rule**: Falsifying expenses is wrong regardless of consequences
+- **Action**: Report based on principle
+
+### Virtue Ethics Analysis
+- **Character**: What would an honest, courageous person do?
+- **Values**: Integrity, loyalty, justice
+- **Tension**: Loyalty to manager vs honesty to company
+
+## Possible Actions
+
+### Option 1: Confront Manager Directly
+- Pros: Gives them chance to correct, preserves relationship
+- Cons: They may deny or retaliate, no documentation
+
+### Option 2: Report to HR or Compliance
+- Pros: Proper channel, documentation, protects company
+- Cons: Damages relationship, potential retaliation
+
+### Option 3: Anonymous Tip
+- Pros: Protects you, still addresses the issue
+- Cons: Less direct, may not be taken seriously
+
+### Option 4: Do Nothing
+- Pros: Preserves relationship, avoids conflict
+- Cons: Compromises your integrity, company continues losing money
+
+## Recommended Approach
+
+1. Document what you observed (dates, amounts, specifics)
+2. Consult company ethics policy
+3. Report through proper channels (HR, compliance hotline, or anonymous reporting)
+4. Focus on facts, not accusations
+5. Be prepared for any outcome
+
+## Key Considerations
+
+- Most companies have anti-retaliation policies
+- Reporting protects the company and other employees
+- Your integrity is your most valuable asset
+- Doing the right thing is rarely easy but always right
+
+Ethical dilemmas at work test our values. The best approach balances honesty, courage, and practical wisdom.`
+  },
+  {
+    id: "supply-demand-problem",
+    category: "Economics",
+    q: ["Supply and demand problem", "Economic reasoning", "Price change analysis"],
+    title: "Supply and Demand Analysis",
+    body: `Supply and demand analysis helps understand how markets determine prices and quantities.
+
+## Scenario
+
+A popular smartphone manufacturer faces a situation where a key component (microchips) becomes scarce due to a factory fire. Meanwhile, a competitor launches a revolutionary new phone.
+
+## Analysis Framework
+
+### Step 1: Identify Supply Factors
+- **Supply decrease**: Factory fire reduces microchip availability
+- **Impact**: Production capacity reduced by 30%
+- **Timeline**: 3-6 months to repair factory
+
+### Step 2: Identify Demand Factors
+- **Demand increase**: Competitor launch creates buzz for smartphones
+- **Consumer interest**: Overall smartphone demand rises
+- **Substitution**: Some consumers may switch brands
+
+### Step 3: Determine Price Effects
+
+**Supply Effect**:
+- Lower supply with constant demand = higher prices
+- Estimated price increase: 15-20%
+
+**Demand Effect**:
+- Higher demand with constant supply = higher prices
+- Estimated price increase: 10-15%
+
+**Combined Effect**:
+- Both forces push prices up
+- Estimated total price increase: 25-35%
+
+### Step 4: Predict Quantity Effects
+
+**Production**:
+- Company produces fewer units
+- Estimated reduction: 30%
+
+**Sales Volume**:
+- Higher prices reduce quantity demanded
+- Estimated reduction: 15-20%
+
+### Step 5: Market Response
+
+**Short-term**:
+- Prices rise immediately
+- Scarcity creates urgency
+- Scalpers may exploit shortage
+
+**Medium-term**:
+- Factory repairs increase supply
+- Competitor production meets demand
+- Prices stabilize
+
+**Long-term**:
+- Companies diversify suppliers
+- New factories built
+- Market equilibrium restored
+
+## Conclusion
+
+The simultaneous supply decrease and demand increase create strong upward pressure on prices. The company should manage inventory carefully, communicate with customers, and accelerate alternative sourcing.
+
+Supply and demand analysis provides a framework for understanding market dynamics and making informed business decisions.`
+  },
+  {
+    id: "time-management-problem",
+    category: "Productivity",
+    q: ["Time management problem", "How to manage time better", "Productivity analysis"],
+    title: "Time Management Problem Analysis",
+    body: `Effective time management requires analyzing how time is spent and optimizing for maximum productivity.
+
+## Scenario
+
+A college student works part-time, studies for exams, and wants to maintain a social life. They feel overwhelmed and consistently miss deadlines.
+
+## Step 1: Time Audit
+
+**Current Time Allocation** (per week):
+- Sleep: 56 hours (8 hours/day)
+- Classes: 15 hours
+- Part-time work: 20 hours
+- Commuting: 10 hours
+- Social media: 14 hours (2 hours/day)
+- Socializing: 7 hours
+- Studying: 10 hours
+- Personal care: 7 hours
+- Free time: 3 hours
+
+**Total accounted**: 142 hours
+**Total available**: 168 hours (24 x 7)
+**Unaccounted**: 26 hours (likely screen time and inefficiency)
+
+## Step 2: Identify Problems
+
+### Problem 1: Excessive Social Media
+- 14 hours/week is excessive
+- Creates distraction and comparison anxiety
+- Contributes to procrastination
+
+### Problem 2: Inefficient Study Time
+- 10 hours for a full course load is low
+- Likely includes distracted, unproductive time
+- No structured study plan
+
+### Problem 3: No Buffer Time
+- Schedule is completely full
+- No time for unexpected events
+- Creates constant stress
+
+## Step 3: Apply Time Management Frameworks
+
+### Eisenhower Matrix
+- **Urgent + Important**: Exam deadlines, work shifts
+- **Important + Not Urgent**: Studying, exercise, relationships
+- **Urgent + Not Important**: Some messages, minor requests
+- **Neither**: Excessive social media, TV
+
+### Pomodoro Technique
+- 25-minute focused work sessions
+- 5-minute breaks between sessions
+- 15-30 minute break after 4 sessions
+- Increases focus and reduces burnout
+
+### Time Blocking
+- Block specific hours for specific activities
+- Protect study time like a class
+- Schedule social media as a treat, not default
+
+## Step 4: Develop New Schedule
+
+**Optimized Time Allocation**:
+- Sleep: 56 hours
+- Classes: 15 hours
+- Work: 20 hours
+- Commuting: 10 hours
+- Studying: 20 hours (structured, focused)
+- Social media: 5 hours (restricted to breaks)
+- Socializing: 7 hours
+- Personal care: 7 hours
+- Buffer time: 10 hours
+- Free time: 18 hours
+
+## Step 5: Implementation
+
+### Week 1-2
+- Install app blocker for social media during study time
+- Create study schedule and stick to it
+- Say no to one social commitment per week
+
+### Week 3-4
+- Review and adjust schedule
+- Measure productivity improvement
+- Celebrate small wins
+
+## Results
+
+- Study time doubled (10 to 20 hours)
+- Social media cut by 65%
+- Buffer time added for unexpected events
+- Less stress, better performance
+
+Time management is not about doing more things; it is about doing the right things efficiently.`
+  },
+  {
+    id: "resource-allocation",
+    category: "Problem Solving",
+    q: ["How to allocate resources", "Resource allocation problem", "Limited resources decision"],
+    title: "Resource Allocation Problem",
+    body: `Resource allocation involves distributing limited resources to maximize outcomes.
+
+## Scenario
+
+A small business has 100,000 budget to invest. They can choose from three options:
+1. New marketing campaign
+2. Employee training program
+3. Technology upgrade
+
+## Step 1: Define Criteria
+
+1. Return on Investment (ROI)
+2. Time to see results
+3. Risk level
+4. Long-term vs short-term benefits
+5. Employee impact
+
+## Step 2: Analyze Each Option
+
+### Option 1: Marketing Campaign (100,000)
+- **ROI**: 200% within 6 months
+- **Time**: 1-2 months to see results
+- **Risk**: Medium (depends on execution)
+- **Benefits**: Short-term revenue boost
+- **Impact**: Minimal employee impact
+
+### Option 2: Employee Training (100,000)
+- **ROI**: 150% within 12 months
+- **Time**: 3-6 months for full impact
+- **Risk**: Low (employees may leave)
+- **Benefits**: Long-term capability building
+- **Impact**: High employee satisfaction
+
+### Option 3: Technology Upgrade (100,000)
+- **ROI**: 180% within 9 months
+- **Time**: 2-3 months for implementation
+- **Risk**: Low-Medium (integration challenges)
+- **Benefits**: Efficiency gains, cost savings
+- **Impact**: Moderate employee learning curve
+
+## Step 3: Score Each Option (1-10)
+
+| Criterion | Weight | Marketing | Training | Tech |
+|-----------|--------|-----------|----------|------|
+| ROI | 30% | 9 | 7 | 8 |
+| Time to results | 20% | 8 | 5 | 7 |
+| Risk | 20% | 6 | 8 | 7 |
+| Long-term benefit | 15% | 5 | 9 | 8 |
+| Employee impact | 15% | 3 | 10 | 6 |
+
+## Step 4: Calculate Weighted Scores
+
+**Marketing**: (9 x 0.3) + (8 x 0.2) + (6 x 0.2) + (5 x 0.15) + (3 x 0.15) = 6.75
+
+**Training**: (7 x 0.3) + (5 x 0.2) + (8 x 0.2) + (9 x 0.15) + (10 x 0.15) = 7.35
+
+**Tech**: (8 x 0.3) + (7 x 0.2) + (7 x 0.2) + (8 x 0.15) + (6 x 0.15) = 7.25
+
+## Step 5: Decision
+
+**Training scores highest (7.35)**
+
+However, consider splitting the budget:
+- 60,000 for Training (employee development)
+- 40,000 for Tech upgrade (efficiency gains)
+
+This balances short-term needs with long-term capability building.
+
+## Conclusion
+
+Resource allocation requires systematic analysis of options against clear criteria. The best decision balances multiple factors and considers creative solutions like splitting resources.`
+  },
+  {
+    id: "risk-assessment",
+    category: "Decision Making",
+    q: ["Risk assessment analysis", "How to evaluate risk", "Risk vs reward analysis"],
+    title: "Risk Assessment Analysis",
+    body: `Risk assessment evaluates potential negative outcomes and their likelihood to inform decisions.
+
+## Scenario
+
+An entrepreneur considers starting an online food delivery business in a mid-sized Philippine city.
+
+## Step 1: Identify Risks
+
+### Market Risks
+- Low customer adoption
+- Competition from established players
+- Economic downturn reducing spending
+
+### Operational Risks
+- Delivery delays
+- Food quality issues
+- Driver reliability
+
+### Financial Risks
+- High startup costs
+- Low profit margins
+- Cash flow problems
+
+### Legal Risks
+- Food safety regulations
+- Business permit issues
+- Liability for accidents
+
+## Step 2: Assess Likelihood and Impact
+
+| Risk | Likelihood | Impact | Risk Score |
+|------|------------|--------|------------|
+| Low adoption | Medium (3) | High (4) | 12 |
+| Competition | High (4) | High (4) | 16 |
+| Delivery delays | Medium (3) | Medium (3) | 9 |
+| Cash flow issues | High (4) | High (4) | 16 |
+| Food safety issues | Low (2) | High (4) | 8 |
+| Driver reliability | Medium (3) | Medium (3) | 9 |
+
+## Step 3: Develop Mitigation Strategies
+
+### For High-Risk Items (Score 12+):
+
+**Low Customer Adoption**
+- Start with a small area
+- Offer first-order discounts
+- Partner with popular restaurants
+- Use social media marketing
+
+**Competition**
+- Focus on underserved areas
+- Offer better customer service
+- Create loyalty programs
+- Differentiate with unique features
+
+**Cash Flow Problems**
+- Start with minimal investment
+- Secure backup funding
+- Monitor expenses closely
+- Maintain 3-month reserve
+
+## Step 4: Calculate Expected Value
+
+**Scenario Analysis**:
+
+Best Case (30% probability):
+- Revenue: 500,000/month
+- Profit: 100,000/month
+- Expected value: 30,000/month
+
+Base Case (50% probability):
+- Revenue: 300,000/month
+- Profit: 50,000/month
+- Expected value: 25,000/month
+
+Worst Case (20% probability):
+- Revenue: 100,000/month
+- Loss: 20,000/month
+- Expected value: -4,000/month
+
+**Total Expected Value**: 30,000 + 25,000 - 4,000 = 51,000/month
+
+## Step 5: Decision Framework
+
+### Accept if:
+- Expected value is positive
+- Risks are manageable
+- You have adequate reserves
+- You understand the downsides
+
+### Reject if:
+- Risk exceeds your tolerance
+- Downside is catastrophic
+- Better opportunities exist
+- You cannot afford to lose the investment
+
+## Conclusion
+
+This business opportunity has a positive expected value of 51,000/month. With proper mitigation strategies and adequate reserves, the risks are manageable. The entrepreneur should proceed with a phased approach, starting small and scaling based on results.
+
+Risk assessment does not eliminate risk; it helps you understand and manage it effectively.`
+  },
+  {
+    id: "comparative-advantage",
+    category: "Economics",
+    q: ["Comparative advantage", "Should I specialize?", "Division of labor reasoning"],
+    title: "Comparative Advantage Analysis",
+    body: `Comparative advantage explains why specialization and trade benefit everyone.
+
+## Concept
+
+A person or country has comparative advantage when they can produce something at a lower opportunity cost than others. Even if one person is better at everything, both benefit from specializing.
+
+## Example: Freelancer Decision
+
+**Maria** is a talented web designer who is also good at accounting.
+
+**Monthly Work Output**:
+- Web design: 4 projects at 5,000 each = 20,000
+- Bookkeeping: 10 clients at 2,000 each = 20,000
+- Total if doing both: 40,000
+
+**Opportunity Costs**:
+- 1 web design project = 2.5 bookkeeping clients (4/10)
+- 1 bookkeeping client = 0.4 web design projects (10/4)
+
+**Maria** has comparative advantage in **web design** (lower opportunity cost).
+
+**Juan** is a bookkeeper who also does basic web design.
+
+**Monthly Work Output**:
+- Web design: 2 projects at 5,000 each = 10,000
+- Bookkeeping: 8 clients at 2,000 each = 16,000
+- Total if doing both: 26,000
+
+**Opportunity Costs**:
+- 1 web design project = 4 bookkeeping clients (2/8)
+- 1 bookkeeping client = 0.25 web design projects (8/2)
+
+**Juan** has comparative advantage in **bookkeeping** (lower opportunity cost).
+
+## Specialization Outcome
+
+**Maria** specializes in web design: 4 x 5,000 = 20,000
+**Juan** specializes in bookkeeping: 8 x 2,000 = 16,000
+**Total combined output**: 36,000
+
+They can then trade services. If Maria pays Juan 3,000 for bookkeeping:
+- Maria gains: 3,000 saved vs doing it herself
+- Juan gains: 1,000 more than his usual rate
+
+## Key Insight
+
+Both parties benefit when each specializes in what they do best relative to alternatives. This is true even when one person is objectively better at everything.
+
+## Application
+
+- **Individuals**: Focus on your strengths, outsource weaknesses
+- **Businesses**: Specialize in core competencies
+- **Countries**: Trade for goods they produce less efficiently
+
+Comparative advantage is one of the most powerful economic concepts, explaining why specialization and trade create wealth.`
+  },
+  {
+    id: "game-theory-prisoners-dilemma",
+    category: "Logic",
+    q: ["Prisoners dilemma", "Game theory reasoning", "Cooperation vs competition"],
+    title: "Game Theory: Prisoner's Dilemma",
+    body: `The Prisoner's Dilemma illustrates why individuals might not cooperate even when it is in their best interest.
+
+## The Scenario
+
+Two criminals are arrested and questioned separately. They have two options: **cooperate** (stay silent) or **defect** (betray the other).
+
+## Payoff Matrix
+
+|  | Prisoner B Stays Silent | Prisoner B Betrays |
+|--|------------------------|-------------------|
+| **A Stays Silent** | Both get 1 year | A gets 3 years, B goes free |
+| **A Betrays** | A goes free, B gets 3 years | Both get 2 years |
+
+## Analysis
+
+### Individual Rationality
+
+From Prisoner A's perspective:
+- If B stays silent: I should betray (0 vs 1 year)
+- If B betrays: I should betray (2 vs 3 years)
+
+**Betraying is always better for the individual**, regardless of what B does.
+
+### Collective Outcome
+
+- Both stay silent: 2 total years (best collective outcome)
+- Both betray: 4 total years
+- One betrays: 3 total years
+
+**Both staying silent is best collectively**, but both betraying is the individual rational choice.
+
+## Real-World Examples
+
+### Business Pricing
+- Two companies can keep prices high (cooperate) or lower them (defect)
+- Both lowering prices leads to a price war (worse for both)
+
+### Arms Race
+- Two countries can limit weapons (cooperate) or build more (defect)
+- Both building more leads to expensive arms race
+
+### Environmental Agreements
+- Countries can reduce emissions (cooperate) or continue polluting (defect)
+- Free-riding on others' cooperation is tempting
+
+## Repeated Games
+
+In real life, interactions are repeated. This changes the calculus:
+- Reputation matters
+- Retaliation is possible
+- Cooperation can emerge through tit-for-tat strategies
+
+## Lessons
+
+1. Individual rationality can lead to collective irrationality
+2. Communication and enforcement help achieve cooperation
+3. Long-term relationships promote cooperative behavior
+4. Institutions and agreements help overcome the dilemma
+
+The Prisoner's Dilemma explains many real-world situations where cooperation fails despite being mutually beneficial.`
+  },
+  {
+    id: "decision-tree-analysis",
+    category: "Decision Making",
+    q: ["Decision tree analysis", "How to make complex decisions", "Structured decision making"],
+    title: "Decision Tree Analysis",
+    body: `Decision trees map out choices and their possible outcomes to find the optimal decision.
+
+## Scenario
+
+A company must decide whether to launch a new product.
+
+## Decision Tree Structure
+
+### Decision Node 1: Launch or Not?
+
+**Option A**: Do not launch
+- Outcome: No revenue, no cost
+- Value: 0
+
+**Option B**: Launch
+
+### Chance Node 1: Market Response
+
+**Branch B1**: High demand (40% probability)
+- Revenue: 500,000
+- Profit: 200,000
+
+**Branch B2**: Medium demand (35% probability)
+- Revenue: 300,000
+- Profit: 50,000
+
+**Branch B3**: Low demand (25% probability)
+- Revenue: 100,000
+- Loss: 50,000
+
+## Calculate Expected Values
+
+### Option A (Do Not Launch)
+Expected Value = 0
+
+### Option B (Launch)
+Expected Value = (0.40 x 200,000) + (0.35 x 50,000) + (0.25 x -50,000)
+= 80,000 + 17,500 - 12,500
+= 85,000
+
+## Decision
+
+Since 85,000 > 0, the company should **launch the product**.
+
+## Adding More Complexity
+
+### Decision Node 2: Marketing Budget
+
+**Branch B1a**: High marketing (100,000 budget)
+- High demand: 55% probability
+- Medium demand: 30% probability
+- Low demand: 15% probability
+
+**Branch B1b**: Low marketing (50,000 budget)
+- High demand: 30% probability
+- Medium demand: 40% probability
+- Low demand: 30% probability
+
+### Expected Values with Marketing Options
+
+**High Marketing**:
+(0.55 x 250,000) + (0.30 x 100,000) + (0.15 x 0) - 100,000
+= 137,500 + 30,000 + 0 - 100,000
+= 67,500
+
+**Low Marketing**:
+(0.30 x 200,000) + (0.40 x 50,000) + (0.30 x -50,000) - 50,000
+= 60,000 + 20,000 - 15,000 - 50,000
+= 15,000
+
+## Revised Decision
+
+Launch with **high marketing** (67,500 expected value).
+
+## Benefits of Decision Trees
+
+1. Visual representation of complex decisions
+2. Quantifies uncertainty with probabilities
+3. Considers multiple outcomes
+4. Documents assumptions
+5. Facilitates stakeholder communication
+
+Decision trees turn gut-feeling decisions into structured, data-driven choices.`
+  },
+  {
+    id: "systems-failure-analysis",
+    category: "Problem Solving",
+    q: ["Systems failure analysis", "Why did the system fail?", "Root cause of failure"],
+    title: "Systems Failure Analysis",
+    body: `Systems failure analysis examines how complex systems break down to prevent future failures.
+
+## Scenario
+
+A bank's online banking system experienced a 6-hour outage during peak hours.
+
+## Step 1: Timeline Reconstruction
+
+- 2:00 PM: Database server shows high CPU usage
+- 2:15 PM: Response times increase to 10 seconds
+- 2:30 PM: Error rates spike above 50%
+- 2:45 PM: System becomes unresponsive
+- 3:00 PM: Emergency team assembled
+- 5:00 PM: Root cause identified
+- 8:00 PM: System restored
+
+## Step 2: Immediate Causes
+
+### Technical Causes
+- Database connection pool exhausted
+- Memory overflow on application servers
+- Cascading failure to dependent services
+
+### Contributing Factors
+- No circuit breaker implementation
+- Insufficient load testing
+- Missing auto-scaling rules
+
+## Step 3: Root Cause Analysis (5 Whys)
+
+**Why 1**: Why did the system become unresponsive?
+- Because database connections were exhausted
+
+**Why 2**: Why were connections exhausted?
+- Because a slow query consumed all available connections
+
+**Why 3**: Why was the slow query not terminated?
+- Because there was no query timeout configuration
+
+**Why 4**: Why was there no timeout?
+- Because the feature was added without performance testing
+
+**Why 5**: Why was it deployed without testing?
+- Because there was no mandatory performance testing in the deployment process
+
+## Step 4: Contributing Factors
+
+### Process Failures
+- No code review for performance impact
+- No load testing requirement
+- No deployment checklist
+
+### Technical Debt
+- Legacy connection pooling
+- No monitoring alerts for slow queries
+- No automatic query termination
+
+### Human Factors
+- Developer unfamiliar with performance best practices
+- Time pressure to deliver feature
+- No on-call performance engineer
+
+## Step 5: Solutions
+
+### Immediate Fixes (Week 1)
+- Implement query timeout (30 seconds)
+- Add connection pool monitoring
+- Set up performance alerts
+
+### Short-term (Month 1)
+- Implement circuit breakers
+- Add load testing to CI/CD
+- Create performance review checklist
+
+### Long-term (Quarter 1)
+- Database optimization
+- Auto-scaling implementation
+- Performance engineering training
+
+## Step 6: Prevention
+
+### Process Changes
+- Mandatory performance testing for database changes
+- Code review includes performance checklist
+- Canary deployments for risky changes
+
+### Technical Changes
+- Real-time performance monitoring
+- Automated query optimization
+- Graceful degradation under load
+
+## Conclusion
+
+This failure resulted from a combination of technical debt, process gaps, and human factors. The root cause was the lack of performance testing, but multiple layers of defense failed to prevent or detect the issue.
+
+Systems failure analysis reveals that most failures are not caused by single events but by multiple small failures combining. Prevention requires addressing all layers.`
+  },
+  {
+    id: "opportunity-cost-analysis",
+    category: "Economics",
+    q: ["Opportunity cost analysis", "What am I giving up?", "Cost of choices"],
+    title: "Opportunity Cost Analysis",
+    body: `Opportunity cost is the value of the next best alternative foregone when making a choice.
+
+## Concept
+
+Every choice has a cost: what you give up by choosing that option. This cost is not always monetary.
+
+## Example: Career Decision
+
+**Situation**: Ana has two job offers after graduation.
+
+**Offer A**: Software Developer at a startup
+- Salary: 40,000/month
+- Benefits: Stock options, flexible hours
+- Learning: Fast-paced, varied technologies
+
+**Offer B**: Corporate Analyst at a bank
+- Salary: 50,000/month
+- Benefits: Health insurance, bonuses
+- Learning: Structured training, stable career
+
+## Opportunity Cost Analysis
+
+### If Ana Chooses Offer A (Startup):
+- **Direct cost**: 40,000/month salary
+- **Opportunity cost**: 50,000/month salary = 10,000/month lost
+- **Total economic cost**: 50,000/month
+
+### If Ana Chooses Offer B (Corporate):
+- **Direct cost**: 50,000/month salary
+- **Opportunity cost**: Stock options, flexibility, learning = unknown value
+- **Total economic cost**: 50,000 + value of foregone options
+
+## Hidden Opportunity Costs
+
+### Time
+- 10 hours/week commuting = 40 hours/month
+- Could be used for learning, freelancing, or rest
+
+### Energy
+- High-stress job may reduce capacity for side projects
+- Lower stress job may allow more personal development
+
+### Network
+- Startup: Tech entrepreneur network
+- Corporate: Finance professional network
+
+## Decision Framework
+
+### Quantify What You Can
+- Salary differences
+- Benefit values
+- Time costs
+
+### Consider Intangibles
+- Job satisfaction
+- Work-life balance
+- Career growth potential
+- Personal alignment
+
+### Think Long-term
+- 5-year career trajectory
+- Skills development
+- Network building
+- Financial security
+
+## Conclusion
+
+Ana should consider not just the salary difference but the total opportunity cost of each choice. If she values learning and flexibility, the startup may be worth the salary sacrifice. If she values stability and benefits, the corporate role may be better.
+
+Understanding opportunity cost helps make more informed decisions by considering what you are giving up, not just what you are gaining.`
+  },
+  {
+    id: "causal-reasoning-pandemic",
+    category: "Science",
+    q: ["How do pandemics spread?", "Pandemic cause and effect", "Virus transmission reasoning"],
+    title: "Causal Reasoning: Pandemic Spread",
+    body: `Causal reasoning traces the chain of events that lead to pandemic spread.
+
+## The Phenomenon
+
+A new virus emerges and spreads rapidly across the globe, causing a pandemic.
+
+## Causal Chain
+
+### Step 1: Virus Emergence
+- **Cause**: Virus jumps from animal to human (zoonotic spillover)
+- **Effect**: First human cases appear
+- **Factors**: Wet markets, habitat encroachment, wildlife trade
+
+### Step 2: Local Transmission
+- **Cause**: Infected people contact others
+- **Effect**: Community spread begins
+- **Factors**: Close contact, poor ventilation, asymptomatic carriers
+
+### Step 3: Exponential Growth
+- **Cause**: Each infected person infects 2-3 others (R0 = 2-3)
+- **Effect**: Case numbers double every few days
+- **Factors**: No immunity, highly contagious, modern travel
+
+### Step 4: International Spread
+- **Cause**: Infected travelers cross borders
+- **Effect**: Virus reaches multiple countries
+- **Factors**: Global aviation, asymptomatic transmission, delayed detection
+
+### Step 5: Healthcare Overload
+- **Cause**: Cases exceed hospital capacity
+- **Effect**: Higher mortality, overwhelmed healthcare workers
+- **Factors**: Limited beds, equipment, staff
+
+## Mitigation Points
+
+### Prevention (Step 1-2)
+- Wildlife trade regulation
+- Early surveillance systems
+- Rapid testing and isolation
+
+### Containment (Step 3-4)
+- Contact tracing
+- Quarantine measures
+- Travel restrictions
+
+### Mitigation (Step 5)
+- Healthcare capacity expansion
+- Vaccination campaigns
+- Public health messaging
+
+## Verification
+
+- Does this causal chain make biological sense? Yes
+- Can we observe each step in real pandemics? Yes
+- Are there alternative explanations? Yes (some viruses do not cause pandemics)
+
+## Lessons
+
+1. Prevention is more effective than response
+2. Early action saves lives and resources
+3. Global cooperation is essential
+4. Healthcare capacity is critical
+5. Communication and trust matter
+
+Causal reasoning helps us understand how pandemics unfold and where to intervene for maximum impact.`
+  },
+  {
+    id: "weighted-decision-matrix",
+    category: "Decision Making",
+    q: ["Weighted decision matrix", "How to choose between options", "Structured decision making"],
+    title: "Weighted Decision Matrix",
+    body: `A weighted decision matrix evaluates options by scoring them against weighted criteria.
+
+## Scenario
+
+Choosing a new laptop for work and personal use.
+
+## Step 1: Identify Options
+
+- **Option A**: MacBook Air M2
+- **Option B**: Dell XPS 13
+- **Option C**: Lenovo ThinkPad X1
+
+## Step 2: Identify Criteria
+
+1. Performance
+2. Portability
+3. Battery life
+4. Price
+5. Build quality
+6. Keyboard
+
+## Step 3: Assign Weights (Total = 100%)
+
+| Criterion | Weight | Reason |
+|-----------|--------|--------|
+| Performance | 25% | Primary work tool |
+| Portability | 20% | Travel frequently |
+| Battery life | 20% | Work remotely |
+| Price | 15% | Budget matters |
+| Build quality | 10% | Durability |
+| Keyboard | 10% | Lots of typing |
+
+## Step 4: Score Each Option (1-10)
+
+| Criterion | MacBook | Dell | Lenovo |
+|-----------|---------|------|--------|
+| Performance | 9 | 8 | 8 |
+| Portability | 9 | 8 | 7 |
+| Battery life | 10 | 7 | 8 |
+| Price | 5 | 7 | 7 |
+| Build quality | 9 | 8 | 9 |
+| Keyboard | 7 | 8 | 10 |
+
+## Step 5: Calculate Weighted Scores
+
+### MacBook Air M2
+(9 x 0.25) + (9 x 0.20) + (10 x 0.20) + (5 x 0.15) + (9 x 0.10) + (7 x 0.10)
+= 2.25 + 1.80 + 2.00 + 0.75 + 0.90 + 0.70
+= **8.40**
+
+### Dell XPS 13
+(8 x 0.25) + (8 x 0.20) + (7 x 0.20) + (7 x 0.15) + (8 x 0.10) + (8 x 0.10)
+= 2.00 + 1.60 + 1.40 + 1.05 + 0.80 + 0.80
+= **7.65**
+
+### Lenovo ThinkPad X1
+(8 x 0.25) + (7 x 0.20) + (8 x 0.20) + (7 x 0.15) + (9 x 0.10) + (10 x 0.10)
+= 2.00 + 1.40 + 1.60 + 1.05 + 0.90 + 1.00
+= **7.95**
+
+## Step 6: Decision
+
+**MacBook Air M2 scores highest (8.40)**
+
+Choose MacBook Air M2 for best combination of performance, portability, and battery life.
+
+## Benefits of Weighted Decision Matrix
+
+1. Makes subjective decisions more objective
+2. Forces you to consider all relevant factors
+3. Documents your reasoning
+4. Allows comparison on equal footing
+5. Can be shared and discussed with others
+
+A weighted decision matrix turns complex choices into structured, defensible decisions.`
+  },
+  {
+    id: "feedback-loop-reasoning",
+    category: "Systems Thinking",
+    q: ["Feedback loops", "Reinforcing vs balancing loops", "Systems dynamics"],
+    title: "Feedback Loop Reasoning",
+    body: `Feedback loops are circular cause-and-effect chains that amplify or stabilize systems.
+
+## Types of Feedback Loops
+
+### Reinforcing Loops (Positive Feedback)
+- Amplify change
+- Push systems away from equilibrium
+- Create exponential growth or collapse
+
+### Balancing Loops (Negative Feedback)
+- Stabilize systems
+- Push systems toward equilibrium
+- Create self-correcting behavior
+
+## Example 1: Social Media Growth (Reinforcing)
+
+**Loop**:
+1. User creates content
+2. Content gets likes and shares
+3. Algorithm shows content to more users
+4. More users follow the creator
+5. More followers means more engagement
+6. More engagement means more content creation
+
+**Result**: Viral growth, exponential follower increase
+
+## Example 2: Thermostat (Balancing)
+
+**Loop**:
+1. Room temperature rises above set point
+2. Thermostat detects deviation
+3. Air conditioning turns on
+4. Room cools down
+5. Temperature reaches set point
+6. Air conditioning turns off
+
+**Result**: Temperature stability
+
+## Example 3: Population Growth (Reinforcing with Balancing)
+
+**Reinforcing Loop**:
+1. More people
+2. More births
+3. More people
+4. (Exponential growth)
+
+**Balancing Loop**:
+1. More people
+2. More resource consumption
+3. Resource scarcity
+4. Increased mortality
+5. Fewer people
+6. (Population stabilization)
+
+## Real-World Example: Business Growth
+
+### Reinforcing Loop (Growth)
+1. Good product
+2. Happy customers
+3. Word-of-mouth referrals
+4. More customers
+5. More revenue
+6. More investment in product
+7. Better product
+
+### Balancing Loop (Constraints)
+1. Growing customer base
+2. Increased support requests
+3. Support quality drops
+4. Customer satisfaction falls
+5. Referrals decrease
+6. Growth slows
+
+## Identifying Leverage Points
+
+### In Reinforcing Loops
+- Amplify positive loops (invest in what works)
+- Break negative loops (address root causes)
+
+### In Balancing Loops
+- Shift the set point (raise standards)
+- Reduce resistance (remove obstacles)
+- Strengthen the feedback signal (better monitoring)
+
+## Application
+
+1. Map your systems to identify loops
+2. Look for reinforcing loops driving growth or decline
+3. Identify balancing loops maintaining stability
+4. Find leverage points for intervention
+5. Monitor feedback delays
+
+Understanding feedback loops helps you see how small actions can create large effects over time.`
+  },
+  {
+    id: "counterfactual-reasoning",
+    category: "Critical Thinking",
+    q: ["What if history was different?", "Counterfactual reasoning", "Alternative history thinking"],
+    title: "Counterfactual Reasoning",
+    body: `Counterfactual reasoning explores what might have happened if key events had turned out differently.
+
+## Concept
+
+Counterfactuals are "what if" scenarios about the past. They help us understand causation by imagining alternatives.
+
+## Example: What If the Internet Was Never Invented?
+
+### Scenario
+Imagine the ARPANET project was defunded in the 1970s and the internet was never developed.
+
+### Immediate Effects
+- No World Wide Web
+- No email
+- No social media
+- No online shopping
+- No streaming services
+
+### Long-term Effects
+
+**Economy**:
+- Slower globalization
+- Local businesses dominate
+- No tech giants (Google, Facebook, Amazon)
+- Slower innovation cycles
+
+**Communication**:
+- Letters and phone calls remain primary
+- Long-distance relationships harder
+- Information spreads slowly
+- Local news remains dominant
+
+**Education**:
+- Libraries remain primary knowledge source
+- Online courses do not exist
+- Research is slower
+- Knowledge less accessible
+
+**Social**:
+- Stronger local communities
+- Less global awareness
+- Slower cultural exchange
+- More face-to-face interaction
+
+### What Would Be Different?
+
+1. **Economy**: More manufacturing, less digital
+2. **Politics**: Less political polarization from social media
+3. **Culture**: More local, less globalized
+4. **Education**: More equal access (no digital divide)
+5. **Privacy**: Much greater privacy
+
+## Why Counterfactuals Matter
+
+1. **Understanding causation**: Shows what events truly mattered
+2. **Learning from history**: Shows how choices have consequences
+3. **Strategic planning**: Helps anticipate future scenarios
+4. **Creativity**: Explores alternative possibilities
+5. **Humility**: Shows how contingent outcomes are
+
+## Limitations
+
+- History is complex (many variables)
+- One change can have unpredictable effects
+- We tend to imagine better outcomes
+- Cannot be tested or verified
+
+Counterfactual reasoning helps us appreciate how contingent history is and how small changes can have large effects.`
+  },
+  {
+    id: "multi-criteria-decision",
+    category: "Decision Making",
+    q: ["Multi-criteria decision making", "How to weigh trade-offs", "Complex decision analysis"],
+    title: "Multi-Criteria Decision Analysis",
+    body: `Multi-criteria decision analysis helps evaluate options when multiple factors matter.
+
+## Scenario
+
+A city must choose a location for a new park.
+
+## Options
+
+- **Option A**: Downtown location
+- **Option B**: Suburban location
+- **Option C**: Waterfront location
+
+## Criteria
+
+1. Accessibility (25%)
+2. Cost (20%)
+3. Environmental impact (20%)
+4. Community benefit (20%)
+5. Safety (15%)
+
+## Evaluation
+
+### Option A: Downtown
+
+| Criterion | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Accessibility | 9 | 0.25 | 2.25 |
+| Cost | 5 | 0.20 | 1.00 |
+| Environmental | 6 | 0.20 | 1.20 |
+| Community | 8 | 0.20 | 1.60 |
+| Safety | 7 | 0.15 | 1.05 |
+| **Total** | | | **7.10** |
+
+### Option B: Suburban
+
+| Criterion | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Accessibility | 5 | 0.25 | 1.25 |
+| Cost | 8 | 0.20 | 1.60 |
+| Environmental | 7 | 0.20 | 1.40 |
+| Community | 6 | 0.20 | 1.20 |
+| Safety | 8 | 0.15 | 1.20 |
+| **Total** | | | **6.65** |
+
+### Option C: Waterfront
+
+| Criterion | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Accessibility | 6 | 0.25 | 1.50 |
+| Cost | 4 | 0.20 | 0.80 |
+| Environmental | 9 | 0.20 | 1.80 |
+| Community | 9 | 0.20 | 1.80 |
+| Safety | 6 | 0.15 | 0.90 |
+| **Total** | | | **6.80** |
+
+## Sensitivity Analysis
+
+What if we change weights?
+
+### Scenario 1: Cost becomes more important (30%)
+- Downtown: 6.60
+- Suburban: 6.85 (becomes best)
+- Waterfront: 6.40
+
+### Scenario 2: Environment becomes more important (30%)
+- Downtown: 6.85
+- Suburban: 6.75
+- Waterfront: 7.15 (becomes best)
+
+## Decision
+
+**Option A (Downtown) scores highest (7.10)**
+
+The downtown location provides the best balance of accessibility, community benefit, and safety despite higher cost.
+
+## Conclusion
+
+Multi-criteria analysis reveals that the best choice depends on how you weight different factors. By making weights explicit, the decision becomes transparent and defensible. Sensitivity analysis shows how robust the decision is to changes in priorities.`
+  },
+  {
+    id: "ethics-of-ai",
+    category: "Ethics",
+    q: ["Ethics of artificial intelligence", "AI ethics dilemma", "Should AI make decisions?"],
+    title: "Ethics of Artificial Intelligence",
+    body: `AI ethics examines the moral implications of creating and deploying artificial intelligence systems.
+
+## Key Ethical Issues
+
+### 1. Bias and Fairness
+
+**Problem**: AI systems can perpetuate or amplify human biases.
+
+**Example**: An AI hiring tool trained on historical data may discriminate against women because past hires were predominantly male.
+
+**Questions**:
+- Who is responsible for biased AI outcomes?
+- How do we detect and correct bias?
+- Should we use AI for high-stakes decisions?
+
+### 2. Privacy and Surveillance
+
+**Problem**: AI enables mass surveillance and data collection.
+
+**Example**: Facial recognition technology can track people's movements without consent.
+
+**Questions**:
+- Where is the line between security and privacy?
+- Who should have access to AI surveillance?
+- How do we protect individual rights?
+
+### 3. Transparency and Accountability
+
+**Problem**: AI decisions are often opaque ("black box").
+
+**Example**: A loan application is denied by AI, but no one can explain why.
+
+**Questions**:
+- Should AI decisions be explainable?
+- Who is accountable when AI fails?
+- How do we audit AI systems?
+
+### 4. Job Displacement
+
+**Problem**: AI automation replaces human workers.
+
+**Example**: Self-driving trucks could eliminate millions of driving jobs.
+
+**Questions**:
+- What is our responsibility to displaced workers?
+- How do we distribute AI's economic benefits?
+- Should we limit AI automation?
+
+### 5. Autonomous Weapons
+
+**Problem**: AI-powered weapons can make kill decisions without human input.
+
+**Example**: Drones that autonomously select and engage targets.
+
+**Questions**:
+- Should machines decide who lives or dies?
+- Who is responsible for autonomous weapon actions?
+- Should we ban lethal autonomous weapons?
+
+## Ethical Frameworks
+
+### Utilitarian Approach
+- Maximize overall good
+- Consider all consequences
+- Balance benefits and harms
+
+### Rights-Based Approach
+- Protect individual rights
+- Ensure dignity and autonomy
+- Prevent harm to individuals
+
+### Virtue Ethics Approach
+- What would a wise person do?
+- Consider character and values
+- Focus on human flourishing
+
+## Recommendations
+
+1. **Transparency**: AI decisions should be explainable
+2. **Accountability**: Clear responsibility for AI outcomes
+3. **Fairness**: Regular audits for bias
+4. **Human oversight**: Humans should supervise high-stakes AI
+5. **Inclusive development**: Diverse teams building AI
+
+## Conclusion
+
+AI ethics is not just about technology; it is about the kind of society we want to live in. As AI becomes more powerful, we must ensure it serves human values and interests.`
+  },
 ];
