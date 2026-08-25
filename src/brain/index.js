@@ -20,12 +20,15 @@ import chance from './skills/chance.js'
 import chemistry from './skills/chemistry.js'
 import code from './skills/code.js'
 import datetime from './skills/datetime.js'
+import debug from './skills/debug.js'
 import define from './skills/define.js'
+import explain from './skills/explain.js'
 import geography from './skills/geography.js'
 import knowledge from './skills/knowledge.js'
 import law from './skills/law.js'
 import math from './skills/math.js'
 import profiles from './skills/profiles.js'
+import reasoning from './skills/reasoning.js'
 import smalltalk from './skills/smalltalk.js'
 import strands from './skills/strands.js'
 import text from './skills/text.js'
@@ -41,6 +44,9 @@ export const SKILLS = [
   academics,
   strands,
   law,
+  debug,
+  explain,
+  reasoning,
   code,
   profiles,
   define,
@@ -62,6 +68,23 @@ const FOLLOW_UP =
   /^(?:and|what about|how about|ok(?:ay)?|then)?[,\s]*(?:what(?:'s| is| are)\s+)?(?:its|it's|their|the|his|her)?\s*(?:capital|currency|language|population|area|continent|symbol|atomic number|atomic mass|subjects?|majors?|minors?|careers?|years?|meaning|definition)\s*[?.!]*$/i
 
 const PRONOUN_ONLY = /^\s*(and|what about|how about)?\s*(it|that|this|there|them|those)\s*[?.!]*\s*$/i
+
+/**
+ * Enhanced follow-up patterns for multi-turn context.
+ * These detect questions that depend on previous conversation context.
+ */
+const CONTEXT_FOLLOW_UP = [
+  // "what about" follow-ups
+  /^(?:what about|how about|and (?:about|the)|ok(?:ay)?,?\s*(?:what|how))\s+/i,
+  // "why" follow-ups that likely refer to previous subject
+  /^(?:why|how come|explain why)\s+(?:is|are|does|do|did|can|could|would|should|will)\s+(?:it|that|this|the|he|she|they|we)\b/i,
+  // "can you" follow-ups
+  /^(?:can|could|would|should|will)\s+(?:you|u)\s+(?:tell|give|show|explain|help)\s+(?:me|us)?\s+(?:about|the|more|detail)\s+(?:it|that|this|the)\b/i,
+  // comparison follow-ups
+  /^(?:which|what)\s+(?:one|is|are)\s+(?:better|faster|easier|cheaper|more)\b/i,
+  // "give me code" follow-ups
+  /^(?:show|give|write|create|make|generate)\s+(?:me\s+)?(?:the\s+)?(?:code|example|sample|demo)\s+(?:for|of|in|using|with)\s+(?:it|that|this|the)\b/i,
+]
 
 /* --------------------------------------------------------- answer length */
 
@@ -208,12 +231,30 @@ export async function answer(input, options = {}) {
     question = PRONOUN_ONLY.test(question) ? context.subject : `${question} of ${context.subject}`
   }
 
+  // Enhanced: detect context-dependent questions that reference previous subject
+  const isContextFollowUp = !bare && context.subject && CONTEXT_FOLLOW_UP.some(p => p.test(question))
+  if (isContextFollowUp) {
+    // Append previous subject to help skills match the context
+    question = `${question} (referring to ${context.subject})`
+  }
+
+  // Track conversation history for multi-turn awareness
+  if (!context.history) context.history = []
+  if (!lengthCommand) {
+    context.history.push({ role: 'user', content: raw })
+    // Keep last 6 messages for context (3 turns)
+    if (context.history.length > 6) context.history = context.history.slice(-6)
+  }
+
   const ctx = {
     text: question,
     original: raw,
     now: options.now ?? new Date(),
     memory: options.memory ?? { taught: [] },
     skillList: skillList(),
+    // Pass conversation context for multi-turn awareness
+    conversationHistory: context.history ?? [],
+    previousSubject: context.subject ?? null,
   }
 
   let best = null

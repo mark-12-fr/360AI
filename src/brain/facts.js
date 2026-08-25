@@ -211,6 +211,208 @@ export const FACTS = [
     q: ['tip calculation', 'how much to tip', 'service charge'],
     a: 'Ask me directly — for example `15% of 850` — and I will work it out. In the Philippines a service charge is often already on the bill.',
   },
+
+  /* ------------------------------------------------------- programming */
+  {
+    q: ['what is html', 'ano ang html', 'hypertext markup language'],
+    a: '**HTML (HyperText Markup Language)** structures web content. It uses elements like `<h1>`, `<p>`, `<div>`, `<a>`, and `<img>` to define headings, paragraphs, links, and images.',
+  },
+  {
+    q: ['what is css', 'ano ang css', 'cascading style sheets'],
+    a: '**CSS (Cascading Style Sheets)** controls how HTML elements look — colors, layout, fonts, spacing. It uses selectors to target elements and properties to style them.',
+  },
+  {
+    q: ['what is react', 'ano ang react', 'react js'],
+    a: '**React** is a JavaScript library for building user interfaces. It uses components, JSX, and a virtual DOM to efficiently update the UI when data changes.',
+  },
+  {
+    q: ['what is nextjs', 'ano ang nextjs', 'next js framework'],
+    a: '**Next.js** is a React framework that adds server-side rendering, file-based routing, automatic code splitting, and optimized build settings.',
+  },
+  {
+    q: ['what is typescript', 'ano ang typescript'],
+    a: '**TypeScript** is JavaScript with static types. It catches errors at compile time, provides better autocomplete, and compiles to plain JavaScript.',
+  },
+  {
+    q: ['what is nodejs', 'ano ang nodejs', 'node js'],
+    a: '**Node.js** is a JavaScript runtime built on Chrome\'s V8 engine. It lets you run JavaScript on the server, enabling full-stack JavaScript development.',
+  },
+  {
+    q: ['what is git', 'ano ang git', 'version control'],
+    a: '**Git** is a version control system that tracks changes in code. It lets developers collaborate, branch for features, and maintain a complete history of changes.',
+  },
+  {
+    q: ['what is npm', 'ano ang npm', 'node package manager'],
+    a: '**npm (Node Package Manager)** is the default package manager for JavaScript. It manages project dependencies and provides access to over a million open-source packages.',
+  },
+  {
+    q: ['what is webpack', 'ano ang webpack'],
+    a: '**Webpack** is a module bundler that compiles JavaScript, CSS, and assets into optimized bundles for the browser. Vite is a faster alternative.',
+  },
+  {
+    q: ['what is api', 'ano ang api', 'application programming interface'],
+    a: '**API (Application Programming Interface)** is a set of rules that lets one program communicate with another. REST APIs use HTTP methods; GraphQL uses queries.',
+  },
+  {
+    q: ['what is json', 'ano ang json', 'javascript object notation'],
+    a: '**JSON (JavaScript Object Notation)** is a lightweight data format using key-value pairs. It\'s the standard for data exchange between servers and browsers.',
+  },
+  {
+    q: ['what is a database', 'ano ang database'],
+    a: '**Database** is an organized store of data. Relational databases (MySQL, PostgreSQL) use tables and SQL. NoSQL databases (MongoDB) use flexible documents.',
+  },
+  {
+    q: ['what is rest api', 'rest api explained', 'restful api'],
+    a: '**REST API** uses HTTP methods (GET, POST, PUT, DELETE) to perform CRUD operations on resources identified by URLs. It\'s stateless and uses JSON for data.',
+  },
+  {
+    q: ['what is graphql', 'graphql explained'],
+    a: '**GraphQL** is a query language for APIs that lets clients request exactly the data they need. It uses a single endpoint and a strongly-typed schema.',
+  },
+  {
+    q: ['what is docker', 'docker explained', 'containerization'],
+    a: '**Docker** packages applications into lightweight, portable containers. Containers include everything needed to run, ensuring consistent behavior across environments.',
+  },
+  {
+    q: ['what is responsive design', 'responsive web design explained'],
+    a: '**Responsive design** makes websites work on all screen sizes using flexible grids, media queries, and relative units. Mobile-first is the recommended approach.',
+  },
+  {
+    q: ['what is accessibility', 'web accessibility', 'a11y'],
+    a: '**Web accessibility** ensures websites work for everyone, including people with disabilities. Use semantic HTML, alt text, keyboard navigation, and sufficient color contrast.',
+  },
+  {
+    q: ['what is seo', 'search engine optimization'],
+    a: '**SEO (Search Engine Optimization)** improves your website\'s visibility in search results through quality content, proper headings, meta tags, and fast loading.',
+  },
+  {
+    q: ['what is dom', 'document object model'],
+    a: '**DOM (Document Object Model)** is the tree structure a browser creates from HTML. JavaScript interacts with the DOM to dynamically change content and styles.',
+  },
+  {
+    q: ['what is virtual dom', 'virtual dom explained'],
+    a: '**Virtual DOM** is a lightweight copy of the real DOM used by React. It compares old and new versions to find the minimum changes needed, making updates faster.',
+  },
+  {
+    q: ['what is closure', 'javascript closure', 'closures explained'],
+    a: '**Closure** is when a function remembers variables from its outer scope even after the outer function has returned. Commonly used for data privacy and callbacks.',
+  },
+  {
+    q: ['what is async', 'async javascript', 'asynchronous programming'],
+    a: '**Asynchronous programming** lets code run without blocking. Use `async/await` or Promises for operations like API calls, file reading, or timers.',
+  },
+  {
+    q: ['what is promise', 'javascript promise', 'promises explained'],
+    a: '**Promise** is an object representing the eventual completion or failure of an async operation. Use `.then()` and `.catch()` or `async/await` to handle results.',
+  },
+  {
+    q: ['what is hook', 'react hook', 'hooks in react'],
+    a: '**Hooks** are functions that let React components use state and lifecycle features. `useState` manages state, `useEffect` handles side effects, `useContext` reads context.',
+  },
+  {
+    q: ['what is state', 'react state', 'state in react'],
+    a: '**State** is data managed inside a React component. When state changes, the component re-renders. Use `useState` for local state, context or external stores for global state.',
+  },
+  {
+    q: ['what is props', 'react props', 'properties in react'],
+    a: '**Props** are data passed from parent to child components. They are read-only. Use them to configure child components or pass callback functions.',
+  },
+  {
+    q: ['what is component', 'react component', 'components in react'],
+    a: '**Components** are reusable UI pieces in React. They are functions that return JSX. Keep them small, focused, and composed together for complex interfaces.',
+  },
+  {
+    q: ['what is jsx', 'jsx explained', 'javascript xml'],
+    a: '**JSX** is syntax that lets you write HTML-like code in JavaScript. It compiles to `React.createElement()` calls. Use `className` instead of `class`, and close self-closing tags.',
+  },
+  {
+    q: ['what is typescript', 'ts explained', 'types in typescript'],
+    a: '**TypeScript** adds static types to JavaScript. Define interfaces for object shapes, use union types for multiple possibilities, and generics for reusable types.',
+  },
+  {
+    q: ['what is algorithm', 'algorithm explained'],
+    a: '**Algorithm** is a step-by-step procedure for solving a problem. Common types: sorting (merge sort), searching (binary search), and graph traversal (BFS/DFS).',
+  },
+  {
+    q: ['what is big o', 'big o notation', 'time complexity'],
+    a: '**Big O notation** describes how performance scales with input size. O(1) is constant, O(log n) is logarithmic, O(n) is linear, O(n²) is quadratic.',
+  },
+  {
+    q: ['what is recursion', 'recursion explained', 'recursive function'],
+    a: '**Recursion** is when a function calls itself with a smaller input. It needs a base case to stop. Common uses: tree traversal, factorials, Fibonacci.',
+  },
+  {
+    q: ['what is sorting', 'sorting algorithms', 'types of sorting'],
+    a: '**Sorting** arranges data in order. Common algorithms: bubble sort (O(n²)), merge sort (O(n log n)), quick sort (O(n log n) average).',
+  },
+  {
+    q: ['what is cybersecurity', 'cybersecurity explained', 'information security'],
+    a: '**Cybersecurity** protects systems and data from digital attacks. Use strong passwords, enable 2FA, keep software updated, and never click suspicious links.',
+  },
+  {
+    q: ['what is encryption', 'encryption explained', 'data encryption'],
+    a: '**Encryption** scrambles data so only authorized parties can read it. Symmetric uses one key; asymmetric uses a public-private key pair.',
+  },
+  {
+    q: ['what is https', 'https explained', 'ssl tls'],
+    a: '**HTTPS** is HTTP with encryption (TLS). It verifies the server\'s identity and encrypts data in transit. Always use HTTPS for sensitive information.',
+  },
+  {
+    q: ['what is dns', 'dns explained', 'domain name system'],
+    a: '**DNS** translates domain names (google.com) to IP addresses (142.250.80.46). It works like a phone book for the internet.',
+  },
+  {
+    q: ['what is tcp', 'tcp explained', 'transmission control protocol'],
+    a: '**TCP** is a reliable transport protocol that ensures data arrives complete and in order. Used for web, email, and file transfer. UDP is faster but unreliable.',
+  },
+  {
+    q: ['what is load balancer', 'load balancing explained'],
+    a: '**Load balancer** distributes incoming traffic across multiple servers. It prevents any single server from being overwhelmed and improves availability.',
+  },
+  {
+    q: ['what is cdn', 'content delivery network'],
+    a: '**CDN** is a network of servers distributed globally. It caches static content closer to users, reducing latency and improving load times.',
+  },
+  {
+    q: ['what is caching', 'caching explained', 'browser cache'],
+    a: '**Caching** stores frequently accessed data in a fast-access location. Browser caching stores assets locally; server caching stores query results.',
+  },
+  {
+    q: ['what is agile', 'agile methodology'],
+    a: '**Agile** is a project management approach that delivers work in small increments. It emphasizes collaboration, customer feedback, and adapting to change.',
+  },
+  {
+    q: ['what is scrum', 'scrum methodology'],
+    a: '**Scrum** is an Agile framework with sprints (1-4 weeks), daily standups, and defined roles (Scrum Master, Product Owner, Team).',
+  },
+  {
+    q: ['what is ci cd', 'ci cd explained', 'continuous integration'],
+    a: '**CI/CD** automates code integration, testing, and deployment. CI runs tests on every commit; CD automatically deploys passing builds.',
+  },
+  {
+    q: ['what is ux', 'user experience', 'ux design'],
+    a: '**UX (User Experience)** is how easy and pleasant a product is to use. Good UX involves research, wireframing, testing, and iterative improvement.',
+  },
+  {
+    q: ['what is ui', 'user interface', 'ui design'],
+    a: '**UI (User Interface)** is the visual part of a product — buttons, colors, typography, layout. Good UI is consistent, accessible, and intuitive.',
+  },
+  {
+    q: ['what is dark pattern', 'dark pattern ux', 'deceptive design'],
+    a: '**Dark patterns** are deceptive UI designs that trick users into unintended actions — hidden costs, forced continuity, misdirection. They harm user trust.',
+  },
+  {
+    q: ['what is mvp', 'minimum viable product'],
+    a: '**MVP (Minimum Viable Product)** is a version with just enough features to test core assumptions with real users. It validates ideas before building the full product.',
+  },
+  {
+    q: ['what is startup', 'startup explained'],
+    a: '**Startup** is a company designed to grow fast, typically in tech. It operates with limited resources, tests ideas quickly, and scales successful ones.',
+  },
+  {
+    q: ['what is pivot', 'startup pivot'],
+    a: '**Pivot** is a fundamental change in a startup\'s direction based on market feedback. It keeps what works and changes what doesn\'t.',
+  },
 ]
 
 /**
