@@ -32,6 +32,7 @@ import law from './skills/law.js'
 import math from './skills/math.js'
 import profiles from './skills/profiles.js'
 import reasoning from './skills/reasoning.js'
+import reasoningGeneral from './skills/reasoning-general.js'
 import smalltalk from './skills/smalltalk.js'
 import strands from './skills/strands.js'
 import text from './skills/text.js'
@@ -50,6 +51,7 @@ export const SKILLS = [
   debug,
   explain,
   reasoning,
+  reasoningGeneral,
   analysis,
   general,
   creative,
@@ -64,7 +66,7 @@ export const SKILLS = [
 const now = () => (typeof performance === 'undefined' ? Date.now() : performance.now())
 
 /** Below this, no skill is trusted and the honest fallback runs instead. */
-const THRESHOLD = 0.5
+const THRESHOLD = 0.35
 
 /**
  * A question with no subject of its own — "and its capital?", "what about the
@@ -184,8 +186,17 @@ function fallback() {
     text:
       `${UNKNOWN[Math.floor(Math.random() * UNKNOWN.length)]} I have no trained model behind ` +
       `me — only what is written into me and what you teach me.\n\n` +
-      `You can teach me the answer: **remember: <question> = <answer>**\n\n` +
-      `**Things I answer well:**\n${examples}`,
+      `**You can teach me:** remember: <question> = <answer>\n\n` +
+      `**I can answer questions about:**\n` +
+      `- Programming (React, Python, JavaScript, etc.)\n` +
+      `- Math (calculations, formulas, logic)\n` +
+      `- Science (physics, chemistry, biology)\n` +
+      `- Technology (AI, blockchain, cloud, etc.)\n` +
+      `- Education (courses, careers, study tips)\n` +
+      `- Life skills (cooking, health, finance)\n` +
+      `- Philippines (laws, culture, geography)\n` +
+      `- Complex analysis (scenarios, comparisons, pros/cons)\n\n` +
+      `**Try asking:**\n${examples}`,
   }
 }
 
