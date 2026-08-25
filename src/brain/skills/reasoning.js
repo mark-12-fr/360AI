@@ -39,6 +39,14 @@ const REASONING_PATTERNS = [
   /\b(how to decide|how to choose|how to approach|step by step|systematic)\b/i,
   // multi-step
   /\b(solve|problem|equation|calculate|word problem)\b/i,
+  // general knowledge
+  /\b(tell me about|what do you know about|describe|give me information about)\b/i,
+  // cause and effect
+  /\b(why is|why do|why does|cause|effect|happen|occur)\b/i,
+  // when questions
+  /\b(when did|when was|when were|history of)\b/i,
+  // where questions
+  /\b(where is|where are|where do|location|place)\b/i,
 ]
 
 export default {

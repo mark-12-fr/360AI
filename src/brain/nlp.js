@@ -342,6 +342,19 @@ export const SYNONYMS = {
   'tech stack': 'technology stack',
   'technology choice': 'technology stack',
   'which technology': 'technology stack',
+  // Additional synonyms
+  'grabe': 'very',
+  'ngaa': 'why',
+  'ngano': 'why',
+  'paano': 'how',
+  'diin': 'where',
+  'san-o': 'when',
+  'pila': 'how many',
+  'sin-o': 'who',
+  'ano': 'what',
+  'kabalo': 'know',
+  'alam': 'know',
+  'hibal-an': 'knowledge',
 }
 
 /** Applies the synonym map to a whole phrase, longest key first. */

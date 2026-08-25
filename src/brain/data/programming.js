@@ -1184,6 +1184,1071 @@ const emailRules = [v => v.includes("@"), v => v.includes(".")];
 - Avoid over-engineering
 - Focus on current requirements
 
-Good design principles reduce technical debt and improve team productivity.`
+    Good design principles reduce technical debt and improve team productivity.`
+  },
+  {
+    id: "css-grid",
+    category: "CSS",
+    q: ["What is CSS Grid?", "How does CSS Grid work?", "Grid layout explained"],
+    title: "CSS Grid Layout",
+    body: `CSS Grid is a two-dimensional layout system for creating complex web layouts with rows and columns.
+
+## Basic Setup
+
+\`\`\`css
+.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+}
+\`\`\`
+
+## Key Properties
+
+### Define Columns
+
+\`\`\`css
+/* Fixed and flexible columns */
+.grid {
+  grid-template-columns: 200px 1fr 2fr;
+  /* 200px fixed, middle takes 1 part, right takes 2 parts */
+}
+
+/* Repeat syntax */
+.grid {
+  grid-template-columns: repeat(3, 1fr);  /* 3 equal columns */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+\`\`\`
+
+### Place Items
+
+\`\`\`css
+/* By line numbers */
+.item {
+  grid-column: 1 / 3;  /* Start at line 1, end at line 3 */
+  grid-row: 1 / 2;
+}
+
+/* Span across columns */
+.item {
+  grid-column: span 2;  /* Takes up 2 columns */
+}
+\`\`\`
+
+### Named Areas
+
+\`\`\`css
+.container {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main aside"
+    "footer footer footer";
+}
+
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.aside   { grid-area: aside; }
+.footer  { grid-area: footer; }
+\`\`\`
+
+## Grid vs Flexbox
+
+- **Grid**: Two-dimensional (rows AND columns)
+- **Flexbox**: One-dimensional (row OR column)
+- Use Grid for page layouts, Flexbox for component layouts
+
+## Responsive Grid
+
+\`\`\`css
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+/* Automatically adjusts columns based on available space */
+\`\`\`
+
+CSS Grid is the most powerful layout tool for modern web design.`
+  },
+  {
+    id: "flexbox-deep-dive",
+    category: "CSS",
+    q: ["How does Flexbox work?", "Flexbox explained", "Flex properties"],
+    title: "Flexbox Deep Dive",
+    body: `Flexbox provides efficient alignment and distribution of space among items in a container.
+
+## Container Properties
+
+\`\`\`css
+.container {
+  display: flex;
+
+  /* Main axis direction */
+  flex-direction: row;          /* Left to right (default) */
+  flex-direction: column;       /* Top to bottom */
+
+  /* Wrap behavior */
+  flex-wrap: nowrap;            /* Single line (default) */
+  flex-wrap: wrap;              /* Multiple lines */
+
+  /* Alignment on main axis */
+  justify-content: flex-start;  /* Start */
+  justify-content: center;      /* Center */
+  justify-content: space-between; /* Space between items */
+  justify-content: space-around;  /* Space around items */
+
+  /* Alignment on cross axis */
+  align-items: stretch;         /* Fill container height */
+  align-items: center;          /* Center vertically */
+  align-items: flex-start;      /* Top */
+  align-items: flex-end;        /* Bottom */
+
+  /* Gap between items */
+  gap: 16px;
+}
+\`\`\`
+
+## Item Properties
+
+\`\`\`css
+.item {
+  /* Grow to fill space */
+  flex-grow: 1;    /* Take up available space */
+  flex-grow: 0;    /* Don't grow (default) */
+
+  /* Shrink when space is limited */
+  flex-shrink: 1;  /* Can shrink (default) */
+  flex-shrink: 0;  /* Don't shrink */
+
+  /* Base size before growing/shrinking */
+  flex-basis: 200px;
+
+  /* Shorthand: grow shrink basis */
+  flex: 1 1 200px;
+
+  /* Override container alignment */
+  align-self: center;
+  align-self: flex-end;
+}
+\`\`\`
+
+## Common Patterns
+
+### Center Everything
+
+\`\`\`css
+.center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+\`\`\`
+
+### Equal Width Columns
+
+\`\`\`css
+.equal-columns {
+  display: flex;
+  gap: 16px;
+}
+
+.column {
+  flex: 1;  /* All columns equal width */
+}
+\`\`\`
+
+### Sidebar Layout
+
+\`\`\`css
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  flex: 0 0 250px;  /* Fixed width */
+}
+
+.main {
+  flex: 1;  /* Takes remaining space */
+}
+\`\`\`
+
+## Key Insight
+
+Flexbox works along one axis at a time. Use flex-direction to choose whether items flow horizontally (row) or vertically (column).`
+  },
+  {
+    id: "js-array-methods",
+    category: "JavaScript",
+    q: ["JavaScript array methods", "Array methods explained", "JS array functions"],
+    title: "JavaScript Array Methods",
+    body: `Array methods are essential for manipulating data in JavaScript.
+
+## Transform Methods (Return New Array)
+
+### map - Transform each element
+
+\`\`\`javascript
+const numbers = [1, 2, 3, 4];
+const doubled = numbers.map(n => n * 2);
+// [2, 4, 6, 8]
+\`\`\`
+
+### filter - Keep elements that pass a test
+
+\`\`\`javascript
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(n => n % 2 === 0);
+// [2, 4, 6]
+\`\`\`
+
+### reduce - Combine into single value
+
+\`\`\`javascript
+const numbers = [1, 2, 3, 4];
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+// 10
+\`\`\`
+
+### flatMap - Map then flatten
+
+\`\`\`javascript
+const sentences = ["hello world", "foo bar"];
+const words = sentences.flatMap(s => s.split(" "));
+// ["hello", "world", "foo", "bar"]
+\`\`\`
+
+## Search Methods
+
+### find - Get first match
+
+\`\`\`javascript
+const users = [{id: 1, name: "Alice"}, {id: 2, name: "Bob"}];
+const user = users.find(u => u.id === 2);
+// {id: 2, name: "Bob"}
+\`\`\`
+
+### some / every - Check conditions
+
+\`\`\`javascript
+const numbers = [2, 4, 6, 8];
+numbers.every(n => n % 2 === 0);  // true (all even)
+numbers.some(n => n > 5);         // true (some > 5)
+\`\`\`
+
+## Mutation Methods (Modify Original)
+
+\`\`\`javascript
+const arr = [1, 2, 3];
+arr.push(4);        // [1, 2, 3, 4]
+arr.pop();          // [1, 2]
+arr.unshift(0);     // [0, 1, 2]
+arr.splice(1, 1);   // [0, 2] - removes 1 item at index 1
+\`\`\`
+
+## Utility Methods
+
+\`\`\`javascript
+const arr = [3, 1, 4, 1, 5, 9, 2, 6];
+
+arr.includes(5);    // true
+arr.indexOf(4);     // 2
+arr.join(", ");     // "3, 1, 4, 1, 5, 9, 2, 6"
+arr.slice(2, 5);    // [4, 1, 5] - copy portion
+arr.flat();         // Flatten nested arrays
+arr.sort((a, b) => a - b);  // Sort numbers ascending
+\`\`\`
+
+## Chaining
+
+\`\`\`javascript
+const result = [1, 2, 3, 4, 5]
+  .filter(n => n % 2 === 0)
+  .map(n => n * 10)
+  .reduce((sum, n) => sum + n, 0);
+// 60 (20 + 40)
+\`\`\`
+
+Master these methods to write clean, functional JavaScript.`
+  },
+  {
+    id: "react-hooks-deep-dive",
+    category: "React",
+    q: ["React hooks explained", "How do hooks work?", "useState useEffect explained"],
+    title: "React Hooks Deep Dive",
+    body: `Hooks let React components use state and lifecycle features without classes.
+
+## useState - Managing State
+
+\`\`\`jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  // With initial function (for expensive computation)
+  const [data, setData] = useState(() => {
+    return JSON.parse(localStorage.getItem("savedData"));
+  });
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(c => c + 1)}>Add 1</button>
+      <button onClick={() => setCount(c => c - 1)}>Subtract 1</button>
+    </div>
+  );
+}
+\`\`\`
+
+## useEffect - Side Effects
+
+\`\`\`jsx
+import { useEffect, useState } from "react";
+
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+
+  // Run when userId changes
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/users/" + userId)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) setUser(data);
+      });
+
+    // Cleanup function
+    return () => { cancelled = true; };
+  }, [userId]);
+
+  if (!user) return <p>Loading...</p>;
+  return <h2>{user.name}</h2>;
+}
+\`\`\`
+
+## useRef - DOM Access and Mutable Values
+
+\`\`\`jsx
+import { useRef, useEffect } from "react";
+
+function AutoFocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return <input ref={inputRef} placeholder="Auto focused" />;
+}
+\`\`\`
+
+## useMemo and useCallback - Performance
+
+\`\`\`jsx
+import { useMemo, useCallback } from "react";
+
+function ProductList({ products, filter }) {
+  // Memoize expensive computation
+  const filtered = useMemo(
+    () => products.filter(p => p.category === filter),
+    [products, filter]
+  );
+
+  // Memoize function reference
+  const handleClick = useCallback((id) => {
+    console.log("Clicked:", id);
+  }, []);
+
+  return filtered.map(p => (
+    <Product key={p.id} data={p} onClick={handleClick} />
+  ));
+}
+\`\`\`
+
+## Custom Hooks
+
+\`\`\`jsx
+function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : initialValue;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+}
+
+// Usage
+const [theme, setTheme] = useLocalStorage("theme", "light");
+\`\`\`
+
+## Rules of Hooks
+
+1. Only call hooks at the top level
+2. Only call hooks from React functions
+3. Custom hooks must start with "use"
+
+Hooks make React components simpler and more reusable.`
+  },
+  {
+    id: "typescript-generics",
+    category: "TypeScript",
+    q: ["TypeScript generics", "Generics in TypeScript", "Generic types explained"],
+    title: "TypeScript Generics",
+    body: `Generics allow you to write flexible, reusable code that works with multiple types while maintaining type safety.
+
+## Basic Generic Function
+
+\`\`\`typescript
+// Without generics - loses type info
+function identity(arg: any): any {
+  return arg;
+}
+
+// With generics - preserves type
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+const result = identity<string>("hello");  // Type: string
+const num = identity<number>(42);          // Type: number
+\`\`\`
+
+## Generic Interface
+
+\`\`\`typescript
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message: string;
+}
+
+// Usage with different types
+const userResponse: ApiResponse<User> = {
+  data: { id: 1, name: "Alice" },
+  status: 200,
+  message: "Success"
+};
+
+const postResponse: ApiResponse<Post> = {
+  data: { id: 1, title: "Hello" },
+  status: 200,
+  message: "Success"
+};
+\`\`\`
+
+## Generic Constraints
+
+\`\`\`typescript
+// Constrain T to have a .length property
+interface HasLength {
+  length: number;
+}
+
+function logLength<T extends HasLength>(arg: T): T {
+  console.log(arg.length);
+  return arg;
+}
+
+logLength("hello");       // OK: string has length
+logLength([1, 2, 3]);     // OK: array has length
+logLength({ length: 10 }); // OK: has length property
+// logLength(42);          // Error: number has no length
+\`\`\`
+
+## Generic Classes
+
+\`\`\`typescript
+class Stack<T> {
+  private items: T[] = [];
+
+  push(item: T): void {
+    this.items.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.items.pop();
+  }
+
+  peek(): T | undefined {
+    return this.items[this.items.length - 1];
+  }
+}
+
+const numberStack = new Stack<number>();
+numberStack.push(1);
+numberStack.push(2);
+// numberStack.push("hello");  // Error: string not allowed
+\`\`\`
+
+## Generic Utility Types
+
+\`\`\`typescript
+// Partial - all properties optional
+type UserUpdate = Partial<User>;
+
+// Required - all properties required
+type CompleteUser = Required<User>;
+
+// Pick - select specific properties
+type UserBasic = Pick<User, "id" | "name">;
+
+// Omit - remove specific properties
+type UserWithoutEmail = Omit<User, "email">;
+\`\`\`
+
+## When to Use Generics
+
+1. Writing reusable utility functions
+2. Creating type-safe data structures
+3. Building library/framework code
+4. When the type depends on input
+
+Generics are one of TypeScript's most powerful features for writing flexible, type-safe code.`
+  },
+  {
+    id: "git-commands-advanced",
+    category: "Git",
+    q: ["Git commands", "Advanced git", "Git workflow"],
+    title: "Git Commands Reference",
+    body: `Git commands for version control and collaboration.
+
+## Essential Commands
+
+### Status and Changes
+
+\`\`\`bash
+git status                    # See what changed
+git diff                      # See unstaged changes
+git diff --staged             # See staged changes
+git log --oneline --graph     # Visual commit history
+\`\`\`
+
+### Staging and Committing
+
+\`\`\`bash
+git add file.js               # Stage specific file
+git add .                     # Stage all changes
+git commit -m "message"       # Commit staged changes
+git commit --amend            # Edit last commit
+\`\`\`
+
+### Branching
+
+\`\`\`bash
+git branch                    # List branches
+git branch feature/login      # Create branch
+git checkout feature/login    # Switch branch
+git checkout -b feature/login # Create and switch
+git branch -d feature/login   # Delete branch
+\`\`\`
+
+### Merging and Rebasing
+
+\`\`\`bash
+git checkout main
+git merge feature/login       # Merge branch into main
+git rebase main               # Rebase current branch onto main
+\`\`\`
+
+### Remote Operations
+
+\`\`\`bash
+git remote add origin URL     # Add remote
+git push -u origin main       # Push and set upstream
+git pull origin main          # Fetch and merge
+git fetch origin              # Fetch without merge
+\`\`\`
+
+## Useful Shortcuts
+
+\`\`\`bash
+git stash                     # Save uncommitted changes
+git stash pop                 # Restore stashed changes
+git reset HEAD file.js        # Unstage a file
+git revert HEAD               # Undo last commit (creates new commit)
+git reset --hard HEAD         # Discard all changes (dangerous)
+\`\`\`
+
+## Commit Message Convention
+
+\`\`\`
+feat: add login page          # New feature
+fix: resolve form submission  # Bug fix
+docs: update README           # Documentation
+style: format code            # Formatting changes
+refactor: extract utils       # Code restructuring
+test: add unit tests          # Adding tests
+\`\`\`
+
+## Branching Strategy
+
+\`\`\`
+main (production)
+  |
+  +-- feature/login (new feature)
+  +-- feature/signup (new feature)
+  +-- fix/header-bug (bug fix)
+\`\`\`
+
+Git is essential for tracking changes and collaborating with other developers.`
+  },
+  {
+    id: "api-concepts",
+    category: "Web Development",
+    q: ["What is an API?", "How do APIs work?", "REST API concepts"],
+    title: "API Concepts",
+    body: `APIs (Application Programming Interfaces) allow different software systems to communicate with each other.
+
+## What is an API?
+
+An API is a set of rules that defines how one program can request data or services from another.
+
+## REST API Basics
+
+### HTTP Methods
+
+\`\`\`
+GET    - Retrieve data (read)
+POST   - Create new resource
+PUT    - Update entire resource
+PATCH  - Partial update
+DELETE - Remove resource
+\`\`\`
+
+### Example with Express.js
+
+\`\`\`javascript
+const express = require("express");
+const app = express();
+
+// GET all users
+app.get("/api/users", async (req, res) => {
+  const users = await db.users.findMany();
+  res.json(users);
+});
+
+// GET single user
+app.get("/api/users/:id", async (req, res) => {
+  const user = await db.users.findUnique({
+    where: { id: parseInt(req.params.id) }
+  });
+  if (!user) return res.status(404).json({ error: "Not found" });
+  res.json(user);
+});
+
+// POST create user
+app.post("/api/users", async (req, res) => {
+  const user = await db.users.create({ data: req.body });
+  res.status(201).json(user);
+});
+
+// PUT update user
+app.put("/api/users/:id", async (req, res) => {
+  const user = await db.users.update({
+    where: { id: parseInt(req.params.id) },
+    data: req.body
+  });
+  res.json(user);
+});
+
+// DELETE user
+app.delete("/api/users/:id", async (req, res) => {
+  await db.users.delete({
+    where: { id: parseInt(req.params.id) }
+  });
+  res.status(204).send();
+});
+\`\`\`
+
+## Status Codes
+
+\`\`\`
+200 OK                    - Success
+201 Created               - Resource created
+204 No Content            - Success, no response body
+400 Bad Request           - Invalid input
+401 Unauthorized          - Authentication required
+403 Forbidden             - No permission
+404 Not Found             - Resource does not exist
+500 Internal Server Error - Server error
+\`\`\`
+
+## Authentication
+
+\`\`\`javascript
+// API Key
+app.use((req, res, next) => {
+  const apiKey = req.headers["x-api-key"];
+  if (apiKey !== VALID_KEY) {
+    return res.status(401).json({ error: "Invalid API key" });
+  }
+  next();
+});
+
+// JWT Token
+app.use((req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "No token" });
+
+  try {
+    const decoded = jwt.verify(token, SECRET);
+    req.user = decoded;
+    next();
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
+  }
+});
+\`\`\`
+
+## Fetch API (Client Side)
+
+\`\`\`javascript
+// GET request
+const response = await fetch("https://api.example.com/users");
+const data = await response.json();
+
+// POST request
+const response = await fetch("https://api.example.com/users", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Alice", email: "alice@example.com" })
+});
+\`\`\`
+
+APIs are the backbone of modern web and mobile applications.`
+  },
+  {
+    id: "database-queries",
+    category: "Databases",
+    q: ["SQL queries", "Database queries", "How to query a database"],
+    title: "Database Query Basics",
+    body: `Database queries retrieve, insert, update, and delete data using SQL.
+
+## SELECT Queries
+
+\`\`\`sql
+-- Basic select
+SELECT * FROM users;
+
+-- Select specific columns
+SELECT name, email FROM users;
+
+-- Filter with WHERE
+SELECT * FROM users WHERE age > 18;
+
+-- Multiple conditions
+SELECT * FROM users WHERE age > 18 AND active = true;
+
+-- Sort results
+SELECT * FROM users ORDER BY name ASC;
+
+-- Limit results
+SELECT * FROM users LIMIT 10;
+\`\`\`
+
+## INSERT Queries
+
+\`\`\`sql
+-- Insert single row
+INSERT INTO users (name, email, age)
+VALUES ('Alice', 'alice@example.com', 25);
+
+-- Insert multiple rows
+INSERT INTO users (name, email, age) VALUES
+  ('Bob', 'bob@example.com', 30),
+  ('Charlie', 'charlie@example.com', 35);
+\`\`\`
+
+## UPDATE Queries
+
+\`\`\`sql
+-- Update specific row
+UPDATE users
+SET name = 'Alice Smith', age = 26
+WHERE id = 1;
+
+-- Update multiple rows
+UPDATE users
+SET active = false
+WHERE last_login < '2024-01-01';
+\`\`\`
+
+## DELETE Queries
+
+\`\`\`sql
+-- Delete specific row
+DELETE FROM users WHERE id = 1;
+
+-- Delete with condition
+DELETE FROM users WHERE active = false;
+\`\`\`
+
+## JOIN Queries
+
+\`\`\`sql
+-- Inner join: only matching records
+SELECT users.name, orders.total
+FROM users
+INNER JOIN orders ON users.id = orders.user_id;
+
+-- Left join: all from left table
+SELECT users.name, orders.total
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id;
+
+-- Multiple tables
+SELECT users.name, orders.total, products.name
+FROM users
+INNER JOIN orders ON users.id = orders.user_id
+INNER JOIN products ON orders.product_id = products.id;
+\`\`\`
+
+## Aggregation
+
+\`\`\`sql
+-- Count rows
+SELECT COUNT(*) FROM users;
+
+-- Group and count
+SELECT role, COUNT(*) as count
+FROM users
+GROUP BY role;
+
+-- Average
+SELECT AVG(age) FROM users;
+
+-- Sum
+SELECT SUM(total) FROM orders;
+\`\`\`
+
+## Indexing for Performance
+
+\`\`\`sql
+-- Create index on frequently queried column
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_orders_user_date ON orders(user_id, created_at);
+\`\`\`
+
+SQL is the standard language for working with relational databases.`
+  },
+  {
+    id: "web-security",
+    category: "Security",
+    q: ["Web security basics", "How to secure a website", "Security best practices"],
+    title: "Web Security Basics",
+    body: `Web security protects your application and users from attacks and data breaches.
+
+## Common Attacks
+
+### XSS (Cross-Site Scripting)
+
+\`\`\`javascript
+// Problem: User input injected into page
+element.innerHTML = userInput;  // Dangerous!
+
+// Solution: Sanitize input
+function sanitize(input) {
+  const div = document.createElement("div");
+  div.textContent = input;
+  return div.innerHTML;
+}
+\`\`\`
+
+### SQL Injection
+
+\`\`\`javascript
+// Problem: Direct string concatenation
+const query = "SELECT * FROM users WHERE name = '" + name + "'";
+
+// Solution: Use parameterized queries
+const query = "SELECT * FROM users WHERE name = ?";
+db.run(query, [name]);
+\`\`\`
+
+### CSRF (Cross-Site Request Forgery)
+
+\`\`\`javascript
+// Solution: Use CSRF tokens
+app.post("/transfer", (req, res) => {
+  if (req.body.csrfToken !== req.session.csrfToken) {
+    return res.status(403).json({ error: "Invalid CSRF token" });
+  }
+  // Process transfer
+});
+\`\`\`
+
+## Security Headers
+
+\`\`\`javascript
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000");
+  res.setHeader("Content-Security-Policy", "default-src 'self'");
+  next();
+});
+\`\`\`
+
+## Password Security
+
+\`\`\`javascript
+const bcrypt = require("bcrypt");
+
+// Hash password
+async function hashPassword(password) {
+  return await bcrypt.hash(password, 12);
+}
+
+// Verify password
+async function verifyPassword(password, hash) {
+  return await bcrypt.compare(password, hash);
+}
+\`\`\`
+
+## Input Validation
+
+\`\`\`javascript
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+function validatePassword(password) {
+  return password.length >= 8
+    && /[A-Z]/.test(password)
+    && /[a-z]/.test(password)
+    && /[0-9]/.test(password);
+}
+\`\`\`
+
+## HTTPS
+
+- Always use HTTPS in production
+- Obtain SSL certificates (Let's Encrypt is free)
+- Redirect HTTP to HTTPS
+- Use HSTS header
+
+## Checklist
+
+1. Validate all user input
+2. Use parameterized queries
+3. Hash passwords with bcrypt
+4. Set security headers
+5. Use HTTPS
+6. Implement CSRF protection
+7. Keep dependencies updated
+8. Limit login attempts
+9. Use Content Security Policy
+10. Regular security audits
+
+Security is not optional. Implement these practices in every web application.`
+  },
+  {
+    id: "package-management",
+    category: "Tools",
+    q: ["What is npm?", "Package management", "How to use npm"],
+    title: "Package Management",
+    body: `Package managers install, update, and manage dependencies (libraries and tools) for your project.
+
+## npm (Node Package Manager)
+
+### Initialize a Project
+
+\`\`\`bash
+npm init -y          # Create package.json with defaults
+\`\`\`
+
+### Install Packages
+
+\`\`\`bash
+npm install express         # Install and save to dependencies
+npm install --save-dev jest  # Install as dev dependency
+npm install -g nodemon       # Install globally
+\`\`\`
+
+### package.json
+
+\`\`\`json
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "nodemon": "^3.0.0"
+  }
+}
+\`\`\`
+
+### Common Commands
+
+\`\`\`bash
+npm install               # Install all dependencies
+npm update                # Update packages
+npm run start             # Run start script
+npm run dev               # Run dev script
+npm run build             # Run build script
+npm list                  # List installed packages
+npm outdated              # Check for updates
+\`\`\`
+
+## Yarn
+
+\`\`\`bash
+yarn init                 # Initialize project
+yarn add express          # Install package
+yarn add --dev jest       # Dev dependency
+yarn remove express       # Uninstall package
+yarn install              # Install all dependencies
+yarn run start            # Run script
+\`\`\`
+
+## pnpm
+
+\`\`\`bash
+pnpm init                 # Initialize project
+pnpm add express          # Install package
+pnpm add -D jest          # Dev dependency
+pnpm install              # Install all dependencies
+\`\`\`
+
+## Choosing a Package Manager
+
+- **npm**: Default, comes with Node.js, widely used
+- **yarn**: Faster installs, deterministic lockfile
+- **pnpm**: Most efficient disk usage, strict
+
+## Best Practices
+
+1. Lock your dependencies (package-lock.json, yarn.lock)
+2. Use specific versions in production
+3. Review packages before installing
+4. Keep dependencies updated
+5. Remove unused packages
+
+Package managers save time and ensure consistent environments across teams.`
   }
 ];

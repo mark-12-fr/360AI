@@ -1687,6 +1687,922 @@ Detached HEAD is a useful state for reviewing commits, but always create a branc
 .button { color: blue; } /* This wins */
 \`\`\`
 
-Understanding specificity prevents style conflicts and makes debugging easier.`
+    Understanding specificity prevents style conflicts and makes debugging easier.`
+  },
+  {
+    id: "html-not-displaying",
+    category: "HTML",
+    q: ["HTML not displaying", "HTML page is blank", "HTML content not showing"],
+    title: "HTML Not Displaying",
+    body: `When your HTML content does not appear in the browser, the issue is usually in the structure or syntax.
+
+## Common Causes
+
+1. Missing closing tags
+2. Incorrect DOCTYPE declaration
+3. Content placed outside the body tag
+4. Browser caching old version
+5. File not saved or wrong file path
+
+## Solutions
+
+### Check File Path
+
+\`\`\`html
+<!-- Wrong path -->
+<link rel="stylesheet" href="style.css">
+
+<!-- Correct path (same directory) -->
+<link rel="stylesheet" href="./style.css">
+
+<!-- Correct path (one folder up) -->
+<link rel="stylesheet" href="../style.css">
+\`\`\`
+
+### Check for Missing Body Tag
+
+\`\`\`html
+<!-- Problem: Content outside body -->
+<!DOCTYPE html>
+<html>
+<h1>Hello</h1>  <!-- This may not display -->
+</html>
+
+<!-- Solution: Content inside body -->
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Hello</h1>
+</body>
+</html>
+\`\`\`
+
+### Check for Syntax Errors
+
+\`\`\`html
+<!-- Problem: Unclosed tag -->
+<div>
+  <p>Text
+</div>  <!-- p tag not closed -->
+
+<!-- Solution: Close all tags -->
+<div>
+  <p>Text</p>
+</div>
+\`\`\`
+
+### Clear Browser Cache
+
+- Windows/Linux: Ctrl + Shift + R
+- Mac: Cmd + Shift + R
+- Or open DevTools, right-click refresh, select "Empty Cache and Hard Reload"
+
+### Check Console for Errors
+
+- Open browser DevTools (F12)
+- Look at the Console tab for red error messages
+- Errors will point to the exact line with the problem
+
+Always validate your HTML structure and check the browser console first.`
+  },
+  {
+    id: "css-not-loading",
+    category: "CSS",
+    q: ["CSS not loading", "Styles not applying", "CSS file not working"],
+    title: "CSS Not Loading",
+    body: `When CSS styles do not apply, the stylesheet is likely not being loaded correctly.
+
+## Common Causes
+
+1. Incorrect file path in link tag
+2. CSS syntax errors
+3. Specificity conflicts
+4. Wrong media type
+5. File not saved with .css extension
+
+## Solutions
+
+### Verify Link Tag
+
+\`\`\`html
+<!-- Problem: Missing rel attribute -->
+<link href="style.css">
+
+<!-- Solution: Correct link tag -->
+<link rel="stylesheet" href="style.css">
+\`\`\`
+
+### Check File Path
+
+\`\`\`html
+<!-- If style.css is in a css folder -->
+<link rel="stylesheet" href="css/style.css">
+
+<!-- If style.css is one level up -->
+<link rel="stylesheet" href="../style.css">
+\`\`\`
+
+### Validate CSS Syntax
+
+\`\`\`css
+/* Problem: Missing closing brace */
+.container {
+  display: flex;
+  justify-content: center;
+  /* Missing } */
+
+/* Solution: Close all braces */
+.container {
+  display: flex;
+  justify-content: center;
+}
+\`\`\`
+
+### Check for Specificity Issues
+
+\`\`\`css
+/* Problem: Low specificity overridden */
+p { color: blue; }
+
+/* Later rule with higher specificity wins */
+div p { color: red; }
+
+/* Solution: Use matching or higher specificity */
+.container > p { color: blue; }
+\`\`\`
+
+### Verify File Extension
+
+- Make sure the file is saved as style.css, not style.css.txt
+- Check that your text editor is not adding hidden characters
+
+### Test with Inline Style
+
+\`\`\`html
+<!-- Quick test: Does inline style work? -->
+<p style="color: red;">Test paragraph</p>
+
+<!-- If yes, your CSS file path or syntax is the issue -->
+\`\`\`
+
+### Check Network Tab
+
+- Open DevTools (F12) > Network tab
+- Reload the page
+- Look for your CSS file
+- If it shows 404, the path is wrong
+- If it shows 200 but no styles, check CSS syntax
+
+CSS issues are usually path-related or specificity-related. Start with the link tag and file path.`
+  },
+  {
+    id: "javascript-not-running",
+    category: "JavaScript",
+    q: ["JavaScript not running", "JS code not working", "Script not executing"],
+    title: "JavaScript Not Running",
+    body: `When JavaScript code does not execute, check for syntax errors, loading issues, or timing problems.
+
+## Common Causes
+
+1. Syntax errors in the code
+2. Script tag placed before DOM is ready
+3. File path errors
+4. Browser does not support the feature
+5. Console errors blocking execution
+
+## Solutions
+
+### Check Console First
+
+- Open DevTools (F12)
+- Look at Console tab for red errors
+- Error messages tell you the file and line number
+
+### Ensure DOM Is Ready
+
+\`\`\`html
+<!-- Problem: Script runs before elements exist -->
+<script>
+document.getElementById("btn").addEventListener("click", handler);
+</script>
+<button id="btn">Click</button>
+
+<!-- Solution 1: Place script at end of body -->
+<body>
+  <button id="btn">Click</button>
+  <script>
+    document.getElementById("btn").addEventListener("click", handler);
+  </script>
+</body>
+
+<!-- Solution 2: Use DOMContentLoaded -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("btn").addEventListener("click", handler);
+});
+</script>
+\`\`\`
+
+### Check File Path
+
+\`\`\`html
+<!-- Problem: Wrong path -->
+<script src="app.js"></script>
+
+<!-- If file is in a js folder -->
+<script src="js/app.js"></script>
+\`\`\`
+
+### Check for Syntax Errors
+
+\`\`\`javascript
+// Problem: Missing bracket
+function greet() {
+  console.log("hello");
+// Missing }
+
+// Solution: Count your brackets
+function greet() {
+  console.log("hello");
+}
+\`\`\`
+
+### Use Type Attribute Correctly
+
+\`\`\`html
+<!-- For modern JavaScript -->
+<script type="module" src="app.js"></script>
+
+<!-- For inline scripts -->
+<script>
+  // Your code here
+</script>
+\`\`\`
+
+### Debug with Console
+
+\`\`\`javascript
+console.log("Script loaded");
+console.log("Variable value:", myVariable);
+console.error("Something went wrong");
+\`\`\`
+
+Always check the browser console first when JavaScript is not working.`
+  },
+  {
+    id: "image-not-showing",
+    category: "HTML",
+    q: ["Image not showing", "Image broken", "Img tag not displaying"],
+    title: "Image Not Showing",
+    body: `When images do not appear, the issue is usually the file path or the img tag syntax.
+
+## Common Causes
+
+1. Wrong file path
+2. File name typo (case-sensitive)
+3. Image file does not exist
+4. Broken img tag
+5. CORS restrictions
+
+## Solutions
+
+### Check File Path
+
+\`\`\`html
+<!-- Problem: Wrong path -->
+<img src="photo.jpg">
+
+<!-- If image is in an images folder -->
+<img src="images/photo.jpg">
+
+<!-- If image is one level up -->
+<img src="../photo.jpg">
+\`\`\`
+
+### Check File Name and Case
+
+\`\`\`html
+<!-- Problem: Wrong case -->
+<img src="Photo.jpg">  <!-- File is photo.jpg -->
+
+<!-- Solution: Match exact file name -->
+<img src="photo.jpg">
+\`\`\`
+
+### Use Alt Text
+
+\`\`\`html
+<!-- Always include alt text -->
+<img src="photo.jpg" alt="Description of the image">
+\`\`\`
+
+### Verify Image Exists
+
+- Check the file is in the correct folder
+- Open the image directly in the browser: type its URL in the address bar
+- If it loads there, the path in your HTML is wrong
+
+### Check Network Tab
+
+- Open DevTools (F12) > Network tab
+- Reload the page
+- Look for the image file
+- 404 means the path is wrong
+- 200 means the file loaded but may not display
+
+### Common Mistakes
+
+\`\`\`html
+<!-- Problem: Missing src attribute -->
+<img alt="Photo">
+
+<!-- Problem: Self-closing tag not proper in HTML5 -->
+<img src="photo.jpg" alt="Photo">  <!-- This is correct -->
+
+<!-- In XHTML, you would need -->
+<img src="photo.jpg" alt="Photo" />
+\`\`\`
+
+### Check File Format
+
+- Make sure the file is actually an image (not renamed)
+- Common formats: .jpg, .png, .gif, .svg, .webp
+- Check the file extension matches the actual format
+
+Image issues are almost always path-related. Verify the file exists and the path is correct.`
+  },
+  {
+    id: "link-not-working",
+    category: "HTML",
+    q: ["Link not working", "Href not working", "Anchor tag broken"],
+    title: "Link Not Working",
+    body: `When hyperlinks do not work, check the href attribute, file paths, or URL syntax.
+
+## Common Causes
+
+1. Missing or incorrect href attribute
+2. Wrong file path for internal links
+3. Broken URL for external links
+4. JavaScript preventing default behavior
+5. CSS pointer-events blocking clicks
+
+## Solutions
+
+### Check href Attribute
+
+\`\`\`html
+<!-- Problem: Missing href -->
+<a>Click here</a>
+
+<!-- Solution: Add href -->
+<a href="https://example.com">Click here</a>
+\`\`\`
+
+### Internal Links
+
+\`\`\`html
+<!-- Problem: Wrong path -->
+<a href="about.html">About</a>
+
+<!-- If file is in a pages folder -->
+<a href="pages/about.html">About</a>
+
+<!-- For same-page links -->
+<a href="#section2">Jump to Section 2</a>
+<div id="section2">Section 2 content</div>
+\`\`\`
+
+### External Links
+
+\`\`\`html
+<!-- Problem: Missing protocol -->
+<a href="www.example.com">Example</a>
+
+<!-- Solution: Include https:// -->
+<a href="https://www.example.com">Example</a>
+\`\`\`
+
+### Open in New Tab
+
+\`\`\`html
+<!-- Use target="_blank" with rel="noopener" -->
+<a href="https://example.com" target="_blank" rel="noopener">Open in new tab</a>
+\`\`\`
+
+### Check for JavaScript Interference
+
+\`\`\`javascript
+// Problem: Event handler preventing default
+document.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault(); // This blocks all links
+  });
+});
+
+// Solution: Only prevent on specific links
+document.querySelectorAll("a.no-follow").forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault();
+  });
+});
+\`\`\`
+
+### Check CSS
+
+\`\`\`css
+/* Problem: Pointer events disabled */
+a {
+  pointer-events: none;  /* Links cannot be clicked */
+}
+
+/* Solution: Remove or scope the rule */
+a.disabled {
+  pointer-events: none;
+}
+\`\`\`
+
+Always check the href attribute and verify the target file or URL exists.`
+  },
+  {
+    id: "form-not-submitting",
+    category: "HTML",
+    q: ["Form not submitting", "Form submit not working", "Form action broken"],
+    title: "Form Not Submitting",
+    body: `When forms do not submit, the issue is usually in the form action, method, or JavaScript validation.
+
+## Common Causes
+
+1. Missing action attribute
+2. JavaScript validation blocking submission
+3. Required fields empty
+4. Wrong method (GET vs POST)
+5. Enctype mismatch for file uploads
+
+## Solutions
+
+### Check Action Attribute
+
+\`\`\`html
+<!-- Problem: Missing action -->
+<form method="POST">
+  <input type="text" name="user">
+  <button type="submit">Submit</button>
+</form>
+
+<!-- Solution: Add action URL -->
+<form action="/submit" method="POST">
+  <input type="text" name="user">
+  <button type="submit">Submit</button>
+</form>
+\`\`\`
+
+### Check Method
+
+\`\`\`html
+<!-- GET: Data in URL, for search forms -->
+<form action="/search" method="GET">
+  <input type="text" name="q">
+  <button type="submit">Search</button>
+</form>
+
+<!-- POST: Data in body, for sensitive data -->
+<form action="/register" method="POST">
+  <input type="email" name="email">
+  <button type="submit">Register</button>
+</form>
+\`\`\`
+
+### Handle File Uploads
+
+\`\`\`html
+<!-- Must include enctype for files -->
+<form action="/upload" method="POST" enctype="multipart/form-data">
+  <input type="file" name="document">
+  <button type="submit">Upload</button>
+</form>
+\`\`\`
+
+### JavaScript Validation
+
+\`\`\`javascript
+// Problem: Not calling submit
+form.addEventListener("submit", function(e) {
+  validateForm();  // Missing: e.preventDefault() or form.submit()
+});
+
+// Solution: Handle properly
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+  if (validateForm()) {
+    form.submit();
+  }
+});
+\`\`\`
+
+### Prevent Double Submission
+
+\`\`\`javascript
+let submitting = false;
+
+form.addEventListener("submit", function(e) {
+  if (submitting) {
+    e.preventDefault();
+    return;
+  }
+  submitting = true;
+  // Form will submit
+});
+\`\`\`
+
+Always check the action URL and ensure JavaScript is not blocking the default submission.`
+  },
+  {
+    id: "responsive-issues",
+    category: "CSS",
+    q: ["Responsive design not working", "Mobile layout broken", "Media queries not working"],
+    title: "Responsive Design Issues",
+    body: `Responsive issues occur when layouts do not adapt properly to different screen sizes.
+
+## Common Causes
+
+1. Missing viewport meta tag
+2. Fixed pixel values instead of relative units
+3. Media query breakpoints incorrect
+4. CSS specificity conflicts
+5. Missing media queries
+
+## Solutions
+
+### Add Viewport Meta Tag
+
+\`\`\`html
+<!-- Must have this in the head -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+\`\`\`
+
+### Use Relative Units
+
+\`\`\`css
+/* Problem: Fixed widths */
+.container {
+  width: 960px;  /* Does not adapt */
+}
+
+/* Solution: Use max-width and percentages */
+.container {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+\`\`\`
+
+### Fix Media Queries
+
+\`\`\`css
+/* Problem: Wrong order (desktop first) */
+@media (min-width: 768px) {
+  .sidebar { display: block; }
+}
+
+@media (max-width: 767px) {
+  .sidebar { display: none; }
+}
+
+/* Solution: Mobile first (use min-width) */
+.sidebar {
+  display: none;  /* Mobile: hidden by default */
+}
+
+@media (min-width: 768px) {
+  .sidebar { display: block; }  /* Tablet+: shown */
+}
+\`\`\`
+
+### Use Flexbox or Grid
+
+\`\`\`css
+/* Problem: Floats not responsive */
+.column {
+  float: left;
+  width: 33.33%;
+}
+
+/* Solution: Use flexbox */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.column {
+  flex: 1 1 300px;  /* Grows, shrinks, minimum 300px */
+}
+\`\`\`
+
+### Test Common Breakpoints
+
+\`\`\`css
+/* Mobile: 0-479px */
+/* Tablet: 480-767px */
+/* Desktop: 768px+ */
+
+@media (max-width: 479px) {
+  /* Mobile styles */
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Tablet styles */
+}
+
+@media (min-width: 768px) {
+  /* Desktop styles */
+}
+\`\`\`
+
+### Use DevTools for Testing
+
+- Open DevTools (F12)
+- Click the device toggle icon (Ctrl+Shift+M)
+- Select different devices to test
+- Check for layout issues at each size
+
+Start with mobile-first design and use relative units for responsive layouts.`
+  },
+  {
+    id: "slow-website",
+    category: "Performance",
+    q: ["Website is slow", "Slow loading page", "Performance optimization"],
+    title: "Slow Website Performance",
+    body: `A slow website frustrates users and hurts search rankings. Here is how to diagnose and fix performance issues.
+
+## Common Causes
+
+1. Unoptimized images (too large, wrong format)
+2. Too many HTTP requests
+3. No browser caching
+4. Render-blocking JavaScript/CSS
+5. Large DOM size
+6. No compression
+
+## Diagnosis
+
+### Check Performance Metrics
+
+- Open DevTools (F12) > Lighthouse tab
+- Run a performance audit
+- Review Core Web Vitals (LCP, FID, CLS)
+
+### Check Network Tab
+
+- Open DevTools > Network tab
+- Reload the page
+- Sort by size or time
+- Identify the largest/slowest resources
+
+## Solutions
+
+### Optimize Images
+
+\`\`\`html
+<!-- Problem: Large unoptimized image -->
+<img src="photo.png" width="1920">
+
+<!-- Solution: Use modern formats and srcset -->
+<picture>
+  <source srcset="photo.avif" type="image/avif">
+  <source srcset="photo.webp" type="image/webp">
+  <img src="photo.jpg" alt="Photo" loading="lazy" width="800" height="600">
+</picture>
+\`\`\`
+
+### Enable Caching
+
+\`\`\`javascript
+// Server-side: Set cache headers
+res.setHeader("Cache-Control", "public, max-age=31536000");
+\`\`\`
+
+### Minimize HTTP Requests
+
+- Combine CSS files
+- Use CSS sprites for icons
+- Lazy load non-critical resources
+- Use code splitting
+
+### Defer Non-Critical JavaScript
+
+\`\`\`html
+<!-- Problem: Render-blocking -->
+<script src="analytics.js"></script>
+
+<!-- Solution: Defer loading -->
+<script src="analytics.js" defer></script>
+\`\`\`
+
+### Use CDN
+
+- Serve static assets from a CDN
+- Reduces latency for users worldwide
+- Cloudflare, AWS CloudFront, or similar
+
+### Enable Compression
+
+\`\`\`javascript
+// Server: Enable gzip/brotli
+const compression = require("compression");
+app.use(compression());
+\`\`\`
+
+### Quick Wins
+
+1. Compress images with tools like TinyPNG
+2. Enable lazy loading: loading="lazy"
+3. Minify CSS and JavaScript
+4. Remove unused CSS
+5. Preload critical resources: <link rel="preload">
+
+Performance optimization is ongoing. Measure before and after each change.`
+  },
+  {
+    id: "browser-compatibility",
+    category: "Web Standards",
+    q: ["Browser compatibility issue", "Not working in older browser", "Cross-browser CSS"],
+    title: "Browser Compatibility Issues",
+    body: `Browser compatibility issues occur when code works in one browser but not in another.
+
+## Common Issues
+
+1. CSS properties not supported in older browsers
+2. JavaScript features missing in older versions
+3. Different default styles across browsers
+4. Vendor prefixes needed
+5. File format support differences
+
+## Solutions
+
+### Check Support
+
+- Use caniuse.com to check feature support
+- Know your target browsers (check analytics)
+
+### CSS Vendor Prefixes
+
+\`\`\`css
+/* Problem: Missing prefixes */
+.container {
+  display: flex;
+}
+
+/* Solution: Add vendor prefixes */
+.container {
+  display: -webkit-box;     /* Old iOS Safari */
+  display: -ms-flexbox;     /* IE 10 */
+  display: -webkit-flex;    /* Old Chrome */
+  display: flex;            /* Standard */
+}
+\`\`\`
+
+### Use Autoprefixer
+
+\`\`\`javascript
+// PostCSS with autoprefixer adds prefixes automatically
+// Install: npm install autoprefixer postcss
+
+// postcss.config.js
+module.exports = {
+  plugins: [require("autoprefixer")]
+};
+\`\`\`
+
+### JavaScript Polyfills
+
+\`\`\`javascript
+// Problem: Array.from not in old browsers
+const arr = Array.from(document.querySelectorAll("div"));
+
+// Solution: Polyfill
+if (!Array.from) {
+  Array.from = function(arrayLike) {
+    return [].slice.call(arrayLike);
+  };
+}
+\`\`\`
+
+### Use Feature Detection
+
+\`\`\`javascript
+// Check if feature is supported
+if ("IntersectionObserver" in window) {
+  // Use IntersectionObserver
+} else {
+  // Fallback: scroll event
+}
+\`\`\`
+
+### Normalize CSS
+
+\`\`\`html
+<!-- Add normalize.css to reset default styles -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+\`\`\`
+
+### Common CSS Fallbacks
+
+\`\`\`css
+/* Fallback for flexbox */
+.container {
+  display: block;  /* Fallback */
+  display: flex;   /* Modern browsers */
+}
+
+/* Fallback for grid */
+.grid {
+  display: float-based-layout;  /* Fallback */
+  display: grid;  /* Modern browsers */
+}
+\`\`\`
+
+Always test on target browsers and use progressive enhancement.`
+  },
+  {
+    id: "cors-issue",
+    category: "Networking",
+    q: ["CORS issue", "Cross-origin error", "Blocked by CORS policy"],
+    title: "Cross-Origin (CORS) Issues",
+    body: `CORS errors happen when a web app tries to access resources from a different domain, protocol, or port.
+
+## What Triggers CORS
+
+- Fetching data from a different API domain
+- Loading fonts or images from another domain
+- Using a different port during development (localhost:3000 to localhost:8080)
+
+## Error Message
+
+\`\`\`
+Access to fetch at 'https://api.example.com' from origin 'http://localhost:3000'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present.
+\`\`\`
+
+## Solutions
+
+### Server-Side Fix (Best)
+
+\`\`\`javascript
+// Express.js
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+\`\`\`
+
+### Use CORS Package
+
+\`\`\`javascript
+const cors = require("cors");
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+\`\`\`
+
+### Development Proxy
+
+\`\`\`javascript
+// vite.config.js
+export default defineConfig({
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true
+      }
+    }
+  }
+});
+\`\`\`
+
+### Fetch with Credentials
+
+\`\`\`javascript
+// Include cookies/headers in cross-origin requests
+fetch("https://api.example.com/data", {
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+\`\`\`
+
+### Preflight Requests
+
+\`\`\`javascript
+// Handle OPTIONS requests for complex requests
+app.options("/api/data", cors());
+\`\`\`
+
+CORS is a browser security feature. The fix must come from the server, not the client.`
   }
 ];

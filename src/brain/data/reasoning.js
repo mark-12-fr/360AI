@@ -929,6 +929,996 @@ class CircuitBreaker {
 
 Prepare for Scenario 3 (Full Preparation) with automated scaling and monitoring. This balances cost and reliability for most e-commerce applications.
 
-Scenario analysis helps organizations prepare for multiple possible futures.`
+    Scenario analysis helps organizations prepare for multiple possible futures.`
+  },
+  {
+    id: "simple-math-word-problem",
+    category: "Math",
+    q: ["Math word problem", "Simple math problem", "Basic word problem"],
+    title: "Simple Math Word Problem",
+    body: `Word problems translate real-life situations into math equations.
+
+## Example Problem
+
+Maria has 24 apples. She gives 7 to her friend and buys 12 more. How many apples does she have now?
+
+## Step-by-Step Solution
+
+**Step 1**: Identify what you know
+- Start: 24 apples
+- Gave away: 7
+- Bought: 12
+
+**Step 2**: Set up the equation
+- 24 - 7 + 12 = ?
+
+**Step 3**: Solve left to right
+- 24 - 7 = 17
+- 17 + 12 = 29
+
+**Step 4**: Check the answer
+- Does 29 make sense? She gave some away but got more, so she should have fewer than 24 + 12 but more than 24 - 7. Yes, 29 fits.
+
+## Answer
+
+Maria has 29 apples.
+
+## Key Strategy
+
+1. Read the problem carefully
+2. Identify what is given and what is asked
+3. Write an equation
+4. Solve and check
+5. Include units in your final answer`
+  },
+  {
+    id: "why-questions-everyday",
+    category: "Everyday",
+    q: ["Why do we yawn?", "Why is the sky blue?", "Why do we need sleep?"],
+    title: "Why Do We Yawn?",
+    body: `"Why" questions explore the reasons behind everyday phenomena.
+
+## Question: Why do we yawn?
+
+## The Science
+
+Yawning is an involuntary opening of the mouth with a deep inhalation. Several theories explain it:
+
+### Theory 1: Brain Cooling
+- The jaw stretch increases blood flow to the brain
+- Cool air inhalation helps lower brain temperature
+- Like a radiator for your head
+
+### Theory 2: Oxygen Regulation
+- Older theory: body needs more oxygen
+- Largely debunked: yawning does not significantly change blood oxygen levels
+
+### Theory 3: Social Communication
+- Yawning is contagious (seeing someone yawn makes you yawn)
+- May signal tiredness or boredom to others
+- Helps synchronize group behavior
+
+### Theory 4: Ear Pressure
+- Yawning opens the Eustachian tubes
+- Equalizes pressure between the ear and throat
+
+## How to Apply This Reasoning
+
+When answering "why" questions:
+1. Ask what is happening physically
+2. Look for biological or chemical mechanisms
+3. Consider evolutionary advantages
+4. Check if multiple theories exist
+5. Present the most accepted explanation
+
+## Another Example
+
+**Question**: Why do onions make us cry?
+**Answer**: Onions release a sulfur compound (syn-propanethial-S-oxide) when cut. This gas reacts with moisture in your eyes to form a mild acid, triggering tear glands to flush it out.
+
+"Why" questions build understanding by connecting effects to causes.`
+  },
+  {
+    id: "comparison-reasoning",
+    category: "Comparison",
+    q: ["Compare two things", "Which is better comparison", "A versus B analysis"],
+    title: "Comparison Reasoning",
+    body: `Comparison reasoning evaluates two or more options by examining similarities, differences, strengths, and weaknesses.
+
+## Example: Online Shopping vs In-Store Shopping
+
+### Criteria for Comparison
+
+1. Convenience
+2. Price
+3. Product inspection
+4. Returns
+5. Immediate gratification
+
+### Side-by-Side Analysis
+
+**Convenience**
+- Online: Shop from anywhere, 24/7, no travel needed
+- In-Store: Must travel, limited hours, but instant possession
+
+**Price**
+- Online: Easier to compare prices, frequent sales, no overhead markup
+- In-Store: May have higher prices, but no shipping fees
+
+**Product Inspection**
+- Online: Rely on photos and reviews, cannot touch or try
+- In-Store: Can touch, try, and inspect before buying
+
+**Returns**
+- Online: Must ship back, may take days
+- In-Store: Return immediately for refund
+
+**Immediate Gratification**
+- Online: Must wait for delivery
+- In-Store: Take it home right away
+
+### When to Choose Each
+
+**Choose Online When:**
+- You know exactly what you want
+- Price comparison is important
+- Product is standardized (electronics, books)
+- You are busy or far from stores
+
+**Choose In-Store When:**
+- You want to try before buying (clothes, furniture)
+- You need it immediately
+- You prefer personal customer service
+- Product quality varies (fresh produce)
+
+### Conclusion
+
+Neither is universally better. The best choice depends on the product type, your priorities, and the situation.`
+  },
+  {
+    id: "how-to-decision",
+    category: "Decision Making",
+    q: ["How to choose between options", "Decision making process", "How to decide"],
+    title: "Decision Making Process",
+    body: `Structured decision-making helps you evaluate options systematically and choose the best path forward.
+
+## Example: Choosing a Programming Language to Learn
+
+### Step 1: Define Your Goal
+- What will you build?
+- What is your timeline?
+- What jobs are available?
+
+### Step 2: List Options
+- JavaScript (web development)
+- Python (data science, AI)
+- Java (enterprise, Android)
+- Swift (iOS apps)
+
+### Step 3: Evaluate Each Option
+
+**JavaScript**
+- Pros: Web front and back end, huge job market, many resources
+- Cons: Can be confusing (async, type coercion), fast-changing ecosystem
+
+**Python**
+- Pros: Easy to learn, great for data science and AI, readable syntax
+- Cons: Slower runtime, less common for mobile apps
+
+**Java**
+- Pros: Enterprise jobs, Android development, strong type system
+- Cons: Verbose syntax, slower to write
+
+**Swift**
+- Pros: Beautiful syntax, Apple ecosystem, growing demand
+- Cons: Limited to Apple platforms, smaller community
+
+### Step 4: Apply Your Constraints
+- Want a job fast? JavaScript has the most openings
+- Interested in AI? Python is the standard
+- Want to build iOS apps? Swift is the choice
+
+### Step 5: Make a Decision
+- Choose one and commit for at least 3 months
+- You can always learn another language later
+
+### Step 6: Review After Time
+- Revisit your decision after 3 months
+- Adjust if your goals changed
+
+## General Framework
+
+1. Define what "good" looks like
+2. List all viable options
+3. Create comparison criteria
+4. Score each option
+5. Consider constraints and trade-offs
+6. Decide and commit
+7. Review and adjust`
+  },
+  {
+    id: "cause-and-effect-weather",
+    category: "Science",
+    q: ["Why does it rain?", "Cause of rain", "How does rain happen?"],
+    title: "Cause and Effect: Why Does It Rain?",
+    body: `Cause-and-effect reasoning traces the chain of events that produce a phenomenon.
+
+## The Cause-and-Effect Chain
+
+### Cause 1: Sun heats water bodies
+- Oceans, lakes, and rivers absorb solar energy
+- Water molecules gain kinetic energy
+
+### Effect 1: Evaporation
+- Water turns from liquid to water vapor
+- Warm, moist air rises into the atmosphere
+
+### Cause 2: Rising air cools
+- Temperature decreases with altitude
+- Air can hold less moisture when cold
+
+### Effect 2: Condensation
+- Water vapor forms tiny water droplets or ice crystals
+- These become visible as clouds
+
+### Cause 3: Droplets combine
+- Small droplets collide and merge
+- They become heavy enough to fall
+
+### Effect 3: Precipitation
+- Water falls as rain, snow, sleet, or hail
+- Depends on temperature and conditions
+
+## Verification
+
+- Does this chain make physical sense? Yes
+- Can we observe each step? Yes
+- Are there exceptions? Yes (rain can also come from fronts and convection)
+
+## Practical Application
+
+Understanding cause and effect helps in:
+- Weather forecasting
+- Agriculture planning
+- Disaster preparedness
+- Understanding climate patterns`
+  },
+  {
+    id: "logical-reasoning-puzzle",
+    category: "Logic",
+    q: ["Logical reasoning puzzle", "Logic puzzle", "Riddle solution"],
+    title: "Logical Reasoning",
+    body: `Logical reasoning applies rules of inference to draw conclusions from given information.
+
+## Example Puzzle
+
+If all cats are animals, and Tom is a cat, what can we conclude?
+
+### Step 1: Identify Premises
+- Premise 1: All cats are animals
+- Premise 2: Tom is a cat
+
+### Step 2: Apply Logic
+- Since Tom is a cat, and all cats are animals
+- Therefore, Tom is an animal
+
+### Step 3: Verify
+- The conclusion follows logically from the premises
+- This is valid deductive reasoning
+
+## Another Example
+
+Some doctors are lawyers. All lawyers studied law. Does that mean all doctors studied law?
+
+### Analysis
+- Some doctors are lawyers (some overlap)
+- All lawyers studied law
+- But doctors who are not lawyers may not have studied law
+- Conclusion: We cannot say all doctors studied law
+
+## Common Logical Fallacies
+
+1. **Affirming the Consequent**: "If it rains, the ground is wet. The ground is wet, so it rained." (Wrong: a sprinkler could cause it)
+
+2. **Denying the Antecedent**: "If it rains, the ground is wet. It did not rain, so the ground is not wet." (Wrong: other things make ground wet)
+
+3. **Ad Hominem**: Attacking the person instead of the argument
+
+## Key Rules
+
+- If the premises are true and the logic is valid, the conclusion must be true
+- Always check if premises are actually true
+- Watch out for hidden assumptions`
+  },
+  {
+    id: "what-if-hypothetical",
+    category: "Critical Thinking",
+    q: ["What if I fail?", "Hypothetical question", "What would happen if"],
+    title: "What-If Reasoning",
+    body: `What-if reasoning explores hypothetical scenarios to understand potential outcomes and prepare for them.
+
+## Framework for What-If Analysis
+
+### Step 1: Define the Scenario
+- What is the specific "what if" question?
+- What are the assumptions?
+
+### Step 2: Identify Possible Outcomes
+- Best case scenario
+- Worst case scenario
+- Most likely scenario
+
+### Step 3: Assess Likelihood and Impact
+- How probable is each outcome?
+- How severe would the impact be?
+
+### Step 4: Plan Responses
+- What can you do to increase positive outcomes?
+- How can you mitigate negative outcomes?
+
+## Example: What if I lose my job?
+
+**Best Case**: Find a better job quickly with higher pay
+**Worst Case**: Financial difficulty for several months
+**Most Likely**: Take 1-3 months to find comparable employment
+
+**Mitigation Steps**:
+- Build an emergency fund (3-6 months of expenses)
+- Keep skills updated
+- Maintain professional network
+- Have a backup plan (freelancing, part-time work)
+
+## Benefits of What-If Thinking
+1. Prepares you for unexpected events
+2. Reduces anxiety through planning
+3. Improves decision-making
+4. Builds resilience`
+  },
+  {
+    id: "practical-advice",
+    category: "Practical Advice",
+    q: ["How to save money", "Practical tips", "Life hack question"],
+    title: "Practical Advice: Saving Money",
+    body: `Practical advice applies knowledge to real-life situations for immediate benefit.
+
+## The 50-30-20 Rule
+
+### Framework
+- 50% of income for needs (rent, food, utilities)
+- 30% of income for wants (entertainment, dining out)
+- 20% of income for savings and debt repayment
+
+## Practical Steps
+
+### Step 1: Track Spending
+- Record every expense for one month
+- Identify where money goes
+- Find areas to cut back
+
+### Step 2: Create a Budget
+- Allocate money to categories
+- Set spending limits
+- Leave room for unexpected expenses
+
+### Step 3: Automate Savings
+- Set up automatic transfers on payday
+- Pay yourself first
+- Treat savings like a non-negotiable bill
+
+### Step 4: Reduce Fixed Costs
+- Negotiate bills (internet, phone, insurance)
+- Switch to cheaper alternatives
+- Downsize if possible
+
+### Step 5: Build Emergency Fund
+- Start with small goal: 1,000
+- Build to 3-6 months of expenses
+- Keep in easily accessible account
+
+## Quick Wins
+- Cancel unused subscriptions
+- Cook at home more
+- Use public transportation
+- Buy generic brands
+- Use cashback apps and rewards
+
+## Common Mistakes
+- Budgeting without tracking first
+- Not accounting for irregular expenses
+- Being too restrictive (leads to budget fatigue)
+- Not having an emergency fund first
+
+## Conclusion
+
+Saving money is about consistent habits, not extreme deprivation. Start small, automate where possible, and review monthly.`
+  },
+  {
+    id: "analyze-problem",
+    category: "Problem Solving",
+    q: ["How to analyze a problem", "Problem analysis", "Breaking down a problem"],
+    title: "Problem Analysis",
+    body: `Effective problem analysis breaks complex issues into manageable components.
+
+## Framework: 5 Whys
+
+### Origin
+Developed by Sakichi Toyoda for Toyota. Used to find the root cause of problems.
+
+### Example: Website is slow
+
+**Why 1**: Why is the website slow?
+- Because page load time exceeds 5 seconds
+
+**Why 2**: Why does page load take 5 seconds?
+- Because the database queries are slow
+
+**Why 3**: Why are the database queries slow?
+- Because there is no index on the user_id column
+
+**Why 4**: Why is there no index?
+- Because it was not included in the original schema
+
+**Why 5**: Why was it not included?
+- Because performance was not considered during design
+
+### Root Cause
+Lack of performance planning during schema design
+
+### Solution
+Add database index and implement performance reviews in development process
+
+## Another Framework: Fishbone Diagram
+
+### Categories to Investigate
+1. People: Are people trained properly?
+2. Process: Are processes efficient?
+3. Technology: Are tools adequate?
+4. Environment: Are external factors影响影响?
+
+## Steps for Any Problem
+1. Define the problem clearly
+2. Gather relevant data
+3. Brainstorm possible causes
+4. Test each cause
+5. Find the root cause
+6. Develop solutions
+7. Implement and monitor`
+  },
+  {
+    id: "critical-thinking-media",
+    category: "Critical Thinking",
+    q: ["How to evaluate information", "Critical thinking about news", "Media literacy"],
+    title: "Evaluating Information Critically",
+    body: `Critical thinking about information helps distinguish reliable sources from misinformation.
+
+## The CRAAP Test
+
+### Currency
+- When was the information published?
+- Has it been updated?
+- Are the links working?
+
+### Relevance
+- Does it relate to your question?
+- Who is the intended audience?
+- Is it at the right level for your needs?
+
+### Authority
+- Who is the author?
+- What are their credentials?
+- Is the publisher reputable?
+
+### Accuracy
+- Where does the information come from?
+- Can you verify it with other sources?
+- Are there citations or references?
+
+### Purpose
+- Why does this information exist?
+- Is it to inform, persuade, sell, or entertain?
+- Are there biases or conflicts of interest?
+
+## Red Flags
+1. No author or date listed
+2. Emotional language instead of facts
+3. No sources or citations
+4. Too good to be true claims
+5. Conspiracy theories without evidence
+6. Urgency or pressure tactics
+
+## Example Evaluation
+
+**Claim**: "This food cures cancer!"
+
+**Analysis**:
+- Currency: Published 2 years ago, no updates
+- Relevance: Related to health
+- Authority: Written by a blogger, no medical credentials
+- Accuracy: No scientific studies cited, contradicts medical consensus
+- Purpose: Sells supplements (financial conflict)
+
+**Verdict**: Unreliable. Seek information from medical institutions and peer-reviewed studies.
+
+## Application
+- Apply CRAAP to news articles, social media posts, and claims
+- Cross-reference with multiple reliable sources
+- Be especially skeptical of emotional or sensational claims`
+  },
+  {
+    id: "sequential-reasoning",
+    category: "Problem Solving",
+    q: ["Step by step reasoning", "Sequential problem solving", "How to solve step by step"],
+    title: "Sequential Reasoning",
+    body: `Sequential reasoning breaks a process into ordered steps to ensure nothing is missed.
+
+## Example: How to Learn a New Programming Language
+
+### Step 1: Set a Clear Goal
+- What will you build with this language?
+- Set a specific project (e.g., "build a todo app")
+
+### Step 2: Learn the Basics (Week 1-2)
+- Variables and data types
+- Control flow (if/else, loops)
+- Functions
+- Basic input/output
+
+### Step 3: Build Something Simple (Week 3-4)
+- Start with a small project
+- Apply what you learned
+- Google errors and problems
+- Do not aim for perfection
+
+### Step 4: Learn Key Concepts (Week 5-6)
+- Data structures (arrays, objects)
+- Error handling
+- File I/O or API calls
+- Testing basics
+
+### Step 5: Build a Real Project (Week 7-8)
+- Choose something meaningful to you
+- Break it into small features
+- Build one feature at a time
+- Deploy it so others can use it
+
+### Step 6: Join a Community
+- Find others learning the same language
+- Ask questions and help others
+- Read other people's code
+- Attend meetups or online groups
+
+### Step 7: Keep Building
+- Take on progressively harder projects
+- Learn best practices and patterns
+- Read the language documentation
+- Stay curious and keep coding
+
+## Key Principles
+1. Start with why (purpose motivates learning)
+2. Learn by doing, not just reading
+3. Embrace errors as learning opportunities
+4. Break large problems into small steps
+5. Review and adjust your plan regularly`
+  },
+  {
+    id: "cost-benefit-analysis",
+    category: "Decision Making",
+    q: ["Cost benefit analysis", "Is it worth it?", "Pros and cons analysis"],
+    title: "Cost-Benefit Analysis",
+    body: `Cost-benefit analysis compares the total expected costs against the total expected benefits of an action.
+
+## Example: Should You Buy a Car?
+
+### Step 1: Identify Costs
+- Purchase price: 800,000
+- Insurance: 20,000/year
+- Gas: 3,000/month
+- Maintenance: 15,000/year
+- Parking: 1,000/month
+- Total annual cost: approximately 71,000
+
+### Step 2: Identify Benefits
+- Convenience and time saved
+- Comfort (air conditioning, personal space)
+- Flexibility (go anywhere, anytime)
+- Status or personal satisfaction
+
+### Step 3: Quantify Benefits
+- Time saved: 1 hour/day x 365 = 365 hours
+- If your time is worth 200/hour, that is 73,000 in value
+- Comfort and flexibility: subjective value
+
+### Step 4: Compare
+- Annual cost: 71,000
+- Annual quantified benefit: 73,000
+- Net benefit: 2,000 (plus unquantified benefits)
+
+### Step 5: Consider Alternatives
+- Public transport: 5,000/month = 60,000/year
+- Ride-sharing: 40,000/year (depending on usage)
+- Bicycle: 5,000/year (minimal)
+
+### Step 6: Make Decision
+- If convenience and flexibility are high priority: buy the car
+- If cost savings are priority: use public transport
+- If moderate usage: ride-sharing may be optimal
+
+## Tips
+- Quantify when possible, but acknowledge subjective factors
+- Consider opportunity cost (what else could you do with the money?)
+- Think long-term, not just immediate costs
+- Include both monetary and non-monetary factors`
+  },
+  {
+    id: "root-cause-analysis",
+    category: "Problem Solving",
+    q: ["Root cause analysis", "Finding the real problem", "Why is this happening"],
+    title: "Root Cause Analysis",
+    body: `Root cause analysis digs beneath surface symptoms to find the underlying cause of a problem.
+
+## Methods
+
+### Method 1: 5 Whys
+Keep asking "why" until you reach the fundamental cause (see earlier example).
+
+### Method 2: Pareto Analysis (80/20 Rule)
+- 80% of problems come from 20% of causes
+- Identify the most frequent issues
+- Focus on fixing the top few causes
+
+### Method 3: Fault Tree Analysis
+- Start with the problem at the top
+- Branch down into contributing factors
+- Continue until you reach root causes
+
+## Example: High Employee Turnover
+
+**Symptom**: Employees are leaving at 40% annually
+
+**Why 1**: Why are employees leaving?
+- They receive better offers elsewhere
+
+**Why 2**: Why do they get better offers?
+- Our salaries are below market rate
+
+**Why 3**: Why are salaries below market?
+- We have not done a salary review in 3 years
+
+**Why 4**: Why no salary review?
+- Management does not see it as a priority
+
+**Why 5**: Why is it not a priority?
+- There is no system to track market rates and retention costs
+
+**Root Cause**: Lack of a compensation review process
+
+**Solution**: Implement annual salary benchmarking and review
+
+## Benefits of Root Cause Analysis
+1. Prevents recurring problems
+2. Saves time and resources long-term
+3. Improves processes and systems
+4. Builds organizational learning`
+  },
+  {
+    id: "ethical-reasoning",
+    category: "Critical Thinking",
+    q: ["Ethical dilemma", "Moral reasoning", "Right or wrong decision"],
+    title: "Ethical Reasoning",
+    body: `Ethical reasoning helps evaluate right and wrong in complex situations where values may conflict.
+
+## Frameworks
+
+### Framework 1: Utilitarianism
+- Choose the action that produces the greatest good for the greatest number
+- Focus on outcomes and consequences
+
+### Framework 2: Deontological Ethics
+- Focus on duties and rules
+- Some actions are right or wrong regardless of outcome
+- Example: lying is always wrong, even if it produces good results
+
+### Framework 3: Virtue Ethics
+- Focus on character and moral virtues
+- Ask: "What would a virtuous person do?"
+- Values: honesty, courage, compassion, justice
+
+## Example: The Trolley Problem
+
+A trolley is heading toward 5 people. You can pull a lever to divert it to a track where it will hit 1 person.
+
+**Utilitarian View**: Pull the lever. Saving 5 lives at the cost of 1 produces the greatest good.
+
+**Deontological View**: Do not pull the lever. Actively causing someone's death is wrong, even to save others.
+
+**Virtue Ethics View**: What would a compassionate, courageous person do? Both options have merit.
+
+## Application to Real Life
+
+**Scenario**: You discover your company is polluting a river.
+
+- **Utilitarian**: Report it. The environmental damage affects thousands.
+- **Deontological**: You have a duty to tell the truth and protect the environment.
+- **Virtue Ethics**: A courageous and honest person would report it.
+
+## Key Questions
+1. What are the consequences of each action?
+2. What duties or rules apply?
+3. What would a person of good character do?
+4. Who are the stakeholders affected?
+5. Are there any conflicting values?
+
+Ethical reasoning does not always give clear answers, but it provides a structured way to think through difficult decisions.`
+  },
+  {
+    id: "systems-thinking",
+    category: "Problem Solving",
+    q: ["Systems thinking", "How to think about complex problems", "Big picture thinking"],
+    title: "Systems Thinking",
+    body: `Systems thinking looks at how parts of a system interact to produce behavior, rather than looking at parts in isolation.
+
+## Core Concepts
+
+### Feedback Loops
+- **Reinforcing loops**: Amplify change (snowball effect)
+- **Balancing loops**: Stabilize the system (thermostat)
+
+### Emergence
+- The whole is greater than the sum of its parts
+- System behavior cannot be predicted from individual components
+
+### Mental Models
+- How we think about the system affects our actions
+- Challenging mental models leads to better solutions
+
+## Example: Traffic Congestion
+
+**Linear Thinking**: Build more roads to reduce traffic.
+
+**Systems Thinking**:
+- More roads attract more drivers (reinforcing loop)
+- More drivers create more congestion
+- Congestion pushes people to public transport (balancing loop)
+- Better public transport reduces cars on road
+
+**Better Solution**: Improve public transportation instead of just building roads.
+
+## Another Example: Student Performance
+
+**Linear Thinking**: Give more homework to improve grades.
+
+**Systems Thinking**:
+- More homework reduces sleep (reinforcing loop)
+- Less sleep reduces focus and retention
+- Lower grades lead to more homework assigned
+- This creates a vicious cycle
+
+**Better Solution**: Consider the whole system - sleep, nutrition, teaching quality, and manageable workload.
+
+## Applying Systems Thinking
+1. Map the system: identify components and connections
+2. Look for feedback loops
+3. Identify leverage points (places where small changes have big effects)
+4. Consider second and third-order effects
+5. Test mental models against reality`
+  },
+  {
+    id: "probability-reasoning",
+    category: "Math",
+    q: ["Probability question", "Chance of happening", "Likelihood reasoning"],
+    title: "Probability Reasoning",
+    body: `Probability reasoning helps assess the likelihood of events and make informed decisions under uncertainty.
+
+## Example: Should You Bring an Umbrella?
+
+**Given Information**:
+- 30% chance of rain today
+- You will be outside for 4 hours
+- Getting wet would ruin your day (high cost)
+
+**Analysis**:
+- 30% is not low enough to ignore (about 1 in 3 days like this, it rains)
+- The cost of being unprepared is high
+- The cost of carrying an umbrella is low (minor inconvenience)
+
+**Decision**: Bring the umbrella
+
+## Key Concepts
+
+### Independent Events
+- One event does not affect the other
+- Example: flipping a coin twice
+
+### Dependent Events
+- One event affects the probability of the other
+- Example: drawing cards without replacement
+
+### Expected Value
+- Multiply each outcome by its probability
+- Sum all outcomes
+- Helps make rational decisions under uncertainty
+
+## Example: Lottery Ticket
+
+- Cost: 100
+- Prize: 1,000,000
+- Odds of winning: 1 in 10,000,000
+
+**Expected Value**:
+- (1/10,000,000) x 1,000,000 = 0.10
+- Minus cost: 0.10 - 100 = -99.90
+
+**Conclusion**: On average, you lose 99.90 per ticket. Not a good investment.
+
+## Common Probability Mistakes
+1. **Gambler's Fallacy**: "I have lost 5 times, so I am due to win" - each event is independent
+2. **Base Rate Ignorance**: Ignoring how common something is in general
+3. **Confusing Probability with Frequency**: 50% chance does not mean it happens every other time
+4. **Anchoring**: Being influenced by irrelevant numbers
+
+## Application
+- Assess risks before making decisions
+- Use data and statistics, not gut feeling
+- Consider both probability and impact
+- Update your beliefs as new information arrives`
+  },
+  {
+    id: "creative-problem-solving",
+    category: "Problem Solving",
+    q: ["How to think creatively", "Creative problem solving", "Brainstorming techniques"],
+    title: "Creative Problem Solving",
+    body: `Creative problem solving uses unconventional approaches to find solutions that traditional thinking misses.
+
+## Techniques
+
+### Technique 1: Brainstorming
+- Generate as many ideas as possible
+- No criticism during idea generation
+- Build on others' ideas
+- Wild ideas are encouraged
+
+### Technique 2: SCAMPER Method
+- **S**ubstitute: What can you replace?
+- **C**ombine: What can you merge?
+- **A**dapt: What can you modify?
+- **M**odify/Magnify: What can you change the scale of?
+- **P**ut to other uses: How else can it be used?
+- **E**liminate: What can you remove?
+- **R**everse: What if you did the opposite?
+
+### Technique 3: Reverse Thinking
+- Instead of asking "How do I solve X?"
+- Ask "How do I cause X?" or "How do I make X worse?"
+- Then reverse those answers
+
+## Example: Improve Customer Retention
+
+**SCAMPER Analysis**:
+- Substitute: Replace annual contracts with monthly
+- Combine: Combine product with free training
+- Adapt: Adapt pricing for different customer segments
+- Modify: Modify the onboarding experience
+- Put to other uses: Use customer data for personalized recommendations
+- Eliminate: Remove unnecessary steps in signup
+- Reverse: Instead of customers contacting support, proactively reach out to them
+
+**Creative Solution**: Implement a proactive customer success program that checks in with customers before problems arise.
+
+## Why Creative Thinking Works
+1. Challenges assumptions
+2. Explores possibilities traditional analysis misses
+3. Finds innovative solutions to persistent problems
+4. Builds competitive advantage`
+  },
+  {
+    id: "data-driven-reasoning",
+    category: "Problem Solving",
+    q: ["How to use data for decisions", "Data-driven decision making", "Analyzing data"],
+    title: "Data-Driven Reasoning",
+    body: `Data-driven reasoning uses evidence and metrics to guide decisions rather than intuition or opinion.
+
+## Framework
+
+### Step 1: Define the Question
+- What decision are you trying to make?
+- What data do you need?
+
+### Step 2: Collect Data
+- Internal data: sales, usage, customer feedback
+- External data: market research, benchmarks
+- Ensure data quality and relevance
+
+### Step 3: Analyze Data
+- Look for patterns and trends
+- Calculate key metrics
+- Identify significant findings
+
+### Step 4: Draw Conclusions
+- What does the data tell you?
+- Are there alternative explanations?
+- What are the limitations?
+
+### Step 5: Take Action
+- Implement the decision based on data
+- Measure results
+- Adjust if needed
+
+## Example: Should We Launch Feature X?
+
+**Data Collected**:
+- Survey: 70% of users say they want it
+- Competitor analysis: 3 of 5 competitors offer it
+- Development cost: 2 months of engineering time
+- Projected revenue increase: 15%
+
+**Analysis**:
+- Strong user demand (70%)
+- Competitive pressure (3/5 have it)
+- ROI calculation: revenue increase exceeds development cost
+
+**Decision**: Launch Feature X
+
+**Measurement**:
+- Track feature usage after launch
+- Compare revenue before and after
+- Gather user feedback
+- Adjust based on results
+
+## Benefits
+1. Reduces bias and gut-feeling decisions
+2. Provides objective basis for discussion
+3. Enables measurement of results
+4. Builds organizational learning
+5. Increases accountability`
+  },
+  {
+    id: "analytical-reasoning",
+    category: "Logic",
+    q: ["How to analyze arguments", "Analytical reasoning", "Evaluating claims"],
+    title: "Analytical Reasoning",
+    body: `Analytical reasoning examines arguments and claims to determine their validity and soundness.
+
+## Structure of an Argument
+
+1. **Premise**: The evidence or reasons given
+2. **Conclusion**: What the argument claims
+3. **Assumption**: Unstated beliefs that support the argument
+
+## Example
+
+**Argument**: "We should ban social media for children under 13 because it harms their mental health."
+
+### Analysis
+
+**Premise 1**: Social media harms children's mental health
+- Evidence: Studies show correlation between social media use and anxiety/depression in teens
+- Quality: Multiple studies support this, though causation is debated
+
+**Premise 2**: Children under 13 are particularly vulnerable
+- Evidence: Brain development research shows limited self-regulation in young children
+- Quality: Well-supported by developmental psychology
+
+**Assumption**: Banning social media would effectively reduce harm
+- Question: Would children find ways around the ban?
+- Question: Would it push activity underground where it is less safe?
+
+**Conclusion**: Banning social media for children under 13 would reduce mental health harm
+- Valid if premises are true and assumption holds
+- But enforcement and alternatives need consideration
+
+## Red Flags in Arguments
+1. **Emotional language**: "This is outrageous!" instead of facts
+2. **False dilemma**: Presenting only two options when more exist
+3. **Slippery slope**: "If X happens, then Y and Z will definitely follow"
+4. **Appeal to authority**: "Expert X says so, therefore it is true"
+5. **Ad hominem**: Attacking the person instead of the argument
+
+## Application
+- Identify the conclusion: What is being argued?
+- List the premises: What evidence supports it?
+- Check assumptions: What unstated beliefs are there?
+- Evaluate evidence: Is it strong, relevant, and sufficient?
+- Consider alternatives: Are there other explanations?
+- Draw your own conclusion based on the analysis`
   }
 ];

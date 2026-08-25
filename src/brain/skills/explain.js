@@ -43,6 +43,16 @@ const CODE_EXPLAIN_PATTERNS = [
   /\b(responsive|accessibility|a11y|seo|performance|optimization|layout|grid|flexbox|positioning)\b/i,
   // software engineering
   /\b(solid|dry|kiss|yagni|clean code|refactor|testing|debugging|version control)\b/i,
+  // general knowledge patterns
+  /\b(give me information|what do you know|inform me about|i want to learn|teach me about)\b/i,
+  // science and math
+  /\b(science|physics|chemistry|biology|math|algebra|geometry|calculus|probability|statistics)\b/i,
+  // history and geography
+  /\b(history|geography|continent|ocean|country|river|mountain|capital|civilization)\b/i,
+  // health and business
+  /\b(health|nutrition|exercise|vitamin|protein|business|marketing|investment|entrepreneurship)\b/i,
+  // technology concepts
+  /\b(blockchain|cryptocurrency|machine learning|artificial intelligence|quantum|5g|iot)\b/i,
 ]
 
 export default {
