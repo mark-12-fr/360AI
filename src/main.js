@@ -294,6 +294,9 @@ async function boot() {
   renderSkillList()
   updateNetStatus()
   renderEngineLabels()
+  // Before the awaited work below, so an update that lands mid-boot is still
+  // noticed. `wireEvents` has already connected the bar's Restart button.
+  watchForUpdates()
 
   try {
     state.settings = await withTimeout(
@@ -319,9 +322,8 @@ async function boot() {
   renderFactList()
   refreshStorageInfo()
 
-  // Which build this is, and whether it is still the newest one.
+  // Which build this is.
   $('#build-stamp').textContent = `build ${__BUILD__}`
-  watchForUpdates()
 
   // What we believe is downloaded, from our own record. Checking the real
   // cache would mean pulling the WebLLM runtime on every visit, including for
@@ -1496,22 +1498,42 @@ async function removeModel(entry) {
  * would be a worse bug than the one it is delivering the fix for. The user is
  * told, and chooses.
  */
+/**
+ * The worker serving this page when its JavaScript began running, read at
+ * module scope so nothing can have awaited first.
+ *
+ * It has to be this early. `boot()` spends up to eight seconds opening the
+ * database and restoring a chat, and a worker that installs and claims the
+ * page inside that window fires `controllerchange` before anyone is listening
+ * — and is already active, rather than waiting, by the time the registration
+ * resolves. Watching only for the event would then miss precisely the case
+ * this feature exists for: the first load after a new build is published.
+ *
+ * Comparing the worker in charge now against this one catches it either way.
+ */
+const STARTING_WORKER = navigator.serviceWorker?.controller ?? null
+
+/** Is a different worker in charge than the one this page started under? */
+function workerReplaced() {
+  const current = navigator.serviceWorker?.controller ?? null
+  // No worker at the start is a first install, not an update. Announcing
+  // "360AI has updated" on someone's first visit would be a lie.
+  return STARTING_WORKER !== null && current !== null && current !== STARTING_WORKER
+}
+
 function watchForUpdates() {
   if (!('serviceWorker' in navigator)) return
 
-  // No previous controller means this is a first install, not an update.
-  // Announcing "360AI has updated" on someone's first visit would be a lie.
-  const hadController = !!navigator.serviceWorker.controller
-
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (hadController) offerRestart()
+    if (workerReplaced()) offerRestart()
   })
 
   navigator.serviceWorker.ready
     .then((reg) => {
-      // A build that installed while the page was closed is already waiting by
-      // the time this runs, and fires no event of its own.
-      if (reg.waiting && hadController) offerRestart()
+      // Two cases the event cannot cover: a build that installed while the page
+      // was closed and is still waiting, and one that took over during boot's
+      // awaited work, before the listener above existed.
+      if (workerReplaced() || (reg.waiting && STARTING_WORKER)) offerRestart()
 
       // The browser checks for a new worker on navigation, which is exactly
       // what an installed app never does. Ask directly instead: whenever the
