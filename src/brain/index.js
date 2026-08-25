@@ -23,6 +23,7 @@ import datetime from './skills/datetime.js'
 import debug from './skills/debug.js'
 import define from './skills/define.js'
 import explain from './skills/explain.js'
+import general from './skills/general.js'
 import geography from './skills/geography.js'
 import knowledge from './skills/knowledge.js'
 import law from './skills/law.js'
@@ -47,6 +48,7 @@ export const SKILLS = [
   debug,
   explain,
   reasoning,
+  general,
   code,
   profiles,
   define,
