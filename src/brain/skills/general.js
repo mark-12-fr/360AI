@@ -3473,6 +3473,75 @@ Good: "In yesterday's meeting, you arrived 15 minutes late. The team had to wait
 - Seek support from others
 - Be patient with yourself`
   },
+  {
+    q: ['what is SDLC', 'software development lifecycle', 'explain SDLC', 'phases of software development', 'software development process'],
+    a: `## Software Development Lifecycle (SDLC)
+
+### What is SDLC?
+A structured process for planning, creating, testing, and deploying software systems.
+
+### 7 Phases of SDLC:
+
+**1. Planning**
+- Define project scope
+- Estimate resources and timeline
+- Identify risks
+- Create project plan
+
+**2. Requirements Analysis**
+- Gather user needs
+- Document functional requirements
+- Define non-functional requirements
+- Get stakeholder approval
+
+**3. Design**
+- System architecture
+- Database design
+- User interface design
+- API design
+- Security planning
+
+**4. Development (Coding)**
+- Write the actual code
+- Follow coding standards
+- Use version control
+- Code reviews
+- Unit testing
+
+**5. Testing**
+- Unit testing
+- Integration testing
+- System testing
+- User acceptance testing
+- Bug fixing
+
+**6. Deployment**
+- Release to production
+- User training
+- Documentation
+- Monitoring setup
+
+**7. Maintenance**
+- Bug fixes
+- Performance optimization
+- Feature updates
+- Security patches
+
+### SDLC Models:
+- **Waterfall**: Sequential, linear approach
+- **Agile**: Iterative, flexible approach
+- **Spiral**: Risk-focused
+- **DevOps**: Continuous integration/delivery
+- **Lean**: Minimize waste
+- **V-Model**: Verification and validation
+
+### Best Practices:
+- Document everything
+- Test early and often
+- Use version control
+- Communicate with stakeholders
+- Plan for maintenance`
+  },
 ]
 
 const GENERAL_PATTERNS = [
