@@ -1813,6 +1813,46 @@ export const FACTS = [
     q: ['how to reduce screen time', 'screen time tips', 'how to cut screen time'],
     a: '**Reduce screen time**: Set daily limits. Use app blockers. Turn off notifications. Keep devices out of bedroom. Find offline hobbies. Use grayscale mode. Set screen-free meals.',
   },
+  {
+    q: ['why might the average be misleading', 'average misleading', 'problems with mean', 'mean median mode difference'],
+    a: '**Why average (mean) can be misleading**: 1. **Outliers**: One extreme value skews the mean (e.g., average salary with a billionaire). 2. **Skewed data**: Non-symmetric data makes mean unrepresentative. 3. **Bimodal data**: Two peaks makes mean meaningless. 4. **Small samples**: Mean varies wildly. **Use median instead** when data is skewed. **Use mode** for categorical data. **Use range** to understand spread.',
+  },
+  {
+    q: ['what is standard deviation', 'standard deviation explained', 'why is standard deviation important'],
+    a: '**Standard deviation** measures how spread out numbers are from the mean. Low SD = data points close to mean. High SD = data points spread out. **Interpretation**: ~68% within 1 SD, ~95% within 2 SD, ~99.7% within 3 SD (normal distribution). **Use**: Compare consistency, identify outliers, measure risk.',
+  },
+  {
+    q: ['what is correlation vs causation', 'correlation does not imply causation', 'difference between correlation and causation'],
+    a: '**Correlation vs Causation**: Correlation = two things happen together. Causation = one thing causes the other. **Example**: Ice cream sales correlate with drowning deaths. But ice cream does not cause drowning. Both are caused by hot weather. **Always ask**: Is there a hidden variable? Is the relationship logical? Was it a controlled experiment?',
+  },
+  {
+    q: ['what is sampling bias', 'sampling bias explained', 'types of sampling bias'],
+    a: '**Sampling bias** occurs when your sample does not represent the population. **Types**: 1. **Selection bias**: Non-random selection. 2. **Self-selection bias**: Only volunteers respond. 3. **Survivorship bias**: Only looking at successes. 4. **Undercoverage bias**: Missing certain groups. 5. **Non-response bias**: Certain people do not respond. **Fix**: Use random sampling, increase sample size, ensure diversity.',
+  },
+  {
+    q: ['what is p value', 'p value explained', 'statistical significance'],
+    a: '**P-value** = probability that results occurred by chance. **Rule**: If p < 0.05, result is statistically significant (95% confidence). **Misconception**: p-value is NOT the probability hypothesis is true. **Limitation**: p-value does not measure effect size or practical significance. Small p-value with large sample can be meaningless. Always consider effect size and context.',
+  },
+  {
+    q: ['what is regression analysis', 'regression explained', 'linear regression', 'types of regression'],
+    a: '**Regression analysis** predicts a dependent variable from independent variables. **Linear regression**: y = mx + b (straight line). **Multiple regression**: Multiple predictors. **Logistic regression**: Binary outcomes (yes/no). **Use**: Predict trends, identify relationships, understand drivers. **Check**: R-squared (goodness of fit), p-values (significance), residuals (errors).',
+  },
+  {
+    q: ['what is hypothesis testing', 'hypothesis testing steps', 'null hypothesis vs alternative'],
+    a: '**Hypothesis testing**: 1. **Null hypothesis (H0)**: No effect/difference. 2. **Alternative hypothesis (H1)**: There is an effect. 3. **Collect data**. 4. **Calculate test statistic**. 5. **Find p-value**. 6. **Decision**: If p < 0.05, reject H0. **Types**: t-test (comparing means), chi-square (categorical data), ANOVA (comparing 3+ groups), z-test (large samples).',
+  },
+  {
+    q: ['what is data visualization', 'data visualization tips', 'best practices for charts'],
+    a: '**Data visualization** presents data visually for better understanding. **Chart types**: Bar (comparing categories), Line (trends over time), Pie (proportions), Scatter (relationships), Histogram (distributions). **Best practices**: 1. Choose right chart. 2. Label clearly. 3. Avoid 3D effects. 4. Use color purposefully. 5. Start y-axis at zero. 6. Tell a story with data.',
+  },
+  {
+    q: ['what is A/B testing', 'A/B testing explained', 'how to do A/B testing'],
+    a: '**A/B testing** compares two versions to see which performs better. **Steps**: 1. Define hypothesis. 2. Create variants (A and B). 3. Split traffic randomly. 4. Measure results. 5. Statistical significance check. **Use**: Landing pages, emails, features, pricing. **Key**: Only test ONE variable at a time. Run long enough for significance. Consider practical significance, not just statistical.',
+  },
+  {
+    q: ['what is confounding variable', 'confounding variable explained', 'types of variables in statistics'],
+    a: '**Confounding variable**: A hidden third variable that influences both the independent and dependent variables, creating a false relationship. **Example**: Ice cream sales and drowning both increase in summer. Temperature is the confounder. **Other variable types**: Independent (changed), Dependent (measured), Controlled (kept constant). **Fix**: Randomization, control groups, statistical adjustment.',
+  },
 ]
 /**
  * Everything above, flattened into one lookup list. `source` distinguishes the

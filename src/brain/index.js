@@ -17,6 +17,7 @@
 
 import academics from './skills/academics.js'
 import analysis from './skills/analysis.js'
+import catchall from './skills/catchall.js'
 import chance from './skills/chance.js'
 import chemistry from './skills/chemistry.js'
 import code from './skills/code.js'
@@ -53,6 +54,7 @@ export const SKILLS = [
   reasoning,
   reasoningGeneral,
   analysis,
+  catchall,
   general,
   creative,
   code,
