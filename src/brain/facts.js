@@ -1447,6 +1447,372 @@ export const FACTS = [
     q: ['what is error handling', 'error handling explained', 'ano ang error handling'],
     a: '**Error handling** manages runtime errors. Use try { ... } catch (error) { ... } to handle errors gracefully. Always validate user input.',
   },
+
+  /* ========================================================= MORE SCIENCE */
+  {
+    q: ['what is a telescope', 'telescope explained', 'ano ang telescope'],
+    a: 'A **telescope** is an instrument that magnifies distant objects by collecting electromagnetic radiation. Refracting telescopes use lenses; reflecting telescopes use mirrors.',
+  },
+  {
+    q: ['what is a microscope', 'microscope explained', 'ano ang microscope'],
+    a: 'A **microscope** magnifies tiny objects invisible to the naked eye. Compound microscopes use multiple lenses and can achieve 1000x or more magnification.',
+  },
+  {
+    q: ['what is voltage', 'voltage explained', 'ano ang voltage'],
+    a: '**Voltage** is the electrical pressure that pushes electrons through a circuit, measured in volts (V). Think of it as water pressure in a pipe.',
+  },
+  {
+    q: ['what is current', 'electric current explained', 'ano ang current'],
+    a: '**Electric current** is the flow of electrons through a conductor, measured in amperes (A). It is like the amount of water flowing through a pipe.',
+  },
+  {
+    q: ['what is resistance', 'resistance explained', 'ano ang resistance'],
+    a: '**Resistance** opposes the flow of current, measured in ohms (ohm). It depends on material, length, thickness, and temperature.',
+  },
+  {
+    q: ['what is Ohm\'s law', 'Ohms law explained', 'ano ang Ohms law'],
+    a: '**Ohm\'s Law**: V = I x R (Voltage = Current x Resistance). If you know two values, you can calculate the third.',
+  },
+  {
+    q: ['what is centripetal force', 'centripetal force explained', 'ano ang centripetal force'],
+    a: '**Centripetal force** is the inward force that keeps an object moving in a circular path. Without it, the object would fly off in a straight line.',
+  },
+  {
+    q: ['what is Newton\'s first law', 'Newton first law explained', 'ano ang Newtons first law'],
+    a: '**Newton\'s First Law** (Law of Inertia): An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted on by an external force.',
+  },
+  {
+    q: ['what is Newton\'s second law', 'Newton second law explained', 'ano ang Newtons second law'],
+    a: '**Newton\'s Second Law**: Force = Mass x Acceleration (F = ma). The acceleration of an object depends on the net force acting on it and its mass.',
+  },
+  {
+    q: ['what is Newton\'s third law', 'Newton third law explained', 'ano ang Newtons third law'],
+    a: '**Newton\'s Third Law**: For every action, there is an equal and opposite reaction. When you push a wall, the wall pushes back with equal force.',
+  },
+  {
+    q: ['what is wavelength', 'wavelength explained', 'ano ang wavelength'],
+    a: '**Wavelength** is the distance between successive crests of a wave. Visible light wavelengths range from about 400 nm (violet) to 700 nm (red).',
+  },
+  {
+    q: ['what is frequency', 'frequency explained', 'ano ang frequency'],
+    a: '**Frequency** is the number of wave cycles per second, measured in Hertz (Hz). Higher frequency means higher pitch (sound) or more energy (light).',
+  },
+  {
+    q: ['what is conservation of energy', 'conservation of energy explained', 'ano ang conservation of energy'],
+    a: '**Conservation of Energy**: Energy cannot be created or destroyed, only transformed from one form to another. Total energy in a closed system stays constant.',
+  },
+  {
+    q: ['what is entropy', 'entropy explained', 'ano ang entropy'],
+    a: '**Entropy** is a measure of disorder or randomness. The Second Law of Thermodynamics states that entropy in a closed system always increases.',
+  },
+  {
+    q: ['what is catalyst', 'catalyst explained', 'ano ang catalyst'],
+    a: 'A **catalyst** speeds up a chemical reaction without being consumed. Enzymes are biological catalysts. Industrial catalysts make reactions cheaper and faster.',
+  },
+  {
+    q: ['what is oxidation', 'oxidation explained', 'ano ang oxidation'],
+    a: '**Oxidation** is the loss of electrons by a substance. Rusting of iron and burning of fuel are examples. It often involves reaction with oxygen.',
+  },
+  {
+    q: ['what is reduction', 'reduction explained', 'ano ang reduction'],
+    a: '**Reduction** is the gain of electrons by a substance. It is the opposite of oxidation. Together, oxidation-reduction (redox) reactions power batteries and metabolism.',
+  },
+
+  /* ======================================================= MORE MATH */
+  {
+    q: ['what is a matrix', 'matrix explained', 'ano ang matrix'],
+    a: 'A **matrix** is a rectangular array of numbers arranged in rows and columns. Used in linear algebra, physics, computer graphics, and data science.',
+  },
+  {
+    q: ['what is a vector', 'vector explained', 'ano ang vector'],
+    a: 'A **vector** has both magnitude and direction. In physics: velocity, force. In math: an ordered list of numbers. Vectors are used in physics and computer graphics.',
+  },
+  {
+    q: ['what is a logarithm', 'logarithm explained', 'ano ang logarithm'],
+    a: 'A **logarithm** answers the question: "To what power must we raise this base to get this number?" log base 10 of 100 = 2 because 10^2 = 100.',
+  },
+  {
+    q: ['what is a set', 'set in math', 'ano ang set'],
+    a: 'A **set** is a collection of distinct objects. Written in braces: {1, 2, 3}. Sets can be combined (union), compared (intersection), or subtracted.',
+  },
+  {
+    q: ['what is a limit', 'limit in calculus', 'ano ang limit'],
+    a: 'A **limit** describes what a function approaches as the input approaches a value. It is the foundation of calculus and defines continuity and derivatives.',
+  },
+  {
+    q: ['what is a derivative', 'derivative explained', 'ano ang derivative'],
+    a: 'A **derivative** measures the rate of change of a function. It gives the slope of the tangent line at any point. Used in physics for velocity and acceleration.',
+  },
+  {
+    q: ['what is an integral', 'integral explained', 'ano ang integral'],
+    a: 'An **integral** calculates the area under a curve. It is the reverse of a derivative. Used for finding areas, volumes, and total quantities from rates.',
+  },
+  {
+    q: ['what is a triangle number', 'triangular number', 'ano ang triangular number'],
+    a: 'A **triangular number** counts objects in a triangle: 1, 3, 6, 10, 15, 21... Formula: n(n+1)/2. The nth triangular number is the sum of 1 to n.',
+  },
+  {
+    q: ['what is a perfect number', 'perfect number explained', 'ano ang perfect number'],
+    a: 'A **perfect number** equals the sum of its proper divisors. 6 = 1 + 2 + 3; 28 = 1 + 2 + 4 + 7 + 14. Only 51 perfect numbers are known.',
+  },
+  {
+    q: ['what is a factor', 'factor in math', 'ano ang factor'],
+    a: 'A **factor** is a number that divides evenly into another number. Factors of 12: 1, 2, 3, 4, 6, 12. Factoring is key in algebra and number theory.',
+  },
+  {
+    q: ['what is a multiple', 'multiple in math', 'ano ang multiple'],
+    a: 'A **multiple** is the product of a number and an integer. Multiples of 3: 3, 6, 9, 12, 15... The least common multiple (LCM) is the smallest shared multiple.',
+  },
+  {
+    q: ['what is congruence', 'congruence in geometry', 'ano ang congruence'],
+    a: 'Two shapes are **congruent** if they have the same size and shape. All corresponding sides and angles are equal. Congruent triangles can be overlapped perfectly.',
+  },
+  {
+    q: ['what is similarity', 'similarity in geometry', 'ano ang similarity'],
+    a: 'Two shapes are **similar** if they have the same shape but different sizes. Corresponding angles are equal and sides are proportional.',
+  },
+
+  /* ==================================================== MORE TECH */
+  {
+    q: ['what is open source', 'open source explained', 'ano ang open source'],
+    a: '**Open source** software has publicly available code that anyone can use, modify, and distribute. Examples: Linux, Firefox, WordPress. It promotes collaboration.',
+  },
+  {
+    q: ['what is version control', 'version control explained', 'ano ang version control'],
+    a: '**Version control** tracks changes to files over time. Git is the most popular. It lets multiple people work on the same project without overwriting each other.',
+  },
+  {
+    q: ['what is machine code', 'machine code explained', 'ano ang machine code'],
+    a: '**Machine code** is binary (0s and 1s) that the CPU directly executes. All other programming languages must be translated to machine code to run.',
+  },
+  {
+    q: ['what is compiler', 'compiler explained', 'ano ang compiler'],
+    a: 'A **compiler** translates entire source code to machine code before execution. Examples: GCC for C, javac for Java. Faster execution but slower build times.',
+  },
+  {
+    q: ['what is interpreter', 'interpreter explained', 'ano ang interpreter'],
+    a: 'An **interpreter** translates and executes code line by line. Examples: Python, JavaScript (in browsers). Slower execution but faster development cycle.',
+  },
+  {
+    q: ['what is IDE', 'IDE explained', 'ano ang IDE'],
+    a: 'An **IDE** (Integrated Development Environment) is software for writing code. It includes a text editor, compiler, debugger, and auto-complete. Examples: VS Code, IntelliJ.',
+  },
+  {
+    q: ['what is framework', 'framework explained', 'ano ang framework'],
+    a: 'A **framework** is a pre-built structure for developing software. It provides tools, libraries, and conventions. Examples: React, Django, Laravel, Angular.',
+  },
+  {
+    q: ['what is library', 'library in programming', 'ano ang library'],
+    a: 'A **library** is reusable code that you call from your program. It saves you from writing everything from scratch. Examples: Lodash, NumPy, jQuery.',
+  },
+  {
+    q: ['what is recursion', 'recursion explained', 'ano ang recursion'],
+    a: '**Recursion** is when a function calls itself. It needs a base case to stop. Common uses: tree traversal, factorials, Fibonacci sequence.',
+  },
+  {
+    q: ['what is object oriented programming', 'OOP explained', 'ano ang OOP'],
+    a: '**OOP** organizes code into objects that combine data and behavior. Four pillars: encapsulation, inheritance, polymorphism, and abstraction.',
+  },
+  {
+    q: ['what is functional programming', 'functional programming explained', 'ano ang functional programming'],
+    a: '**Functional programming** treats computation as evaluation of functions. It avoids changing state and mutable data. Key concepts: pure functions, immutability, higher-order functions.',
+  },
+
+  /* ================================================== MORE HEALTH */
+  {
+    q: ['what is a balanced diet', 'balanced diet explained', 'ano ang balanced diet'],
+    a: 'A **balanced diet** includes the right amounts of carbohydrates, proteins, fats, vitamins, minerals, and water. The food pyramid or plate model guides portions.',
+  },
+  {
+    q: ['what is antioxidants', 'antioxidants explained', 'ano ang antioxidants'],
+    a: '**Antioxidants** neutralize free radicals that damage cells. Found in fruits, vegetables, tea, and dark chocolate. They help prevent aging and disease.',
+  },
+  {
+    q: ['what is cholesterol HDL LDL', 'good and bad cholesterol', 'ano ang cholesterol'],
+    a: '**HDL** (high-density lipoprotein) is "good" cholesterol that removes excess cholesterol. **LDL** (low-density lipoprotein) is "bad" cholesterol that clogs arteries.',
+  },
+  {
+    q: ['what is insulin', 'insulin explained', 'ano ang insulin'],
+    a: '**Insulin** is a hormone made by the pancreas that regulates blood sugar. It helps cells absorb glucose from the blood. Low insulin causes diabetes.',
+  },
+  {
+    q: ['what is antibiotic', 'antibiotic explained', 'ano ang antibiotic'],
+    a: 'An **antibiotic** fights bacterial infections. Examples: amoxicillin, azithromycin. Do not work on viruses (cold, flu). Overuse leads to antibiotic resistance.',
+  },
+  {
+    q: ['what is vaccine', 'vaccine explained', 'ano ang vaccine'],
+    a: 'A **vaccine** teaches the immune system to fight specific diseases without causing illness. It contains weakened or killed pathogens that trigger antibody production.',
+  },
+  {
+    q: ['what is cholesterol', 'cholesterol and health', 'ano ang cholesterol sa katawan'],
+    a: '**Cholesterol** is a waxy substance in blood. Your body needs it but too much (LDL) clogs arteries. Eat fiber, less saturated fat, and exercise regularly.',
+  },
+  {
+    q: ['what is asthma', 'asthma explained', 'ano ang asthma'],
+    a: '**Asthma** is a chronic lung condition where airways swell and narrow, making breathing difficult. Triggers include allergens, cold air, and exercise. Managed with inhalers.',
+  },
+  {
+    q: ['what is hypertension', 'hypertension explained', 'ano ang hypertension'],
+    a: '**Hypertension** (high blood pressure) means blood pushes too hard against artery walls. Normal is below 120/80. High readings increase heart attack and stroke risk.',
+  },
+  {
+    q: ['what is anemia', 'anemia explained', 'ano ang anemia'],
+    a: '**Anemia** is a condition where you lack enough healthy red blood cells to carry adequate oxygen. Symptoms: fatigue, weakness, pale skin. Often caused by iron deficiency.',
+  },
+
+  /* ================================================= MORE HISTORY */
+  {
+    q: ['who invented the telephone', 'telephone inventor', 'ano ang telephone'],
+    a: '**Alexander Graham Bell** patented the telephone in 1876. However, Antonio Meucci and Elisha Gray also worked on similar devices around the same time.',
+  },
+  {
+    q: ['what is the Stone Age', 'Stone Age explained', 'ano ang Stone Age'],
+    a: 'The **Stone Age** was a prehistoric period when humans used stone tools. It lasted about 3.3 million years and ended when metal tools became common.',
+  },
+  {
+    q: ['what is the Iron Age', 'Iron Age explained', 'ano ang Iron Age'],
+    a: 'The **Iron Age** followed the Bronze Age when iron smelting became widespread. Iron tools and weapons were harder and cheaper than bronze.',
+  },
+  {
+    q: ['what is feudalism', 'feudalism explained', 'ano ang feudalism'],
+    a: '**Feudalism** was a medieval social system where land was exchanged for military service. Lords granted land (fiefs) to vassals who served them.',
+  },
+  {
+    q: ['what is the Silk Road', 'Silk Road explained', 'ano ang Silk Road'],
+    a: 'The **Silk Road** was an ancient trade route connecting China to the Mediterranean. It facilitated trade of silk, spices, ideas, and unfortunately, diseases.',
+  },
+  {
+    q: ['what is colonialism', 'colonialism explained', 'ano ang colonialism'],
+    a: '**Colonialism** is when a country takes control of another territory, exploiting its resources and people. Many African and Asian countries were colonized by European powers.',
+  },
+  {
+    q: ['what is independence', 'independence explained', 'ano ang independence'],
+    a: '**Independence** is when a country or people gains freedom from external control. Many nations gained independence from colonial powers in the 20th century.',
+  },
+  {
+    q: ['what is revolution', 'revolution explained', 'ano ang revolution'],
+    a: 'A **revolution** is a fundamental change in political power or organizational structures, usually involving popular uprising against the existing system.',
+  },
+  {
+    q: ['what is democracy', 'democracy explained', 'ano ang democracy'],
+    a: '**Democracy** is a system of government where citizens exercise power by voting. It can be direct (citizens vote on policies) or representative (citizens elect officials).',
+  },
+  {
+    q: ['what is monarchy', 'monarchy explained', 'ano ang monarchy'],
+    a: 'A **monarchy** is a system where a king or queen rules. Constitutional monarchies (UK, Japan) have limited royal power; absolute monarchies have unrestricted power.',
+  },
+  {
+    q: ['what is communism', 'communism explained', 'ano ang communism'],
+    a: '**Communism** is a political theory advocating classless society where all property is publicly owned and each person is paid according to need.',
+  },
+  {
+    q: ['what is capitalism', 'capitalism explained', 'ano ang capitalism'],
+    a: '**Capitalism** is an economic system where private individuals own property and businesses. Prices and production are determined by supply and demand.',
+  },
+  {
+    q: ['what is socialism', 'socialism explained', 'ano ang socialism'],
+    a: '**Socialism** is an economic system where the means of production are owned or regulated by the community as a whole. It aims to reduce inequality.',
+  },
+
+  /* ================================================= GEOGRAPHY */
+  {
+    q: ['what is latitude', 'latitude explained', 'ano ang latitude'],
+    a: '**Latitude** measures how far north or south a point is from the Equator. It ranges from 0 at the Equator to 90 at the poles.',
+  },
+  {
+    q: ['what is longitude', 'longitude explained', 'ano ang longitude'],
+    a: '**Longitude** measures how far east or west a point is from the Prime Meridian. It ranges from 0 to 180 east and 180 west.',
+  },
+  {
+    q: ['what is time zone', 'time zone explained', 'ano ang time zone'],
+    a: 'A **time zone** is a region where the same standard time is used. The world is divided into 24 time zones, each roughly 15 degrees of longitude apart.',
+  },
+  {
+    q: ['what is hemisphere', 'hemisphere explained', 'ano ang hemisphere'],
+    a: 'A **hemisphere** is half of Earth. The Equator divides it into Northern and Southern hemispheres. The Prime Meridian divides it into Eastern and Western.',
+  },
+  {
+    q: ['what is equator', 'equator explained', 'ano ang equator'],
+    a: 'The **Equator** is the imaginary line at 0 degrees latitude, dividing Earth into Northern and Southern hemispheres. Countries on it include Ecuador, Kenya, and Indonesia.',
+  },
+  {
+    q: ['what is prime meridian', 'prime meridian explained', 'ano ang prime meridian'],
+    a: 'The **Prime Meridian** is the imaginary line at 0 degrees longitude, passing through Greenwich, England. It divides Eastern and Western hemispheres.',
+  },
+  {
+    q: ['what is tectonic plate', 'tectonic plate explained', 'ano ang tectonic plate'],
+    a: 'A **tectonic plate** is a massive slab of Earth\'s crust that moves slowly over the mantle. Their interactions cause earthquakes, volcanoes, and mountain formation.',
+  },
+  {
+    q: ['what is volcano', 'volcano explained', 'ano ang bulkan'],
+    a: 'A **volcano** is an opening in Earth\'s crust where molten rock (magma/lava), ash, and gases escape. There are active, dormant, and extinct volcanoes.',
+  },
+  {
+    q: ['what is earthquake', 'earthquake explained', 'ano ang lindol'],
+    a: 'An **earthquake** is the shaking of Earth\'s surface caused by sudden release of energy in the crust. Measured by the Richter scale. The Philippines sits on the Ring of Fire.',
+  },
+  {
+    q: ['what is tsunami', 'tsunami explained', 'ano ang tsunami'],
+    a: 'A **tsunami** is a series of large ocean waves caused by underwater earthquakes, volcanic eruptions, or landslides. They can travel at 800 km/h and cause massive flooding.',
+  },
+  {
+    q: ['what is weather vs climate', 'weather and climate difference', 'weather climate difference'],
+    a: '**Weather** is the short-term state of the atmosphere (today\'s rain). **Climate** is the long-term average of weather patterns in a region (annual rainfall).',
+  },
+  {
+    q: ['what is monsoon', 'monsoon explained', 'ano ang monsoon'],
+    a: 'A **monsoon** is a seasonal wind pattern that brings heavy rains. The Philippine monsoon (Habagat) brings rain from June to October; the Amihan brings dry, cool winds.',
+  },
+
+  /* ================================================== EVERYDAY TIPS */
+  {
+    q: ['how to save money', 'money saving tips', 'how to save more money'],
+    a: '**Save money**: Track expenses. Pay yourself first (save before spending). Cut subscriptions you do not use. Cook at home. Use the 24-hour rule before big purchases.',
+  },
+  {
+    q: ['how to budget', 'budgeting tips', 'how to create a budget'],
+    a: '**Budgeting**: List all income. List all expenses. Subtract expenses from income. Use the 50/30/20 rule: 50% needs, 30% wants, 20% savings. Track monthly.',
+  },
+  {
+    q: ['how to do CPR', 'CPR steps', 'paano gumawa ng CPR'],
+    a: '**Hands-only CPR**: Check response. Call 911. Push hard and fast on center of chest at 100-120 compressions per minute. Continue until help arrives. This is general guidance, not training.',
+  },
+  {
+    q: ['how to clean a bathroom', 'bathroom cleaning tips', 'how to clean bathroom'],
+    a: '**Bathroom cleaning**: Spray all surfaces. Clean from top to bottom. Scrub tiles with baking soda paste. Clean toilet inside and out. Rinse and dry. Do this weekly.',
+  },
+  {
+    q: ['how to wash clothes', 'laundry tips', 'how to do laundry'],
+    a: '**Laundry basics**: Sort by color and fabric. Check labels. Use right temperature. Do not overload. Use appropriate detergent. Dry properly. Fold and store promptly.',
+  },
+  {
+    q: ['how to tie shoes', 'shoe tying methods', 'how to tie shoelaces'],
+    a: '**Basic knot**: Cross laces, pull tight. Make a loop with one lace. Wrap other lace around, push through hole, pull tight. For kids: make two loops and tie together.',
+  },
+  {
+    q: ['how to sew a button', 'sew button on', 'button sewing guide'],
+    a: '**Sew a button**: Thread needle, double it, knot end. Push needle through fabric and buttonhole. Go through other hole. Repeat 4-6 times. Tie off on back.',
+  },
+  {
+    q: ['how to do first aid', 'first aid basics', 'first aid guide'],
+    a: '**First aid basics**: Stay calm. Check scene safety. Call for help. Control bleeding with pressure. Keep person warm and still. Do not move injured body parts.',
+  },
+  {
+    q: ['how to treat a burn', 'burn treatment', 'first aid for burns'],
+    a: '**Burn first aid**: Cool under running water for 10-20 minutes. Do not use ice. Cover with cling wrap. Do not pop blisters. Seek medical help for severe burns.',
+  },
+  {
+    q: ['how to stop nosebleed', 'nosebleed first aid', 'nosebleed treatment'],
+    a: '**Stop nosebleed**: Sit upright and lean forward slightly. Pinch soft part of nose for 10-15 minutes. Breathe through mouth. Do not tilt head back. Seek help if it does not stop.',
+  },
+  {
+    q: ['how to treat a headache', 'headache remedies', 'headache treatment'],
+    a: '**Headache remedies**: Rest in quiet, dark room. Apply cold or warm compress. Drink water. Take over-the-counter pain reliever. Manage stress. Get enough sleep.',
+  },
+  {
+    q: ['how to reduce screen time', 'screen time tips', 'how to cut screen time'],
+    a: '**Reduce screen time**: Set daily limits. Use app blockers. Turn off notifications. Keep devices out of bedroom. Find offline hobbies. Use grayscale mode. Set screen-free meals.',
+  },
 ]
 /**
  * Everything above, flattened into one lookup list. `source` distinguishes the

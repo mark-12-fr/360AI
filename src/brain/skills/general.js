@@ -2612,6 +2612,867 @@ Good: "Write a 200-word article about the top 5 dog breeds for families with chi
 - Use emergency contacts
 - Contact your bank if cards are stolen`
   },
+
+  /* ----------------------------------------------- More General Q&A */
+  {
+    q: ['how to deal with toxic people', 'toxic people tips', 'how to handle toxic person', 'dealing with toxic relationships'],
+    a: `## How to Deal with Toxic People
+
+### Recognize Toxic Behavior
+- Constant criticism and negativity
+- Manipulation and guilt-tripping
+- Lack of respect for boundaries
+- Drama and chaos creation
+- Never taking responsibility
+
+### Strategies
+- Set clear boundaries and enforce them
+- Do not take their behavior personally
+- Limit contact when possible
+- Do not engage in arguments
+- Stay calm and do not react emotionally
+
+### Protect Yourself
+- Keep conversations surface-level
+- Do not share personal information
+- Document interactions if needed
+- Build a support network
+- Remember you cannot change them
+
+### When to Cut Ties
+- They consistently disrespect your boundaries
+- The relationship affects your mental health
+- They refuse to acknowledge problems
+- You feel drained after every interaction
+- There is abuse of any kind`
+  },
+  {
+    q: ['how to give constructive feedback', 'feedback tips', 'how to give feedback', 'constructive criticism guide'],
+    a: `## How to Give Constructive Feedback
+
+### The SBI Model
+- **Situation**: Describe the specific situation
+- **Behavior**: State the observed behavior
+- **Impact**: Explain the impact of the behavior
+
+### Do
+- Be specific, not general
+- Focus on behavior, not personality
+- Offer suggestions for improvement
+- Time it appropriately
+- Balance positive and areas to improve
+
+### Do Not
+- Use "you always" or "you never"
+- Make it personal
+- Give vague feedback
+- Wait too long to give feedback
+- Give feedback when angry
+
+### Example
+Bad: "You are always late."
+Good: "In yesterday's meeting, you arrived 15 minutes late. The team had to wait, which affected our schedule. Can we work on being on time?"
+
+### Tips
+- Ask if they are open to feedback first
+- Be empathetic and respectful
+- Listen to their perspective
+- Follow up on progress`
+  },
+  {
+    q: ['how to make decision', 'decision making tips', 'how to decide', 'decision making framework'],
+    a: `## How to Make Better Decisions
+
+### Step 1: Define the Decision
+- What exactly are you deciding?
+- What is the timeline?
+- What are the constraints?
+
+### Step 2: Gather Information
+- What do you know?
+- What do you need to find out?
+- Who can help you?
+
+### Step 3: Consider Options
+- List all possible options
+- Pros and cons of each
+- What are the consequences?
+- What is the worst case scenario?
+
+### Step 4: Make the Decision
+- Trust your instincts
+- Consider your values
+- Think long-term
+- Accept that no decision is perfect
+
+### Step 5: Act and Review
+- Commit to your decision
+- Take action
+- Review the results
+- Learn from the outcome
+
+### Decision-Making Frameworks
+- Pro/Con List: Simple but effective
+- 10/10/10 Rule: How will you feel in 10 minutes, 10 months, 10 years?
+- Reversibility: Is this decision reversible? If yes, decide faster.
+- Regret Minimization: Which choice will you regret less?`
+  },
+  {
+    q: ['how to handle failure', 'dealing with failure tips', 'how to bounce back from failure', 'failure and success'],
+    a: `## How to Handle Failure
+
+### Reframe Failure
+- Failure is feedback, not final
+- Every successful person has failed many times
+- Failure shows you are trying
+- It is a learning opportunity
+
+### After Failure
+1. Allow yourself to feel disappointed
+2. Analyze what went wrong
+3. Identify what you can control
+4. Extract lessons learned
+5. Create a new plan
+
+### Mindset Shift
+- "I failed" vs "I am a failure" are different things
+- Focus on effort, not just results
+- Progress is not linear
+- Setbacks are temporary
+
+### Build Resilience
+- Practice self-compassion
+- Talk to supportive people
+- Maintain perspective
+- Keep taking action
+- Celebrate small wins
+
+### Famous Failures
+- J.K. Rowling: Rejected 12 times before Harry Potter
+- Michael Jordan: Cut from high school basketball team
+- Walt Disney: Fired for "lacking imagination"
+- Steve Jobs: Fired from his own company
+- Oprah Winfrey: Fired from her first TV job`
+  },
+  {
+    q: ['how to be more creative', 'creativity tips', 'how to boost creativity', 'creative thinking tips'],
+    a: `## How to Be More Creative
+
+### Daily Habits
+- Journal every morning (write 3 pages)
+- Take walks without headphones
+- Try new things regularly
+- Read widely and diversely
+- Allow yourself to daydream
+
+### Techniques
+- Brainstorming: Write 20 ideas daily (quantity over quality)
+- SCAMPER: Substitute, Combine, Adapt, Modify, Put to other use, Eliminate, Reverse
+- Mind Mapping: Visual brainstorming around a central idea
+- Random Input: Pick a random word and connect it to your problem
+- Reversal: Ask the opposite question
+
+### Environment
+- Change your surroundings
+- Listen to different music
+- Surround yourself with creative people
+- Reduce stress and pressure
+- Allow boredom (creativity needs empty space)
+
+### Overcome Blocks
+- Start with small, easy tasks
+- Do not judge your work while creating
+- Take breaks when stuck
+- Collaborate with others
+- Set constraints to spark creativity`
+  },
+  {
+    q: ['how to learn a new skill fast', 'learn new skill quickly', 'skill learning tips', 'how to acquire new skills'],
+    a: `## How to Learn a New Skill Fast
+
+### The 80/20 Rule
+- Focus on the 20% that gives 80% of results
+- Identify the most important sub-skills
+- Learn what experts actually use
+
+### Learning Framework
+1. Deconstruct: Break the skill into small parts
+2. Learn enough to self-correct: Know what good looks like
+3. Remove barriers: Distractions, fear, overwhelm
+4. Practice 20 hours: Commit to minimum practice
+5. Get feedback: Find a coach or mentor
+
+### Tips
+- Practice deliberately, not mindlessly
+- Focus on one skill at a time
+- Use spaced repetition
+- Teach what you learn
+- Find a community of practitioners
+- Track your progress`
+  },
+  {
+    q: ['how to deal with rejection', 'handling rejection tips', 'how to cope with rejection', 'rejection advice'],
+    a: `## How to Deal with Rejection
+
+### Understand Rejection
+- Rejection is part of life
+- It is not always personal
+- Sometimes timing or fit is wrong
+- It redirects you to better opportunities
+
+### Immediate Coping
+- Allow yourself to feel hurt
+- Talk to someone you trust
+- Do not isolate yourself
+- Practice self-care
+- Do not make impulsive decisions
+
+### Long-term Strategies
+- Build self-worth independent of approval
+- Learn from the experience
+- Keep trying (persistence matters)
+- Diversify your opportunities
+- Focus on what you can control
+
+### Reframe Rejection
+- "Not yet" instead of "no"
+- "Not the right fit" instead of "not good enough"
+- "One step closer to yes"
+- "This freed me up for something better"`
+  },
+  {
+    q: ['how to manage money as student', 'student money management', 'student budget tips', 'money tips for students'],
+    a: `## How to Manage Money as a Student
+
+### Create a Simple Budget
+- List your income (allowance, part-time job)
+- List fixed expenses (transport, food, supplies)
+- Set a weekly spending limit
+- Track every peso you spend
+
+### Save Money
+- Use student discounts everywhere
+- Buy second-hand textbooks
+- Cook instead of eating out
+- Use public transport
+- Share costs with classmates
+
+### Avoid Debt
+- Do not use credit cards unless necessary
+- If you borrow, have a repayment plan
+- Avoid unnecessary subscriptions
+- Distinguish needs from wants
+
+### Build Good Habits
+- Save at least 10% of any money you receive
+- Set financial goals
+- Review spending weekly
+- Use free apps to track expenses
+- Avoid impulse purchases (24-hour rule)
+
+### Income Ideas
+- Part-time tutoring
+- Freelancing (writing, design, coding)
+- Online selling
+- Campus jobs
+- Paid surveys and tasks`
+  },
+  {
+    q: ['how to prepare for exams', 'exam preparation tips', 'how to study for exams', 'exam study guide'],
+    a: `## How to Prepare for Exams
+
+### Start Early
+- Begin reviewing 2-3 weeks before the exam
+- Break material into daily study sessions
+- Do not cram the night before
+
+### Study Strategies
+- Active Recall: Test yourself without looking at notes
+- Past Exams: Practice with previous exams
+- Flashcards: Use Anki or handwritten cards
+- Teach Someone: Explain concepts out loud
+- Summary Notes: Condense notes into key points
+
+### Day Before Exam
+- Review summary notes
+- Prepare materials (pens, calculator, ID)
+- Get a full night of sleep
+- Avoid studying new material
+- Relax and stay calm
+
+### During Exam
+- Read all instructions first
+- Answer easy questions first
+- Manage your time
+- Review answers if time permits
+- Stay calm and focused
+
+### Tips
+- Sleep 7-8 hours before the exam
+- Eat a healthy breakfast
+- Arrive early
+- Stay hydrated
+- Take deep breaths if anxious`
+  },
+  {
+    q: ['how to build healthy habits', 'habit building tips', 'how to form good habits', 'habit formation guide'],
+    a: `## How to Build Healthy Habits
+
+### The Habit Loop
+1. Cue: Trigger that starts the habit
+2. Routine: The behavior itself
+3. Reward: The benefit you get from it
+
+### Steps to Build a Habit
+1. Start incredibly small (2 minutes or less)
+2. Attach it to an existing habit (habit stacking)
+3. Design your environment for success
+4. Track your progress
+5. Celebrate small wins
+
+### Tips
+- One habit at a time
+- Same time, same place every day
+- Never miss twice in a row
+- Focus on identity, not outcomes
+- Make it obvious, attractive, easy, satisfying
+
+### Break Bad Habits
+- Identify your triggers
+- Replace the habit with a better one
+- Change your environment
+- Make it harder to do the bad habit
+- Get accountability`
+  },
+  {
+    q: ['how to negotiate in business', 'business negotiation tips', 'negotiation strategies', 'how to negotiate a deal'],
+    a: `## How to Negotiate in Business
+
+### Preparation
+- Research the other party
+- Know your bottom line
+- Prepare alternatives (BATNA)
+- Set your ideal outcome
+- Anticipate their needs
+
+### During Negotiation
+- Listen more than you talk
+- Ask open-ended questions
+- Find common ground
+- Be willing to walk away
+- Focus on win-win outcomes
+
+### Key Techniques
+- Anchoring: Make the first offer
+- Silence: Pause after making a point
+- Chunking: Break large numbers into smaller parts
+- Nibbling: Ask for small extras at the end
+- Flinching: React visibly to extreme offers
+
+### Tips
+- Build rapport first
+- Separate people from the problem
+- Focus on interests, not positions
+- Use objective criteria
+- Get agreements in writing`
+  },
+  {
+    q: ['how to create a startup', 'startup guide', 'how to launch a startup', 'startup tips'],
+    a: `## How to Create a Startup
+
+### Step 1: Find a Problem Worth Solving
+- Talk to potential customers
+- Identify a painful, frequent problem
+- Validate that people will pay for a solution
+- Check the market size
+
+### Step 2: Build an MVP
+- Create the simplest version that solves the problem
+- Launch fast, learn fast
+- Use no-code tools if possible
+- Focus on core features only
+
+### Step 3: Get Users
+- Start with manual outreach
+- Use social media and content
+- Offer it free to first users
+- Get feedback and iterate
+
+### Step 4: Monetize
+- Choose a pricing model
+- Test different price points
+- Offer value before charging
+- Focus on recurring revenue
+
+### Step 5: Scale
+- Hire carefully
+- Build systems and processes
+- Raise funding if needed
+- Expand to new markets
+
+### Common Mistakes
+- Building in isolation
+- Focusing on product, not distribution
+- Running out of cash
+- Co-founder conflicts
+- Scaling too fast`
+  },
+  {
+    q: ['how to give a presentation', 'presentation tips', 'how to present well', 'public speaking tips'],
+    a: `## How to Give a Great Presentation
+
+### Preparation
+- Know your audience
+- Structure: Hook, Content, Call to action
+- Rehearse multiple times
+- Prepare for questions
+
+### Slides Tips
+- One idea per slide
+- Use visuals over text
+- Large, readable fonts
+- Minimal text (6 words per line max)
+- Consistent design
+
+### Delivery
+- Make eye contact
+- Speak slowly and clearly
+- Use gestures
+- Move around naturally
+- Show enthusiasm
+
+### Handle Nerves
+- Practice deep breathing
+- Arrive early to test equipment
+- Start with something you are confident about
+- Remember the audience wants you to succeed
+- Accept that some nervousness is normal
+
+### Tips
+- Tell stories to connect
+- Pause for emphasis
+- Ask the audience questions
+- End with a clear call to action
+- Practice in front of a mirror or record yourself`
+  },
+  {
+    q: ['how to learn from mistakes', 'learning from mistakes tips', 'how to turn mistakes into lessons', 'mistake learning guide'],
+    a: `## How to Learn from Mistakes
+
+### Step 1: Acknowledge the Mistake
+- Admit it happened
+- Do not make excuses
+- Take responsibility
+
+### Step 2: Analyze What Happened
+- What went wrong?
+- What was your role?
+- What factors were beyond your control?
+- What would you do differently?
+
+### Step 3: Extract the Lesson
+- What did you learn?
+- How can you prevent this in the future?
+- What skills do you need to develop?
+
+### Step 4: Apply the Lesson
+- Change your behavior
+- Share what you learned with others
+- Create systems to prevent repeat mistakes
+
+### Mindset
+- Mistakes are data, not failures
+- Every expert was once a beginner
+- The only real mistake is not learning from it
+- Be kind to yourself in the process`
+  },
+  {
+    q: ['how to build trust', 'trust building tips', 'how to earn trust', 'building trust in relationships'],
+    a: `## How to Build Trust
+
+### Key Principles
+- Be consistent (do what you say)
+- Be honest (even when it is hard)
+- Be reliable (show up when you say you will)
+- Be vulnerable (share your true self)
+- Be respectful (honor boundaries)
+
+### In Relationships
+- Listen without judging
+- Keep confidences
+- Apologize when wrong
+- Support without conditions
+- Give people the benefit of the doubt
+
+### In Teams
+- Follow through on commitments
+- Communicate openly
+- Admit mistakes quickly
+- Give credit to others
+- Ask for feedback
+
+### Rebuilding Broken Trust
+- Acknowledge what happened
+- Take full responsibility
+- Be patient (it takes time)
+- Show change through actions, not words
+- Accept that some trust may never return`
+  },
+  {
+    q: ['how to handle criticism', 'dealing with criticism tips', 'how to accept criticism', 'handling negative feedback'],
+    a: `## How to Handle Criticism
+
+### Pause Before Reacting
+- Do not respond immediately
+- Take a deep breath
+- Ask yourself: Is this true?
+
+### Separate the Message from the Delivery
+- Even rude feedback may contain useful truth
+- Focus on the content, not the tone
+- Extract what is useful, discard the rest
+
+### Ask Clarifying Questions
+- "Can you give me a specific example?"
+- "What would you suggest I do differently?"
+- "What would good look like to you?"
+
+### When Criticism is Unfair
+- Stay calm and professional
+- Do not take it personally
+- Consider the source
+- Address it if it affects your work
+- Let it go if it is just negativity
+
+### Use Criticism to Grow
+- Keep a feedback journal
+- Look for patterns in criticism
+- Set improvement goals
+- Thank people for honest feedback`
+  },
+  {
+    q: ['how to make a plan', 'planning tips', 'how to plan effectively', 'goal planning guide'],
+    a: `## How to Make a Plan
+
+### Step 1: Define Your Goal
+- What exactly do you want to achieve?
+- Why does it matter?
+- When do you want to achieve it?
+
+### Step 2: Break It Down
+- Divide the goal into milestones
+- Create actionable steps for each milestone
+- Prioritize the steps
+- Assign deadlines
+
+### Step 3: Identify Resources
+- What skills do you need?
+- Who can help you?
+- What tools or materials do you need?
+- What is your budget?
+
+### Step 4: Anticipate Obstacles
+- What could go wrong?
+- What is your backup plan?
+- What habits or beliefs might hold you back?
+
+### Step 5: Review and Adjust
+- Check progress weekly
+- Adjust the plan as needed
+- Celebrate milestones
+- Learn from setbacks`
+  },
+  {
+    q: ['how to improve memory', 'memory improvement tips', 'how to remember things better', 'memory techniques'],
+    a: `## How to Improve Memory
+
+### Lifestyle Changes
+- Sleep 7-9 hours (memory consolidates during sleep)
+- Exercise regularly (increases blood flow to brain)
+- Eat brain-healthy foods (fish, nuts, blueberries)
+- Stay hydrated
+- Manage stress
+
+### Memory Techniques
+- Spaced Repetition: Review at increasing intervals
+- Active Recall: Test yourself instead of re-reading
+- Memory Palace: Associate info with locations
+- Chunking: Break info into smaller groups
+- Acronyms: Create words from first letters
+
+### Daily Practices
+- Learn something new every day
+- Do puzzles and brain games
+- Read regularly
+- Write things down
+- Teach what you learn
+
+### Tips
+- Pay attention (focus is the first step to memory)
+- Connect new info to what you already know
+- Use all senses (see, hear, do)
+- Repeat and practice
+- Stay socially active`
+  },
+  {
+    q: ['how to change career', 'career change tips', 'how to switch careers', 'career transition guide'],
+    a: `## How to Change Careers
+
+### Step 1: Self-Assessment
+- What are your transferable skills?
+- What are you passionate about?
+- What are your non-negotiables (salary, schedule, location)?
+- What kind of work environment do you thrive in?
+
+### Step 2: Explore Options
+- Research industries that match your skills
+- Talk to people in those fields
+- Try side projects or volunteering
+- Take online courses to test interest
+
+### Step 3: Bridge the Gap
+- Identify skill gaps
+- Take courses or certifications
+- Build a portfolio of relevant work
+- Network in your target industry
+
+### Step 4: Make the Move
+- Update your resume for the new field
+- Highlight transferable skills
+- Start applying or freelancing
+- Consider a gradual transition
+- Build financial cushion (3-6 months expenses)
+
+### Tips
+- Do not quit your job before securing the next one
+- Leverage your existing network
+- Be open to starting at a lower level
+- Tell your story (why you are switching)
+- Stay persistent (career changes take time)`
+  },
+  {
+    q: ['how to be a better listener', 'active listening tips', 'listening skills guide', 'how to listen effectively'],
+    a: `## How to Be a Better Listener
+
+### Active Listening Techniques
+- Give full attention (put phone away)
+- Maintain eye contact
+- Do not interrupt
+- Nod and use verbal affirmations ("I see", "right")
+- Paraphrase what you heard
+
+### Show You Are Listening
+- Ask follow-up questions
+- Reflect their emotions ("That sounds frustrating")
+- Summarize their main points
+- Do not immediately give advice
+- Be comfortable with silence
+
+### Common Barriers
+- Planning your response while they talk
+- Being distracted by your phone
+- Jumping to conclusions
+- Making it about yourself
+- Not tolerating different viewpoints
+
+### Tips
+- Listen to understand, not to respond
+- Practice with low-stakes conversations
+- Be patient and curious
+- Acknowledge their feelings
+- Follow up later on what they shared`
+  },
+  {
+    q: ['how to save for retirement', 'retirement planning tips', 'how to prepare for retirement', 'retirement savings guide'],
+    a: `## How to Save for Retirement
+
+### Start Now
+- Time is your biggest advantage
+- Even small amounts grow significantly with compound interest
+- Do not wait until you earn more
+
+### How Much to Save
+- Aim for 15-20% of gross income
+- Start with whatever you can and increase gradually
+- At minimum, get any employer match (free money)
+
+### Retirement Options (Philippines)
+- SSS: Government pension, mandatory for employed
+- GSIS: For government employees
+- Pag-IBIG MP2: Voluntary savings with dividends
+- Private Plans: Company retirement plans
+- Personal Investments: Stocks, mutual funds
+
+### Rules of Thumb
+- By 30: Have 1x your annual salary saved
+- By 40: Have 3x your annual salary saved
+- By 50: Have 6x your annual salary saved
+- By 60: Have 8-10x your annual salary saved
+
+### Tips
+- Automate savings (pay yourself first)
+- Increase savings with every raise
+- Avoid early withdrawal
+- Diversify investments
+- Review and adjust annually`
+  },
+  {
+    q: ['how to think critically', 'critical thinking tips', 'how to think better', 'critical thinking guide'],
+    a: `## How to Think Critically
+
+### What is Critical Thinking
+- Evaluating information objectively
+- Questioning assumptions
+- Considering multiple perspectives
+- Making reasoned judgments
+
+### Steps
+1. Ask: What is the claim?
+2. Ask: What is the evidence?
+3. Ask: What are the assumptions?
+4. Ask: Are there alternative explanations?
+5. Ask: What are the implications?
+
+### Common Logical Fallacies
+- Ad Hominem: Attacking the person, not the argument
+- Straw Man: Misrepresenting someone's argument
+- Appeal to Authority: "Experts say..." without evidence
+- False Dilemma: Only two options when more exist
+- Slippery Slope: Extreme consequences without justification
+
+### Tips
+- Consider the source of information
+- Look for evidence, not just opinions
+- Be aware of your own biases
+- Seek out opposing viewpoints
+- Change your mind when presented with better evidence`
+  },
+  {
+    q: ['how to set goals', 'goal setting tips', 'how to set and achieve goals', 'goal setting guide'],
+    a: `## How to Set and Achieve Goals
+
+### SMART Goals
+- Specific: Clear and defined
+- Measurable: You can track progress
+- Achievable: Realistic given your resources
+- Relevant: Aligned with your values
+- Time-bound: Has a deadline
+
+### Steps
+1. Write down your goal
+2. Break it into smaller goals
+3. Create action steps for each
+4. Set deadlines
+5. Track progress regularly
+6. Adjust as needed
+
+### Types of Goals
+- Short-term: 1-3 months
+- Medium-term: 6-12 months
+- Long-term: 1-5 years
+
+### Tips
+- Write goals down (makes them real)
+- Share goals with someone (accountability)
+- Review goals weekly
+- Focus on one goal at a time
+- Celebrate progress, not just completion`
+  },
+  {
+    q: ['how to manage anger', 'anger management tips', 'how to control anger', 'anger control guide'],
+    a: `## How to Manage Anger
+
+### Immediate Strategies
+- Take deep breaths (4-7-8 technique)
+- Count to 10 before responding
+- Walk away from the situation
+- Use grounding techniques (5-4-3-2-1)
+- Release physical tension (exercise)
+
+### Long-term Strategies
+- Identify your triggers
+- Practice relaxation techniques
+- Improve communication skills
+- Exercise regularly
+- Get enough sleep
+
+### Communication When Angry
+- Use I statements ("I feel frustrated when...")
+- Do not blame or attack
+- Listen to understand
+- Take breaks during heated discussions
+- Focus on solutions, not blame
+
+### When to Seek Help
+- Anger leads to violence or threats
+- You damage property
+- It affects your relationships
+- You feel out of control
+- It leads to depression or anxiety`
+  },
+  {
+    q: ['how to be a good friend', 'friendship tips', 'how to maintain friendships', 'friendship advice'],
+    a: `## How to Be a Good Friend
+
+### Key Qualities
+- Be reliable and trustworthy
+- Listen without judging
+- Show up during difficult times
+- Celebrate their wins genuinely
+- Respect their boundaries
+
+### Maintain Friendships
+- Reach out regularly
+- Remember important dates
+- Make time despite busy schedules
+- Be there in good and bad times
+- Show appreciation
+
+### When Friends Need Help
+- Ask how you can support them
+- Listen more than you talk
+- Do not try to fix everything
+- Check in regularly
+- Offer practical help
+
+### Healthy Friendships
+- Both people give and receive
+- Mutual respect and trust
+- Space for individual growth
+- Honest communication
+- No competition or jealousy`
+  },
+  {
+    q: ['how to forgive someone', 'forgiveness tips', 'how to let go of grudges', 'forgiveness guide'],
+    a: `## How to Forgive Someone
+
+### Why Forgive
+- It frees you from anger and resentment
+- It improves your mental health
+- It does not mean what they did was okay
+- It is for your peace, not theirs
+
+### Steps to Forgiveness
+1. Acknowledge your pain
+2. Make a conscious decision to forgive
+3. Understand their perspective (if possible)
+4. Release the desire for revenge
+5. Focus on your healing
+
+### Things to Know
+- Forgiveness is a process, not instant
+- You can forgive and still set boundaries
+- You do not need to reconcile
+- It may take time, and that is okay
+- Professional help can assist
+
+### Tips
+- Write a letter (you do not have to send it)
+- Practice empathy
+- Focus on the present, not the past
+- Seek support from others
+- Be patient with yourself`
+  },
 ]
 
 const GENERAL_PATTERNS = [
