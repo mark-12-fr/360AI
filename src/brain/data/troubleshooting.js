@@ -1,5 +1,49 @@
 export const TROUBLESHOOTING = [
   {
+    id: "general-debugging",
+    category: "Debugging",
+    q: ["how to debug code", "debugging approach", "how to troubleshoot", "debugging steps", "how to find bugs"],
+    title: "Systematic Debugging Approach",
+    body: `When your code doesn't work, follow this systematic process:
+
+## Step 1: Reproduce the Bug
+- What are the exact steps to trigger it?
+- Does it happen every time or sometimes?
+- What is the expected vs actual behavior?
+
+## Step 2: Read the Error Message
+- What file and line number?
+- What type of error (TypeError, ReferenceError, etc.)?
+- What was the program doing when it failed?
+
+## Step 3: Isolate the Problem
+- Comment out code until the bug disappears
+- Use binary search: disable half, test, narrow down
+- Check: does data arrive correctly? Is the logic correct?
+
+## Step 4: Form a Hypothesis
+- "I think X is happening because of Y"
+- Test ONE change at a time
+- Use console.log, debugger, or print statements
+
+## Step 5: Fix and Verify
+- Apply the fix
+- Test the original case works
+- Test that you didn't break anything else
+
+## Step 6: Prevent Recurrence
+- Add a test for this case
+- Document what happened
+- Check if similar bugs exist elsewhere
+
+## Quick Tips
+- \`console.log(variable)\` to check values
+- \`console.log(typeof variable)\` to check type
+- \`JSON.stringify(object)\` to see full object
+- Use browser DevTools debugger (F12)
+- In React: use React DevTools component inspector`,
+  },
+  {
     id: "cannot-read-property-undefined",
     category: "JavaScript",
     q: ["Cannot read property of undefined", "reading undefined error", "undefined property access"],

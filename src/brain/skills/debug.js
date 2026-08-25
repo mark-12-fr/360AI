@@ -60,7 +60,7 @@ export default {
       if (!best || score > best.score) best = { entry, score }
     }
 
-    if (!best || best.score < 0.45) return null
+    if (!best || best.score < 0.35) return null
 
     return {
       score: Math.min(0.95, best.score),
