@@ -16,6 +16,7 @@
  */
 
 import academics from './skills/academics.js'
+import cannotknow from './skills/cannotknow.js'
 import chance from './skills/chance.js'
 import chemistry from './skills/chemistry.js'
 import code from './skills/code.js'
@@ -32,6 +33,8 @@ import text from './skills/text.js'
 import units from './skills/units.js'
 
 export const SKILLS = [
+  // First: the questions nobody offline can answer, said plainly.
+  cannotknow,
   knowledge,
   math,
   units,
