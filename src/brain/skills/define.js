@@ -11,21 +11,48 @@
 import { GLOSSARY, REFERENCE } from '../data/reference.js'
 import { canonicalise, contentWords, coreQuestion, diceSimilarity, normalise, overlapScore } from '../nlp.js'
 
-const TERMS = Object.keys(GLOSSARY)
+/**
+ * Everything about a glossary term that does not depend on the question:
+ * its normalised form, its word-boundary pattern, and its content words.
+ *
+ * There are several hundred terms and they never change, but all three were
+ * being rebuilt for every one of them on every question asked — a few hundred
+ * regular expressions compiled per keystroke's worth of work. Built once here
+ * instead, at first use.
+ */
+const TERMS = Object.keys(GLOSSARY).map((term) => {
+  const norm = normalise(term)
+  return {
+    term,
+    norm,
+    re: new RegExp(`\\b${norm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`),
+    words: contentWords(term),
+  }
+})
+
+/**
+ * How much of the question the similarity comparisons see.
+ *
+ * A glossary term is a word or two. Comparing it against a whole pasted essay
+ * scores near zero however long the essay is — but building the essay's bigram
+ * map to find that out, once per term, is most of the cost of a long question.
+ * These bounds change nothing for a question of ordinary length, which is
+ * every question that was ever going to match.
+ */
+const DICE_CHARS = 120
+const QUERY_WORDS = 40
 
 /** Scores every glossary term against the question and returns the best few. */
 function rankTerms(query) {
   const q = normalise(query)
-  const words = contentWords(q)
-  return TERMS.map((term) => {
-    const t = normalise(term)
-    let score = diceSimilarity(q, t)
+  const short = q.slice(0, DICE_CHARS)
+  const words = contentWords(q).slice(0, QUERY_WORDS)
+  return TERMS.map(({ term, norm, re, words: tWords }) => {
+    let score = diceSimilarity(short, norm)
     // A question containing the term outright is a much stronger signal than
     // string similarity across the whole sentence.
-    if (new RegExp(`\\b${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(q)) {
-      score = Math.max(score, t.includes(' ') ? 0.97 : 0.93)
-    }
-    score = Math.max(score, overlapScore(words, contentWords(term)) * 0.9)
+    if (re.test(q)) score = Math.max(score, norm.includes(' ') ? 0.97 : 0.93)
+    score = Math.max(score, overlapScore(words, tWords) * 0.9)
     return { term, score }
   })
     .sort((a, b) => b.score - a.score)

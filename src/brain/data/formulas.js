@@ -148,4 +148,95 @@ export const FORMULAS = [
       '- v = fλ (speed = frequency × wavelength)\n' +
       '- period T = 1 / f',
   },
+  {
+    id: 'statistics-formulas',
+    q: [
+      'statistics formulas',
+      'mean median mode',
+      'standard deviation formula',
+      'probability formula',
+      'combinatorics formulas',
+    ],
+    title: 'Statistics and Probability',
+    body:
+      '**Measures of Central Tendency**\n' +
+      '- Mean (average): x̄ = Σx / n\n' +
+      '- Median: middle value when sorted\n' +
+      '- Mode: most frequent value\n\n' +
+      '**Measures of Spread**\n' +
+      '- Range: max − min\n' +
+      '- Variance: σ² = Σ(x − μ)² / N\n' +
+      '- Standard deviation: σ = √(variance)\n' +
+      '- Coefficient of variation: CV = (σ / μ) × 100%\n\n' +
+      '**Probability**\n' +
+      '- P(A) = favorable outcomes / total outcomes\n' +
+      '- P(A and B) = P(A) × P(B) if independent\n' +
+      '- P(A or B) = P(A) + P(B) − P(A and B)\n' +
+      '- P(A|B) = P(A and B) / P(B) (conditional)\n' +
+      '- Complement: P(not A) = 1 − P(A)\n\n' +
+      '**Combinatorics**\n' +
+      '- Permutations: P(n,r) = n! / (n−r)!\n' +
+      '- Combinations: C(n,r) = n! / (r!(n−r)!)\n' +
+      '- Binomial: P(X=k) = C(n,k) × pᵏ × (1−p)ⁿ⁻ᵏ',
+  },
+  {
+    id: 'chemistry-formulas',
+    q: [
+      'chemistry formulas',
+      'molarity formula',
+      'ideal gas law',
+      'pH formula',
+      'stoichiometry formulas',
+    ],
+    title: 'Chemistry',
+    body:
+      '**Stoichiometry**\n' +
+      '- Moles = mass (g) / molar mass (g/mol)\n' +
+      '- Molarity (M) = moles of solute / liters of solution\n' +
+      '- Dilution: M₁V₁ = M₂V₂\n\n' +
+      '**Ideal Gas Law**\n' +
+      '- PV = nRT\n' +
+      '- P = pressure (atm), V = volume (L), n = moles, R = 0.0821 L·atm/(mol·K), T = temperature (K)\n\n' +
+      '**pH and Acidity**\n' +
+      '- pH = −log[H⁺]\n' +
+      '- pOH = −log[OH⁻]\n' +
+      '- pH + pOH = 14\n' +
+      '- [H⁺] = 10⁻ᵖᴴ\n\n' +
+      '**Thermochemistry**\n' +
+      '- q = mcΔT (heat energy)\n' +
+      '- ΔH = H(products) − H(reactants)\n\n' +
+      '**Equilibrium**\n' +
+      '- Kc = [products]ⁿ / [reactants]ᵐ\n' +
+      '- Le Chatelier\'s principle: system shifts to counteract changes',
+  },
+  {
+    id: 'finance-formulas',
+    q: [
+      'finance formulas',
+      'compound interest formula',
+      'simple interest formula',
+      'present value formula',
+      'future value formula',
+    ],
+    title: 'Finance',
+    body:
+      '**Simple Interest**\n' +
+      '- I = P × r × t\n' +
+      '- P = principal, r = rate (decimal), t = time (years)\n\n' +
+      '**Compound Interest**\n' +
+      '- A = P(1 + r/n)ⁿᵗ\n' +
+      '- A = final amount, P = principal, r = annual rate, n = compounds per year, t = years\n\n' +
+      '**Future Value**\n' +
+      '- FV = PV × (1 + r)ⁿ\n\n' +
+      '**Present Value**\n' +
+      '- PV = FV / (1 + r)ⁿ\n\n' +
+      '**Annuity**\n' +
+      '- PV = PMT × [(1 − (1 + r)ⁿ) / r]\n' +
+      '- FV = PMT × [((1 + r)ⁿ − 1) / r]\n\n' +
+      '**Depreciation**\n' +
+      '- Straight-line: (Cost − Salvage) / Useful life\n' +
+      '- Declining balance: Book value × rate\n\n' +
+      '**Break-even**\n' +
+      '- Break-even point = Fixed costs / (Price − Variable cost per unit)',
+  },
 ]

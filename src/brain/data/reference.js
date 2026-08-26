@@ -1,7 +1,7 @@
 /**
  * General reference: a definitions glossary and the world's standing facts.
  *
- * Everything here is stable — definitions, physical constants, geography,
+ * Everything here is stable - definitions, physical constants, geography,
  * anatomy, historical dates. Nothing that changes with the news belongs in this
  * file, because there is no way to update it once someone has installed the app.
  *
@@ -20,7 +20,7 @@ import { HEALTH } from './health.js'
 import { HISTORY } from './history.js'
 import { PHILIPPINES } from './philippines.js'
 
-/** term → definition. Keys are lowercase; the skill matches them fuzzily. */
+/** term ' definition. Keys are lowercase; the skill matches them fuzzily. */
 export const GLOSSARY = {
   /* ------------------------------------------------------------- biology */
   photosynthesis:
@@ -30,7 +30,7 @@ export const GLOSSARY = {
   mitosis: 'Cell division that makes two identical cells, used for growth and repair.',
   meiosis:
     'Cell division that makes sex cells (egg and sperm), each with half the chromosomes, so offspring get a mix from both parents.',
-  dna: 'Deoxyribonucleic acid — the double-helix molecule carrying genetic instructions. Its four bases are A, T, G and C.',
+  dna: 'Deoxyribonucleic acid - the double-helix molecule carrying genetic instructions. Its four bases are A, T, G and C.',
   rna: 'A single-stranded relative of DNA that carries genetic messages and helps build proteins.',
   gene: 'A stretch of DNA coding for one trait or protein. Humans have roughly 20,000 of them.',
   chromosome: 'A packaged strand of DNA. Humans have 46, in 23 pairs.',
@@ -38,62 +38,62 @@ export const GLOSSARY = {
   protein: 'A chain of amino acids folded into a shape. Proteins build tissue, carry oxygen and run cell chemistry.',
   bacteria: 'Single-celled organisms without a nucleus. Most are harmless or useful; some cause disease.',
   virus:
-    'A packet of genetic material in a protein coat. It is not alive on its own — it must hijack a living cell to copy itself.',
+    'A packet of genetic material in a protein coat. It is not alive on its own - it must hijack a living cell to copy itself.',
   ecosystem: 'A community of living things plus the non-living environment they interact with.',
   evolution:
     'Change in the inherited traits of a population over generations. Natural selection is its main mechanism: traits that help survival become more common.',
-  homeostasis: 'A body keeping its internal conditions steady — temperature, blood sugar, water balance.',
+  homeostasis: 'A body keeping its internal conditions steady - temperature, blood sugar, water balance.',
   osmosis: 'Water moving across a membrane from where it is less concentrated in solutes to where it is more.',
   diffusion: 'Particles spreading from a crowded area to a less crowded one until evenly spread.',
   antibiotic: 'A medicine that kills bacteria or stops them multiplying. It has no effect on viruses.',
   vaccine: 'A preparation that teaches the immune system to recognise a pathogen before a real infection arrives.',
   antibody: 'A protein the immune system makes to lock onto and mark a specific invader.',
-  metabolism: 'All the chemical reactions keeping an organism alive — building up and breaking down.',
+  metabolism: 'All the chemical reactions keeping an organism alive - building up and breaking down.',
   hormone: 'A chemical messenger carried in the blood that tells distant organs what to do.',
   neuron: 'A nerve cell. It carries electrical signals and passes them on chemically at synapses.',
 
   /* ----------------------------------------------------------- chemistry */
   atom: 'The smallest unit of an element: a nucleus of protons and neutrons with electrons around it.',
-  molecule: 'Two or more atoms bonded together, such as H₂O or O₂.',
+  molecule: 'Two or more atoms bonded together, such as H_O or O_.',
   element: 'A substance made of one kind of atom. There are 118 known elements.',
   compound: 'A substance made of two or more different elements chemically bonded in fixed proportions.',
-  mixture: 'Substances physically combined but not chemically bonded — they keep their own properties.',
+  mixture: 'Substances physically combined but not chemically bonded - they keep their own properties.',
   'periodic table':
     "Mendeleev's arrangement of the elements by atomic number, where columns share chemical behaviour.",
   ion: 'An atom that has gained or lost electrons, giving it a negative or positive charge.',
   acid: 'A substance that donates hydrogen ions in water; pH below 7. Vinegar and stomach acid are examples.',
   base: 'A substance that accepts hydrogen ions; pH above 7. Soap and baking soda are examples.',
-  ph: 'A 0–14 scale of acidity. 7 is neutral, below 7 acidic, above 7 basic. Each step is a tenfold change.',
+  ph: 'A 0-14 scale of acidity. 7 is neutral, below 7 acidic, above 7 basic. Each step is a tenfold change.',
   catalyst: 'Something that speeds up a reaction without being consumed by it.',
-  oxidation: 'A reaction where a substance loses electrons — rusting and burning are common examples.',
-  'chemical bond': 'The force holding atoms together — ionic (transferred electrons), covalent (shared) or metallic.',
-  mole: 'The chemist\'s counting unit: 6.022 × 10²³ particles, called Avogadro\'s number.',
+  oxidation: 'A reaction where a substance loses electrons - rusting and burning are common examples.',
+  'chemical bond': 'The force holding atoms together - ionic (transferred electrons), covalent (shared) or metallic.',
+  mole: 'The chemist\'s counting unit: 6.022 - 10^2^3 particles, called Avogadro\'s number.',
   isotope: 'Atoms of the same element with different numbers of neutrons, and so different masses.',
 
   /* ------------------------------------------------------------- physics */
   gravity:
-    'The attraction between anything with mass. On Earth it accelerates falling objects at about 9.8 m/s².',
-  force: 'A push or pull that changes an object\'s motion. Measured in newtons: force = mass × acceleration.',
+    'The attraction between anything with mass. On Earth it accelerates falling objects at about 9.8 m/s^2.',
+  force: 'A push or pull that changes an object\'s motion. Measured in newtons: force = mass - acceleration.',
   energy: 'The capacity to do work. It cannot be created or destroyed, only changed in form.',
-  work: 'Force applied over a distance: work = force × distance, measured in joules.',
-  power: 'How fast work is done: power = work ÷ time, measured in watts.',
-  velocity: 'Speed in a given direction — a vector, unlike plain speed.',
+  work: 'Force applied over a distance: work = force - distance, measured in joules.',
+  power: 'How fast work is done: power = work * time, measured in watts.',
+  velocity: 'Speed in a given direction - a vector, unlike plain speed.',
   acceleration: 'How quickly velocity changes, in metres per second squared.',
-  momentum: 'Mass × velocity. In a closed system, total momentum is conserved.',
+  momentum: 'Mass - velocity. In a closed system, total momentum is conserved.',
   friction: 'The force resisting motion between surfaces in contact.',
-  inertia: "An object's resistance to a change in its motion — Newton's first law.",
+  inertia: "An object's resistance to a change in its motion - Newton's first law.",
   'newtons laws':
     "1) An object stays at rest or in uniform motion unless a force acts. 2) F = ma. 3) Every action has an equal and opposite reaction.",
   electricity: 'The flow of electric charge, usually electrons through a conductor.',
-  voltage: 'The electrical pressure pushing charge through a circuit, in volts. Ohm\'s law: V = I × R.',
+  voltage: 'The electrical pressure pushing charge through a circuit, in volts. Ohm\'s law: V = I - R.',
   current: 'The rate of flow of electric charge, in amperes.',
   resistance: 'How much a material opposes current, in ohms.',
   magnetism: 'The force produced by moving charges, and by certain materials whose atoms align.',
   wave: 'A disturbance that transfers energy without transferring matter. Described by wavelength, frequency and amplitude.',
   frequency: 'How many wave cycles pass a point per second, in hertz.',
-  'speed of light': '299,792,458 metres per second in a vacuum — the universal speed limit.',
+  'speed of light': '299,792,458 metres per second in a vacuum - the universal speed limit.',
   relativity:
-    "Einstein's theory: measurements of space and time depend on the observer's motion, and mass and energy are equivalent (E = mc²).",
+    "Einstein's theory: measurements of space and time depend on the observer's motion, and mass and energy are equivalent (E = mc^2).",
   'quantum mechanics':
     'The physics of the very small, where energy comes in discrete packets and particles behave as waves and probabilities.',
   thermodynamics:
@@ -103,14 +103,14 @@ export const GLOSSARY = {
   /* ---------------------------------------------------------------- maths */
   algebra: 'The branch of mathematics that uses letters for unknown numbers and studies the rules for manipulating them.',
   geometry: 'The mathematics of shape, size, position and space.',
-  trigonometry: 'The mathematics of triangles and the relationships between their angles and sides — sine, cosine, tangent.',
+  trigonometry: 'The mathematics of triangles and the relationships between their angles and sides - sine, cosine, tangent.',
   calculus:
     'The mathematics of continuous change. Differential calculus deals with rates of change; integral calculus with accumulation.',
-  derivative: 'The instantaneous rate of change of a function — the slope of its curve at a point.',
-  integral: 'The accumulation of a quantity — the area under a curve.',
-  'pythagorean theorem': 'In a right triangle, a² + b² = c², where c is the hypotenuse.',
-  'prime number': 'A whole number greater than 1 divisible only by 1 and itself: 2, 3, 5, 7, 11, 13…',
-  pi: 'π ≈ 3.14159 — the ratio of a circle\'s circumference to its diameter. It never ends and never repeats.',
+  derivative: 'The instantaneous rate of change of a function - the slope of its curve at a point.',
+  integral: 'The accumulation of a quantity - the area under a curve.',
+  'pythagorean theorem': 'In a right triangle, a^2 + b^2 = c^2, where c is the hypotenuse.',
+  'prime number': 'A whole number greater than 1 divisible only by 1 and itself: 2, 3, 5, 7, 11, 13...',
+  pi: 'pi ~ 3.14159 - the ratio of a circle\'s circumference to its diameter. It never ends and never repeats.',
   mean: 'The average: add the values and divide by how many there are.',
   median: 'The middle value when the numbers are sorted.',
   mode: 'The value that appears most often.',
@@ -123,35 +123,35 @@ export const GLOSSARY = {
 
   /* ------------------------------------------------------------ computing */
   algorithm: 'A precise, finite set of steps for solving a problem.',
-  'programming language': 'A formal language for writing instructions a computer can execute — Python, JavaScript, C, Java.',
+  'programming language': 'A formal language for writing instructions a computer can execute - Python, JavaScript, C, Java.',
   javascript: 'The programming language browsers run. 360AI itself is written entirely in it.',
   python: 'A readable, general-purpose programming language, dominant in data science and automation.',
-  html: 'HyperText Markup Language — the structure of a web page.',
-  css: 'Cascading Style Sheets — how a web page looks.',
+  html: 'HyperText Markup Language - the structure of a web page.',
+  css: 'Cascading Style Sheets - how a web page looks.',
   database: 'An organised store of data that can be queried and updated efficiently.',
-  sql: 'Structured Query Language — the standard way to ask a relational database for data.',
-  api: 'Application Programming Interface — an agreed way for one program to ask another for something.',
-  'operating system': 'The software managing a computer\'s hardware and running its programs — Windows, macOS, Linux, Android, iOS.',
-  cpu: 'Central Processing Unit — the chip that executes instructions. Its speed is measured in gigahertz.',
-  gpu: 'Graphics Processing Unit — a chip with thousands of small cores, ideal for graphics and parallel maths.',
-  ram: 'Random Access Memory — fast temporary working memory, emptied when power is lost.',
-  'ssd': 'Solid State Drive — storage with no moving parts, much faster than a hard disk.',
+  sql: 'Structured Query Language - the standard way to ask a relational database for data.',
+  api: 'Application Programming Interface - an agreed way for one program to ask another for something.',
+  'operating system': 'The software managing a computer\'s hardware and running its programs - Windows, macOS, Linux, Android, iOS.',
+  cpu: 'Central Processing Unit - the chip that executes instructions. Its speed is measured in gigahertz.',
+  gpu: 'Graphics Processing Unit - a chip with thousands of small cores, ideal for graphics and parallel maths.',
+  ram: 'Random Access Memory - fast temporary working memory, emptied when power is lost.',
+  'ssd': 'Solid State Drive - storage with no moving parts, much faster than a hard disk.',
   binary: 'Base-2 counting with only 0 and 1, each place worth twice the one to its right. 1011 = 11.',
   bit: 'The smallest unit of data: a single 0 or 1. Eight bits make a byte.',
-  byte: 'Eight bits — roughly one character of text.',
+  byte: 'Eight bits - roughly one character of text.',
   encryption: 'Scrambling data so only someone with the key can read it.',
   'machine learning': 'Software that improves at a task by finding patterns in data instead of being explicitly programmed.',
   'artificial intelligence':
     'Any system doing tasks we associate with human reasoning. It covers trained models and rules engines like 360AI alike.',
   'neural network': 'A model loosely inspired by brain cells: layers of weighted connections tuned by training data.',
-  llm: 'Large Language Model — a neural network trained to predict text, with knowledge stored in billions of weights.',
+  llm: 'Large Language Model - a neural network trained to predict text, with knowledge stored in billions of weights.',
   server: 'A computer that provides data or services to other computers over a network.',
   cloud: "Computing done on someone else's servers, rented over the internet.",
   'ip address': 'The numeric address identifying a device on a network.',
   cache: 'A small fast store of recently used data, kept so it need not be fetched again.',
   cookie: 'A small file a website stores in your browser to remember you between visits.',
   firewall: 'A barrier that filters network traffic according to rules.',
-  malware: 'Software written to damage or intrude — viruses, worms, ransomware, spyware.',
+  malware: 'Software written to damage or intrude - viruses, worms, ransomware, spyware.',
   phishing: 'Tricking someone into giving up passwords or money by impersonating someone they trust.',
   'open source': 'Software whose source code anyone may read, modify and share.',
   git: 'A version control system that records every change to a project and lets people work in parallel.',
@@ -159,28 +159,28 @@ export const GLOSSARY = {
   /* ------------------------------------------------------------- business */
   economics: 'The study of how people and societies allocate limited resources.',
   inflation: 'A general rise in prices over time, which reduces what each peso buys.',
-  gdp: 'Gross Domestic Product — the total value of goods and services a country produces in a year.',
+  gdp: 'Gross Domestic Product - the total value of goods and services a country produces in a year.',
   recession: 'A significant, sustained decline in economic activity, often two consecutive quarters of shrinking GDP.',
   'supply and demand':
     'The core price mechanism: when supply rises or demand falls, price tends to drop, and vice versa.',
   capital: 'Money or assets put to work to produce more value.',
   asset: 'Anything of value that a person or business owns.',
   liability: 'Anything a person or business owes.',
-  equity: 'What is left of the assets after liabilities are paid — the owner\'s share.',
+  equity: 'What is left of the assets after liabilities are paid - the owner\'s share.',
   revenue: 'Total money earned from sales before any costs are subtracted.',
   profit: 'Revenue minus all costs. Gross profit subtracts only direct costs; net profit subtracts everything.',
-  'break even': 'The point where revenue exactly covers costs — no profit, no loss.',
-  roi: 'Return on Investment — gain minus cost, divided by cost, expressed as a percentage.',
+  'break even': 'The point where revenue exactly covers costs - no profit, no loss.',
+  roi: 'Return on Investment - gain minus cost, divided by cost, expressed as a percentage.',
   interest: 'The price of borrowing money. Simple interest is on the principal only; compound interest is on the accumulated total.',
   'compound interest': 'Interest earned on interest. It is why savings and debt both grow faster than they first appear.',
   depreciation: 'The gradual loss in value of an asset over its useful life.',
   'balance sheet': 'A snapshot of what a business owns and owes at one moment: assets = liabilities + equity.',
   'income statement': 'A record of revenue, expenses and profit over a period.',
-  'cash flow': 'The actual movement of money in and out of a business — profitable businesses still fail without it.',
+  'cash flow': 'The actual movement of money in and out of a business - profitable businesses still fail without it.',
   budget: 'A plan of expected income and spending over a period.',
   tax: 'A compulsory payment to government, levied on income, sales, property or transfers.',
-  vat: 'Value Added Tax — a consumption tax added at each stage of production. In the Philippines it is 12%.',
-  marketing: 'Everything done to understand a market and bring a product to it — the 4 Ps: product, price, place, promotion.',
+  vat: 'Value Added Tax - a consumption tax added at each stage of production. In the Philippines it is 12%.',
+  marketing: 'Everything done to understand a market and bring a product to it - the 4 Ps: product, price, place, promotion.',
   entrepreneurship: 'Identifying an opportunity and building an organisation to pursue it, carrying the risk.',
   franchise: 'A licence to run a business under an established brand and system, for a fee and royalties.',
   logistics: 'Planning and executing the movement and storage of goods.',
@@ -190,11 +190,11 @@ export const GLOSSARY = {
   democracy: 'A system where power comes from the people, usually exercised through elected representatives.',
   republic: 'A state where the head of state is elected rather than inherited.',
   constitution: 'The fundamental law setting out how a state is organised and what rights it guarantees.',
-  'human rights': 'Rights every person holds simply by being human — life, liberty, expression, due process, and more.',
+  'human rights': 'Rights every person holds simply by being human - life, liberty, expression, due process, and more.',
   federalism: 'A system dividing power between a national government and regional governments.',
   'separation of powers': 'Splitting government into executive, legislative and judicial branches so each checks the others.',
   'due process': 'The requirement that the state follow fair legal procedure before depriving anyone of life, liberty or property.',
-  contract: 'A legally binding agreement — offer, acceptance and consideration.',
+  contract: 'A legally binding agreement - offer, acceptance and consideration.',
   culture: 'The shared beliefs, practices and artefacts of a group, passed on by learning rather than genes.',
   globalization: 'The growing interconnection of economies, cultures and populations across borders.',
   urbanization: 'The shift of population from rural areas into cities.',
@@ -202,11 +202,11 @@ export const GLOSSARY = {
   'climate change':
     'Long-term shifts in temperature and weather patterns, driven since the 1800s mainly by burning fossil fuels.',
   'greenhouse effect':
-    'Gases such as CO₂ and methane trapping heat in the atmosphere. Without it Earth would freeze; too much of it warms the planet.',
-  'renewable energy': 'Energy from sources that replenish naturally — solar, wind, hydro, geothermal, biomass.',
+    'Gases such as CO_ and methane trapping heat in the atmosphere. Without it Earth would freeze; too much of it warms the planet.',
+  'renewable energy': 'Energy from sources that replenish naturally - solar, wind, hydro, geothermal, biomass.',
   pandemic: 'An epidemic that has spread across countries or continents.',
   'first aid': 'Immediate help given to an injured or ill person before professional care arrives.',
-  bmi: 'Body Mass Index — weight in kg divided by height in metres squared. A rough screen, not a diagnosis.',
+  bmi: 'Body Mass Index - weight in kg divided by height in metres squared. A rough screen, not a diagnosis.',
   'blood pressure':
     'The force of blood against artery walls, written systolic over diastolic. Around 120/80 mmHg is considered normal.',
   diabetes: 'A condition where blood sugar stays too high, because the body makes too little insulin or resists it.',
@@ -218,7 +218,7 @@ export const GLOSSARY = {
   bibliography: 'The list of sources consulted for a piece of work.',
   hypothesis: 'A testable proposed explanation, stated before the evidence is gathered.',
   'scientific method':
-    'Observe, form a hypothesis, predict, test by experiment, analyse, and revise — with results checked by others.',
+    'Observe, form a hypothesis, predict, test by experiment, analyse, and revise - with results checked by others.',
   variable:
     'Anything that can change in an experiment. The independent variable is changed on purpose; the dependent one is measured.',
   'qualitative research': 'Research into meaning and experience, using interviews, observation and text rather than numbers.',
@@ -328,10 +328,115 @@ export const GLOSSARY = {
   propaganda: 'Information shaped to promote a cause, often by leaving things out rather than by lying outright.',
   census: 'An official count of a population and what it is like.',
   demography: 'The statistical study of populations — births, deaths, migration, age structure.',
+  /* ------------------------------------------------------ web development */
+  react: 'A JavaScript library for building user interfaces using a component-based architecture with JSX.',
+  'react native': 'A framework for building mobile apps using React components, rendering to native views.',
+  nextjs: 'A React framework adding server-side rendering, file-based routing, and build optimizations.',
+  vue: 'A progressive JavaScript framework for building UIs, known for its gentle learning curve.',
+  angular: 'A TypeScript-based framework for building large single-page applications.',
+  nodejs: 'JavaScript runtime built on Chrome\'s V8 engine, enabling JS on the server.',
+  npm: 'Node Package Manager - the default package manager for JavaScript.',
+  yarn: 'An alternative package manager for JavaScript, developed by Facebook.',
+  pnpm: 'A fast, disk-efficient package manager that uses a content-addressable store.',
+  webpack: 'A module bundler that compiles JavaScript and assets for the browser.',
+  vite: 'A fast build tool using native ES modules, created by the Vue author.',
+  babel: 'A JavaScript compiler that transforms modern JS into backward-compatible versions.',
+  eslint: 'A linting tool for JavaScript and TypeScript that catches common errors.',
+  prettier: 'An opinionated code formatter supporting many languages.',
+  typescript: 'A typed superset of JavaScript that compiles to plain JS.',
+  jsx: 'JavaScript XML - syntax that lets you write HTML-like code in JavaScript.',
+  tailwind: 'A utility-first CSS framework for rapid UI development.',
+  sass: 'A CSS preprocessor adding variables, nesting, mixins and functions.',
+  'css modules': 'CSS files where class names are scoped locally by default.',
+  'styled components': 'A CSS-in-JS library for styling React components with tagged template literals.',
+  graphql: 'A query language for APIs that lets clients request exactly the data they need.',
+  rest: 'Representational State Transfer - an architectural style for APIs using HTTP methods.',
+  websocket: 'A protocol for persistent, bidirectional communication between client and server.',
+  cors: 'Cross-Origin Resource Sharing - a mechanism allowing requests between different origins.',
+  'service worker': 'A script that runs in the browser background, enabling offline support and push notifications.',
+  pwa: 'Progressive Web App - a website that can be installed like a native app and works offline.',
+  spa: 'Single Page Application - a web app that loads once and updates content without full page reloads.',
+  ssr: 'Server-Side Rendering - generating HTML on the server for each request.',
+  ssg: 'Static Site Generation - generating HTML at build time.',
+  isr: 'Incremental Static Regeneration - updating static pages after build time.',
+  dom: 'Document Object Model - the tree structure a browser creates from HTML.',
+  'virtual dom': 'A lightweight copy of the DOM used by React to minimize expensive DOM updates.',
+  'event loop': 'The mechanism that allows JavaScript to handle asynchronous operations on a single thread.',
+  closure: 'A function that retains access to variables from its outer scope even after the outer function returns.',
+  prototype: 'An object from which other objects inherit properties in JavaScript.',
+  'strict mode': 'A restricted variant of JavaScript that catches common mistakes.',
+  iterator: 'An object with a `next()` method that returns `{ value, done }` for sequential access.',
+  generator: 'A function that can pause and resume execution using `yield`, producing a sequence of values.',
+  proxy: 'An object that intercepts and customizes operations on another object.',
+  reflect: 'A built-in object providing methods for interceptable JavaScript operations.',
+  webhook: 'A user-defined HTTP callback triggered by an event in a source system.',
+  'api gateway': 'A server that routes API requests to the appropriate backend services.',
+  microservice: 'An architecture where an application is built as a collection of small, independent services.',
+  docker: 'A platform for building, shipping and running applications in lightweight containers.',
+  kubernetes: 'A system for automating deployment, scaling and management of containerized applications.',
+  cicd: 'Continuous Integration / Continuous Deployment - automated testing and deployment pipelines.',
+  'design pattern': 'A reusable solution to a commonly occurring problem in software design.',
+  mvc: 'Model-View-Controller - separating an app into data, presentation and logic.',
+  mvvm: 'Model-View-ViewModel - a variation of MVC for data binding.',
+  orm: 'Object-Relational Mapping - mapping database tables to objects in code.',
+  crud: 'Create, Read, Update, Delete - the four basic database operations.',
+  'unit testing': 'Testing individual functions or components in isolation.',
+  'integration testing': 'Testing how multiple components work together.',
+  'e2e testing': 'End-to-end testing that simulates real user workflows.',
+  jest: 'A JavaScript testing framework by Facebook, focused on simplicity.',
+  cypress: 'An end-to-end testing framework for web applications.',
+  playwright: 'A browser automation library for testing web apps across browsers.',
+  'code review': 'Examining code by peers before merging to find bugs and improve quality.',
+  refactoring: 'Restructuring code without changing its external behavior to improve readability and maintainability.',
+  'technical debt': 'The accumulated cost of shortcuts and deferred work in a codebase.',
+  scalability: 'The ability of a system to handle increased load by adding resources.',
+  latency: 'The time delay between a request and a response.',
+  throughput: 'The amount of work completed per unit of time.',
+  'load balancing': 'Distributing incoming requests across multiple servers.',
+  cdn: 'Content Delivery Network - servers distributed globally to serve content closer to users.',
+  'load balancer': 'A device or software that distributes network traffic across multiple servers.',
+  'horizontal scaling': 'Adding more machines to handle increased load.',
+  'vertical scaling': 'Adding more power (CPU, RAM) to an existing machine.',
+  'hot reload': 'Automatically updating the browser when code changes during development.',
+  hmr: 'Hot Module Replacement - updating modules in the browser without a full reload.',
+  'tree shaking': 'Removing unused code from the final bundle during build.',
+  'code splitting': 'Breaking code into smaller chunks loaded on demand.',
+  'lazy loading': 'Loading resources only when they are needed.',
+  prefetch: 'Loading resources before they are needed for upcoming navigation.',
+  hydration: 'In SSR, attaching event listeners to server-rendered HTML to make it interactive.',
+  'state management': 'Managing the data state of an application, especially across components.',
+  'global state': 'Data accessible from any component in the application.',
+  'local state': 'Data managed within a single component.',
+  'derived state': 'State computed from other state values.',
+  'side effect': 'A function that interacts with the outside world (API calls, DOM manipulation, timers).',
+  immutability: 'Never modifying data directly, instead creating new copies with changes.',
+  'pure function': 'A function that always returns the same output for the same input, with no side effects.',
+  memoization: 'Caching the result of a function call to avoid recomputing for the same inputs.',
+  debounce: 'Delaying a function call until a pause in events, to prevent rapid repeated calls.',
+  throttle: 'Limiting a function call to once per specified time interval.',
+  'user experience': 'The overall experience a person has using a product, especially how easy and pleasant it is.',
+  'user interface': 'The visual part of an application that a user interacts with.',
+  wireframe: 'A simple visual guide showing the layout of a page or app.',
+  prototype: 'An early sample or model of a product to test concepts.',
+  'a b testing': 'Comparing two versions of something to see which performs better.',
+  analytics: 'The collection and analysis of data about user behavior.',
+  'error boundary': 'A React component that catches JavaScript errors and displays a fallback UI.',
+  'context api': 'React\'s way of passing data through the component tree without props drilling.',
+  'refs': 'React objects that give direct access to DOM elements or component instances.',
+  'controlled component': 'A form element whose value is controlled by React state.',
+  'uncontrolled component': 'A form element that stores its own state in the DOM.',
+  'higher order component': 'A function that takes a component and returns a new component with added functionality.',
+  'render prop': 'A technique for sharing code between React components using a prop whose value is a function.',
+  composition: 'Building complex components by combining simpler ones.',
+  'single responsibility': 'A principle that a module should have one reason to change.',
+  'open closed': 'Software entities should be open for extension but closed for modification.',
+  'dependency inversion': 'High-level modules should not depend on low-level modules; both should depend on abstractions.',
+  'interface segregation': 'Clients should not be forced to depend on interfaces they do not use.',
+  liskov: 'Objects of a superclass should be replaceable with objects of a subclass without breaking correctness.',
 }
 
 /**
- * Reference lists — the answers to "what are the…" and "which is the biggest…"
+ * Reference lists - the answers to "what are the..." and "which is the biggest..."
  * questions. Each entry is a title plus rows, rendered as a table or list.
  */
 const CORE = [
@@ -340,14 +445,14 @@ const CORE = [
     q: ['planets', 'solar system', 'planets in order', 'how many planets'],
     title: 'The eight planets, in order from the Sun',
     body:
-      '1. **Mercury** — smallest, no atmosphere, 88-day year\n' +
-      '2. **Venus** — hottest at ~465 °C, thick CO₂ atmosphere\n' +
-      '3. **Earth** — the only known life; 1 moon\n' +
-      '4. **Mars** — the red planet; 2 small moons\n' +
-      '5. **Jupiter** — largest; a gas giant with 95+ moons\n' +
-      '6. **Saturn** — the ring system; least dense planet\n' +
-      '7. **Uranus** — ice giant, tilted on its side\n' +
-      '8. **Neptune** — farthest, windiest, 165-year orbit\n\n' +
+      '1. **Mercury** - smallest, no atmosphere, 88-day year\n' +
+      '2. **Venus** - hottest at ~465 degC, thick CO_ atmosphere\n' +
+      '3. **Earth** - the only known life; 1 moon\n' +
+      '4. **Mars** - the red planet; 2 small moons\n' +
+      '5. **Jupiter** - largest; a gas giant with 95+ moons\n' +
+      '6. **Saturn** - the ring system; least dense planet\n' +
+      '7. **Uranus** - ice giant, tilted on its side\n' +
+      '8. **Neptune** - farthest, windiest, 165-year orbit\n\n' +
       'Pluto has been classed a dwarf planet since 2006.',
   },
   {
@@ -355,7 +460,7 @@ const CORE = [
     q: ['continents', 'how many continents', 'list of continents'],
     title: 'The seven continents',
     body:
-      '| Continent | Area (km²) | Countries |\n| --- | --- | --- |\n' +
+      '| Continent | Area (km^2) | Countries |\n| --- | --- | --- |\n' +
       '| Asia | 44,579,000 | 49 |\n| Africa | 30,370,000 | 54 |\n' +
       '| North America | 24,709,000 | 23 |\n| South America | 17,840,000 | 12 |\n' +
       '| Antarctica | 14,200,000 | 0 |\n| Europe | 10,180,000 | 44 |\n| Oceania | 8,526,000 | 14 |',
@@ -365,19 +470,19 @@ const CORE = [
     q: ['oceans', 'how many oceans', 'largest ocean'],
     title: 'The five oceans',
     body:
-      '1. **Pacific** — 165.2 million km², deepest point Challenger Deep at 10,935 m\n' +
-      '2. **Atlantic** — 106.4 million km²\n' +
-      '3. **Indian** — 70.6 million km²\n' +
-      '4. **Southern (Antarctic)** — 21.9 million km²\n' +
-      '5. **Arctic** — 14.1 million km², smallest and shallowest',
+      '1. **Pacific** - 165.2 million km^2, deepest point Challenger Deep at 10,935 m\n' +
+      '2. **Atlantic** - 106.4 million km^2\n' +
+      '3. **Indian** - 70.6 million km^2\n' +
+      '4. **Southern (Antarctic)** - 21.9 million km^2\n' +
+      '5. **Arctic** - 14.1 million km^2, smallest and shallowest',
   },
   {
     id: 'tallest-mountains',
     q: ['tallest mountain', 'highest mountain', 'mount everest height', 'highest peaks'],
     title: 'The highest mountains',
     body:
-      '1. **Everest** (Nepal/China) — 8,849 m\n2. **K2** (Pakistan/China) — 8,611 m\n' +
-      '3. **Kangchenjunga** (Nepal/India) — 8,586 m\n4. **Lhotse** — 8,516 m\n5. **Makalu** — 8,485 m\n\n' +
+      '1. **Everest** (Nepal/China) - 8,849 m\n2. **K2** (Pakistan/China) - 8,611 m\n' +
+      '3. **Kangchenjunga** (Nepal/India) - 8,586 m\n4. **Lhotse** - 8,516 m\n5. **Makalu** - 8,485 m\n\n' +
       'The highest in the Philippines is **Mount Apo**, 2,954 m.',
   },
   {
@@ -385,8 +490,8 @@ const CORE = [
     q: ['longest river', 'longest rivers in the world', 'nile length'],
     title: 'The longest rivers',
     body:
-      '1. **Nile** (Africa) — 6,650 km\n2. **Amazon** (South America) — 6,400 km, by far the largest by volume\n' +
-      '3. **Yangtze** (China) — 6,300 km\n4. **Mississippi–Missouri** (USA) — 6,275 km\n5. **Yenisei** (Russia) — 5,539 km\n\n' +
+      '1. **Nile** (Africa) - 6,650 km\n2. **Amazon** (South America) - 6,400 km, by far the largest by volume\n' +
+      '3. **Yangtze** (China) - 6,300 km\n4. **Mississippi-Missouri** (USA) - 6,275 km\n5. **Yenisei** (Russia) - 5,539 km\n\n' +
       'The longest in the Philippines is the **Cagayan River**, 505 km.',
   },
   {
@@ -394,34 +499,34 @@ const CORE = [
     q: ['largest country', 'biggest country', 'largest countries by area'],
     title: 'The largest countries by area',
     body:
-      '1. **Russia** — 17,098,246 km²\n2. **Canada** — 9,984,670 km²\n3. **United States** — 9,833,520 km²\n' +
-      '4. **China** — 9,596,961 km²\n5. **Brazil** — 8,515,767 km²\n\n' +
-      'The smallest is **Vatican City** at 0.49 km².',
+      '1. **Russia** - 17,098,246 km^2\n2. **Canada** - 9,984,670 km^2\n3. **United States** - 9,833,520 km^2\n' +
+      '4. **China** - 9,596,961 km^2\n5. **Brazil** - 8,515,767 km^2\n\n' +
+      'The smallest is **Vatican City** at 0.49 km^2.',
   },
   {
     id: 'ph-facts',
     q: ['philippines facts', 'about the philippines', 'philippine information'],
     title: 'The Philippines at a glance',
     body:
-      '- **Capital:** Manila · **Largest city:** Quezon City\n' +
-      '- **Islands:** 7,641 · **Regions:** 18 · **Provinces:** 82\n' +
+      '- **Capital:** Manila . **Largest city:** Quezon City\n' +
+      '- **Islands:** 7,641 . **Regions:** 18 . **Provinces:** 82\n' +
       '- **Population:** about 114 million\n' +
       '- **Official languages:** Filipino and English, with around 175 living languages\n' +
       '- **Currency:** Philippine peso (PHP)\n' +
       '- **Independence:** declared 12 June 1898; recognised by the US on 4 July 1946\n' +
-      '- **Highest point:** Mount Apo (2,954 m) · **Longest river:** Cagayan (505 km)',
+      '- **Highest point:** Mount Apo (2,954 m) . **Longest river:** Cagayan (505 km)',
   },
   {
     id: 'ph-presidents',
     q: ['philippine presidents', 'presidents of the philippines', 'list of presidents'],
     title: 'Presidents of the Philippines',
     body:
-      'Emilio Aguinaldo (1899–1901) · Manuel L. Quezon (1935–1944) · José P. Laurel (1943–1945) · ' +
-      'Sergio Osmeña (1944–1946) · Manuel Roxas (1946–1948) · Elpidio Quirino (1948–1953) · ' +
-      'Ramon Magsaysay (1953–1957) · Carlos P. Garcia (1957–1961) · Diosdado Macapagal (1961–1965) · ' +
-      'Ferdinand E. Marcos (1965–1986) · Corazon C. Aquino (1986–1992) · Fidel V. Ramos (1992–1998) · ' +
-      'Joseph Estrada (1998–2001) · Gloria Macapagal Arroyo (2001–2010) · Benigno Aquino III (2010–2016) · ' +
-      'Rodrigo Duterte (2016–2022) · Ferdinand Marcos Jr. (2022– )\n\n' +
+      'Emilio Aguinaldo (1899-1901) . Manuel L. Quezon (1935-1944) . Jose P. Laurel (1943-1945) . ' +
+      'Sergio Osmena (1944-1946) . Manuel Roxas (1946-1948) . Elpidio Quirino (1948-1953) . ' +
+      'Ramon Magsaysay (1953-1957) . Carlos P. Garcia (1957-1961) . Diosdado Macapagal (1961-1965) . ' +
+      'Ferdinand E. Marcos (1965-1986) . Corazon C. Aquino (1986-1992) . Fidel V. Ramos (1992-1998) . ' +
+      'Joseph Estrada (1998-2001) . Gloria Macapagal Arroyo (2001-2010) . Benigno Aquino III (2010-2016) . ' +
+      'Rodrigo Duterte (2016-2022) . Ferdinand Marcos Jr. (2022- )\n\n' +
       '*This list ends where my knowledge was written; I cannot see anything after that.*',
   },
   {
@@ -430,29 +535,29 @@ const CORE = [
     title: 'The New Seven Wonders of the World (2007)',
     body:
       '- **Great Wall of China**\n- **Petra**, Jordan\n- **Christ the Redeemer**, Brazil\n' +
-      '- **Machu Picchu**, Peru\n- **Chichén Itzá**, Mexico\n- **Colosseum**, Italy\n- **Taj Mahal**, India\n\n' +
-      'The Great Pyramid of Giza — the only surviving ancient wonder — was given honorary status.',
+      '- **Machu Picchu**, Peru\n- **Chichen Itza**, Mexico\n- **Colosseum**, Italy\n- **Taj Mahal**, India\n\n' +
+      'The Great Pyramid of Giza - the only surviving ancient wonder - was given honorary status.',
   },
   {
     id: 'water-cycle',
     q: ['water cycle', 'hydrologic cycle', 'stages of the water cycle'],
     title: 'The water cycle',
     body:
-      '1. **Evaporation** — the sun turns surface water to vapour\n' +
-      '2. **Transpiration** — plants release vapour through their leaves\n' +
-      '3. **Condensation** — vapour cools and forms clouds\n' +
-      '4. **Precipitation** — rain, snow or hail falls\n' +
-      '5. **Collection / Runoff** — water returns to rivers, lakes, oceans and groundwater',
+      '1. **Evaporation** - the sun turns surface water to vapour\n' +
+      '2. **Transpiration** - plants release vapour through their leaves\n' +
+      '3. **Condensation** - vapour cools and forms clouds\n' +
+      '4. **Precipitation** - rain, snow or hail falls\n' +
+      '5. **Collection / Runoff** - water returns to rivers, lakes, oceans and groundwater',
   },
   {
     id: 'states-of-matter',
     q: ['states of matter', 'solid liquid gas', 'phases of matter'],
     title: 'The states of matter',
     body:
-      '- **Solid** — fixed shape and volume; particles vibrate in place\n' +
-      '- **Liquid** — fixed volume, takes the shape of its container\n' +
-      '- **Gas** — fills whatever contains it; particles move freely\n' +
-      '- **Plasma** — ionised gas, the most common state in the universe (stars, lightning)\n\n' +
+      '- **Solid** - fixed shape and volume; particles vibrate in place\n' +
+      '- **Liquid** - fixed volume, takes the shape of its container\n' +
+      '- **Gas** - fills whatever contains it; particles move freely\n' +
+      '- **Plasma** - ionised gas, the most common state in the universe (stars, lightning)\n\n' +
       'Changes: melting, freezing, evaporation, condensation, sublimation, deposition.',
   },
   {
@@ -462,12 +567,12 @@ const CORE = [
     body:
       'A **solar eclipse** happens when the Moon passes between the Sun and Earth, blocking the Sun. ' +
       'A **lunar eclipse** happens when Earth passes between the Sun and Moon, casting its shadow on the Moon. ' +
-      'They do not happen monthly because the Moon\'s orbit is tilted about 5° from Earth\'s.',
+      'They do not happen monthly because the Moon\'s orbit is tilted about 5deg from Earth\'s.',
   },
 ]
 
 /**
- * Everything the "what are the…" lookup searches. Order matters only for ties,
+ * Everything the "what are the..." lookup searches. Order matters only for ties,
  * and the core list is first because it holds the broadest questions.
  */
 export const REFERENCE = [
