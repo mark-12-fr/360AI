@@ -1,5 +1,6 @@
 import { CreateWebWorkerMLCEngine } from '@mlc-ai/web-llm'
 import { cachedVariant, pickVariant, probeGPU } from '../models.js'
+import { systemPrompt } from './prompt.js'
 
 /**
  * The built worker bundle's URL, re-exported so the offline warm-up can fetch
@@ -23,31 +24,6 @@ export { workerURL }
  * anywhere: the model runs on this device's GPU through WebGPU.
  */
 
-/**
- * Who the model thinks it is. Small models drift badly without this — a 1B
- * asked "what are you?" will happily claim to be ChatGPT with a knowledge
- * cutoff and a moderation team, none of which is true here.
- */
-const IDENTITY =
-  'You are 360AI, a helpful assistant running entirely on the user\'s own device — ' +
-  'their phone, tablet or computer. You were downloaded once and now work with no ' +
-  'internet connection, no account and no server. Nothing the user types leaves ' +
-  'their device.\n' +
-  'Answer in the same language the user writes in. Be direct and concrete. ' +
-  'If you do not know something, say so plainly rather than inventing it, and never ' +
-  'claim to have looked anything up — you have no way to.'
-
-const LENGTH_RULE = {
-  short: 'Keep answers to a few sentences unless asked for more.',
-  normal: 'Match the length of your answer to the question.',
-  detailed: 'Give thorough answers, with the reasoning and the examples spelled out.',
-}
-
-/** Added for a vision model, so it describes what is there rather than what it expects. */
-const SIGHT_RULE =
-  'You can see pictures the user attaches. Describe only what is actually visible, ' +
-  'read any text in the image exactly as written, and say when the picture is too ' +
-  'blurred or cropped to tell.'
 
 /**
  * Turns one of our messages into the shape WebLLM wants.
@@ -194,12 +170,7 @@ export class WebLLMBackend {
     if (!this.engine) throw new Error('No model is loaded yet.')
 
     const canSee = this.canSee
-    const system = {
-      role: 'system',
-      content: [IDENTITY, canSee ? SIGHT_RULE : null, LENGTH_RULE[verbosity] ?? LENGTH_RULE.normal]
-        .filter(Boolean)
-        .join('\n'),
-    }
+    const system = { role: 'system', content: systemPrompt({ canSee, verbosity }) }
 
     const history = messages.filter((m) => m.role !== 'system')
     const newest = history.reduce((at, m, i) => (m.images?.length ? i : at), -1)
