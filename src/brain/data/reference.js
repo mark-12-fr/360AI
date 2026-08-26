@@ -6,13 +6,18 @@
  * file, because there is no way to update it once someone has installed the app.
  *
  * The reference lists are assembled from here plus the topic files beside it:
- * formulas, the Philippines, and first aid. They are separate files because
- * each is a sheet somebody would look up as a whole, and because a 400-line
- * array of unrelated cards is nobody's idea of maintainable.
+ * formulas, the Philippines, first aid, world history, the human body, health
+ * and nutrition, and English grammar. They are separate files because each is a
+ * sheet somebody would look up as a whole, and because one long array of
+ * unrelated cards is nobody's idea of maintainable.
  */
 
+import { BODY } from './body.js'
 import { FIRST_AID } from './firstaid.js'
 import { FORMULAS } from './formulas.js'
+import { GRAMMAR } from './grammar.js'
+import { HEALTH } from './health.js'
+import { HISTORY } from './history.js'
 import { PHILIPPINES } from './philippines.js'
 
 /** term → definition. Keys are lowercase; the skill matches them fuzzily. */
@@ -218,6 +223,111 @@ export const GLOSSARY = {
     'Anything that can change in an experiment. The independent variable is changed on purpose; the dependent one is measured.',
   'qualitative research': 'Research into meaning and experience, using interviews, observation and text rather than numbers.',
   'quantitative research': 'Research using measurement and statistics to test relationships between variables.',
+
+  /* -------------------------------------------------------- earth science */
+  weathering: 'The breaking down of rock in place, by water, ice, temperature or chemistry.',
+  erosion: 'The carrying away of broken rock and soil by water, wind or ice.',
+  'plate tectonics':
+    'The theory that Earth\'s crust is broken into plates that move slowly, building mountains and causing earthquakes and volcanoes at their edges.',
+  earthquake:
+    'Ground shaking caused by a sudden release of energy, usually as rock slips along a fault. Measured for magnitude on a moment-magnitude scale.',
+  fault: 'A fracture in rock where the two sides have moved relative to each other.',
+  'ring of fire':
+    'The horseshoe of volcanoes and earthquake zones round the Pacific, where plates meet. The Philippines sits on it.',
+  volcano: 'An opening in the crust through which magma, ash and gas escape. Magma is called lava once it reaches the surface.',
+  tsunami: 'A series of long ocean waves set off by an undersea earthquake, landslide or eruption.',
+  typhoon:
+    'A tropical cyclone in the western Pacific. The same storm is called a hurricane in the Atlantic and a cyclone in the Indian Ocean.',
+  monsoon: 'A seasonal reversal of prevailing winds that brings a wet season and a dry one.',
+  'el nino': 'A warming of the central and eastern Pacific that shifts rainfall — often drought in the Philippines.',
+  'la nina': 'The cooler counterpart of El Niño — often heavier rain and more typhoons here.',
+  'water cycle':
+    'Evaporation, condensation, precipitation, collection — water moving continuously between sea, air and land.',
+  'rock cycle': 'The slow conversion between igneous, sedimentary and metamorphic rock.',
+  atmosphere:
+    'The layer of gases round Earth — about 78% nitrogen, 21% oxygen. Its layers are the troposphere, stratosphere, mesosphere, thermosphere and exosphere.',
+  'ozone layer': 'Ozone in the stratosphere that absorbs most of the Sun\'s ultraviolet radiation.',
+  biodiversity: 'The variety of living things in a place — species, genes and ecosystems.',
+  'food chain': 'The order in which organisms eat one another: producer, then consumers, then decomposers.',
+  'food web': 'The overlapping food chains in an ecosystem, showing what actually eats what.',
+  photoperiod: 'The length of daylight an organism receives, which drives flowering, migration and breeding.',
+  'carbon footprint': 'The greenhouse gas a person, product or activity is responsible for, expressed as CO₂.',
+  deforestation: 'The clearing of forest for farming, logging or building.',
+
+  /* ----------------------------------------------------- health, medicine */
+  virus_infection: 'An illness caused by a virus. Antibiotics do not work on one.',
+  immunity: 'The body\'s ability to resist a disease, either from surviving it or from vaccination.',
+  'herd immunity':
+    'When enough of a population is immune that a disease can no longer spread easily, protecting those who are not.',
+  incubation: 'The time between catching an infection and the first symptoms.',
+  symptom: 'What the patient feels or reports. A *sign* is what an examiner can observe.',
+  diagnosis: 'Identifying which illness is causing the symptoms.',
+  prognosis: 'The likely course and outcome of an illness.',
+  chronic: 'Lasting a long time or recurring. The opposite is *acute* — sudden and short.',
+  benign: 'Not cancerous, and not spreading. The opposite is *malignant*.',
+  anaemia: 'Too few healthy red blood cells to carry enough oxygen, often from lack of iron.',
+  malnutrition:
+    'Getting too little, too much, or the wrong balance of nutrients. Undernutrition and obesity are both forms of it.',
+  dehydration: 'Losing more fluid than is taken in, so the body has too little water to work properly.',
+  'oral rehydration':
+    'Water with the right amount of salt and sugar, drunk to replace what diarrhoea takes out. It saves lives cheaply.',
+  antiseptic: 'A substance applied to living tissue to reduce infection. A *disinfectant* is for surfaces.',
+  analgesic: 'A painkiller.',
+  'side effect': 'An unintended effect of a medicine, in addition to the one it is taken for.',
+  placebo: 'An inactive treatment given for comparison in a trial — or, sometimes, for its own psychological effect.',
+  epidemic: 'A sharp rise in cases of a disease in a population, above what is normally expected.',
+  quarantine: 'Separating people who may have been exposed to an infection, before they show symptoms.',
+  isolation: 'Separating people who are known to be infected.',
+
+  /* ------------------------------------------------ language, literature */
+  syllable: 'A unit of pronunciation with one vowel sound, with or without consonants round it.',
+  prefix: 'A word part added at the front to change meaning — *un-*, *re-*, *pre-*.',
+  suffix: 'A word part added at the end — *-ing*, *-ness*, *-able*.',
+  synonym: 'A word with nearly the same meaning as another.',
+  antonym: 'A word with the opposite meaning.',
+  homonym: 'A word spelled and said like another but meaning something different — *bat* the animal, *bat* for hitting.',
+  connotation: 'The feeling a word carries beyond its literal meaning. The literal meaning is its *denotation*.',
+  clause: 'A group of words with a subject and a verb. Independent ones stand alone; dependent ones do not.',
+  phrase: 'A group of words acting as a unit but lacking a subject-verb pair.',
+  syntax: 'The rules for arranging words into sentences.',
+  semantics: 'The study of meaning in language.',
+  plot: 'The sequence of events in a story: exposition, rising action, climax, falling action, resolution.',
+  theme: 'The central idea a work explores — not its subject, but what it says about that subject.',
+  protagonist: 'The main character. The one opposing them is the *antagonist*.',
+  'point of view': 'Who is telling the story — first person (*I*), second (*you*), or third (*he, she, they*).',
+  setting: 'When and where a story takes place.',
+  genre: 'A category of writing — novel, essay, poetry, drama — with its own conventions.',
+  stanza: 'A group of lines in a poem, set off from the others.',
+  rhyme_scheme: 'The pattern of rhymes at the ends of lines, written as letters — ABAB, AABB.',
+  imagery: 'Language that appeals to the senses to create a picture in the reader\'s mind.',
+  symbolism: 'Using an object or action to stand for something larger than itself.',
+  'topic sentence': 'The sentence carrying the main idea of a paragraph, usually its first.',
+  citation: 'A reference to the source of an idea or quotation, so a reader can find it.',
+  paraphrase: 'Restating someone\'s idea in your own words — still requiring a citation.',
+  summary: 'A short account of the main points of a longer text.',
+
+  /* ------------------------------------------------- history, government */
+  civilization: 'A society with cities, writing, specialised work and organised government.',
+  colonialism: 'One country taking political control of another and settling or exploiting it.',
+  imperialism: 'Extending a country\'s power over others, by force, politics or economics.',
+  revolution: 'A forced overthrow of a government or social order, or a fundamental change in how things are done.',
+  nationalism: 'Devotion to one\'s nation, often with the belief it should be self-governing.',
+  monarchy: 'Rule by a king or queen, usually inherited.',
+  dictatorship: 'Rule by one person or a small group holding power without meaningful consent.',
+  suffrage: 'The right to vote.',
+  bicameral: 'A legislature with two chambers. The Philippine Congress is bicameral — Senate and House.',
+  veto: 'A power to reject a proposed law.',
+  impeachment: 'The process of formally charging a public official with wrongdoing, which may lead to removal.',
+  referendum: 'A direct vote by the electorate on a single question.',
+  treaty: 'A formal agreement between states, binding under international law.',
+  sovereignty: 'A state\'s supreme authority over its own territory and affairs.',
+  diplomacy: 'Managing relations between states by negotiation rather than force.',
+  'united nations':
+    'An organisation of 193 member states founded in 1945 to keep peace, protect human rights and promote cooperation.',
+  'cold war': 'The rivalry between the United States and the Soviet Union from 1947 to 1991, fought without direct war between them.',
+  propaganda: 'Information shaped to promote a cause, often by leaving things out rather than by lying outright.',
+  census: 'An official count of a population and what it is like.',
+  demography: 'The statistical study of populations — births, deaths, migration, age structure.',
 }
 
 /**
@@ -289,23 +399,6 @@ const CORE = [
       'The smallest is **Vatican City** at 0.49 km².',
   },
   {
-    id: 'body-systems',
-    q: ['body systems', 'organ systems', 'systems of the human body'],
-    title: 'The human body systems',
-    body:
-      '- **Circulatory** — heart, blood, vessels; moves oxygen and nutrients\n' +
-      '- **Respiratory** — lungs and airways; gas exchange\n' +
-      '- **Digestive** — mouth to intestines; breaks down food\n' +
-      '- **Nervous** — brain, spinal cord, nerves; control and sensation\n' +
-      '- **Skeletal** — 206 bones; structure and protection\n' +
-      '- **Muscular** — over 600 muscles; movement\n' +
-      '- **Endocrine** — glands and hormones; long-term regulation\n' +
-      '- **Immune/Lymphatic** — defence against infection\n' +
-      '- **Urinary** — kidneys and bladder; filtering waste\n' +
-      '- **Integumentary** — skin, hair, nails; the outer barrier\n' +
-      '- **Reproductive** — producing offspring',
-  },
-  {
     id: 'ph-facts',
     q: ['philippines facts', 'about the philippines', 'philippine information'],
     title: 'The Philippines at a glance',
@@ -363,29 +456,6 @@ const CORE = [
       'Changes: melting, freezing, evaporation, condensation, sublimation, deposition.',
   },
   {
-    id: 'parts-of-speech',
-    q: ['parts of speech', 'grammar parts of speech'],
-    title: 'The eight parts of speech',
-    body:
-      '- **Noun** — a person, place, thing or idea\n- **Pronoun** — stands in for a noun\n' +
-      '- **Verb** — an action or state of being\n- **Adjective** — describes a noun\n' +
-      '- **Adverb** — describes a verb, adjective or another adverb\n' +
-      '- **Preposition** — shows relation (in, on, under, between)\n' +
-      '- **Conjunction** — joins words or clauses (and, but, because)\n' +
-      '- **Interjection** — an exclamation (oh!, wow!)',
-  },
-  {
-    id: 'world-wars',
-    q: ['world war', 'world war 1', 'world war 2', 'ww2', 'ww1'],
-    title: 'The two World Wars',
-    body:
-      '**World War I (1914–1918)** — triggered by the assassination of Archduke Franz Ferdinand; ' +
-      'Allies against the Central Powers; roughly 17 million dead; ended with the Treaty of Versailles.\n\n' +
-      '**World War II (1939–1945)** — began with Germany\'s invasion of Poland; Allies against the Axis; ' +
-      'roughly 70–85 million dead including the Holocaust; ended with Germany\'s surrender in May 1945 and ' +
-      "Japan's in September 1945. The Philippines was occupied from 1942 to 1945.",
-  },
-  {
     id: 'solar-eclipse',
     q: ['eclipse', 'solar eclipse', 'lunar eclipse'],
     title: 'Eclipses',
@@ -400,4 +470,13 @@ const CORE = [
  * Everything the "what are the…" lookup searches. Order matters only for ties,
  * and the core list is first because it holds the broadest questions.
  */
-export const REFERENCE = [...CORE, ...FORMULAS, ...PHILIPPINES, ...FIRST_AID]
+export const REFERENCE = [
+  ...CORE,
+  ...FORMULAS,
+  ...PHILIPPINES,
+  ...FIRST_AID,
+  ...HISTORY,
+  ...BODY,
+  ...HEALTH,
+  ...GRAMMAR,
+]

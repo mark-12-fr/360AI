@@ -55,14 +55,33 @@ export default {
     const core = coreQuestion(raw)
 
     /* ------------------------------------------------------ reference lists */
+    /**
+     * The longest matching phrase wins, not the first one found.
+     *
+     * Taking the first made the answer depend on the order of the array: a card
+     * listing `blood` shadowed every later card whose phrase merely contained
+     * the word, so "normal blood pressure" was answered with what blood is made
+     * of. It was already doing this before this file grew — "surface area
+     * formulas" came back as the area-and-perimeter sheet, because "area
+     * formulas" sits earlier and is a substring of it.
+     *
+     * Length is the right tiebreak because a longer phrase that still matches
+     * is by definition the more specific one. An exact substring outranks a
+     * fuzzy hit of the same length, since fuzz is the weaker evidence.
+     */
+    const hay = normalise(s)
+    let hit = null
     for (const entry of REFERENCE) {
       for (const phrase of entry.q) {
         const p = normalise(phrase)
-        if (normalise(s).includes(p) || diceSimilarity(core, p) > 0.85) {
-          return { score: 0.94, text: `**${entry.title}**\n\n${entry.body}` }
-        }
+        if (!p) continue
+        const exact = hay.includes(p)
+        if (!exact && diceSimilarity(core, p) <= 0.85) continue
+        const strength = exact ? p.length : p.length - 0.5
+        if (!hit || strength > hit.strength) hit = { entry, strength }
       }
     }
+    if (hit) return { score: 0.94, text: `**${hit.entry.title}**\n\n${hit.entry.body}` }
 
     /* ------------------------------------------------------------ glossary */
     const asksDefinition = /\b(meaning|what is|what are|explain|describe|tell me about|ano ang)\b/.test(s) ||
