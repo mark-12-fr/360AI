@@ -12,19 +12,54 @@ import { contentWords, normalise, overlapScore } from '../nlp.js'
 
 const BUILTIN = builtinEntries()
 
-/** How well `query` matches one entry, 0..1. */
-function scoreEntry(query, entry) {
-  const qWords = contentWords(query)
+/**
+ * A phrase's normalised form and content words, computed once.
+ *
+ * The phrases are fixed data — the same few hundred every time — but they were
+ * being normalised once and tokenised *twice* on every comparison against every
+ * question. With the tables at their present size that is most of the work this
+ * skill does, and none of it changes between questions.
+ */
+const PHRASE = new Map()
+
+function prepared(phrase) {
+  let p = PHRASE.get(phrase)
+  if (!p) {
+    const norm = normalise(phrase)
+    p = { norm, words: contentWords(phrase) }
+    PHRASE.set(phrase, p)
+  }
+  return p
+}
+
+/**
+ * How much of a question is used to score it against an entry.
+ *
+ * Scoring is a bag-of-words overlap, so every extra word is another pass over
+ * every phrase of every entry. A question's subject is in its opening words;
+ * a pasted essay's four-hundredth word is not what makes it match a card, it
+ * is only what makes the match slow. Forty content words is far more than any
+ * real question carries.
+ */
+const QUERY_WORDS = 40
+
+/** The question, tokenised once, for scoring against many entries. */
+export function queryWords(query) {
+  return contentWords(query).slice(0, QUERY_WORDS)
+}
+
+/** How well `query` matches one entry, 0..1. `qWords` comes from `queryWords`. */
+function scoreEntry(query, entry, qWords) {
   let best = 0
   for (const phrase of entry.q) {
-    const p = normalise(phrase)
+    const { norm: p, words } = prepared(phrase)
     if (!p) continue
     if (query === p) return 1
     // A question that contains the whole phrasing is a strong signal.
     if (query.includes(p) && p.length > 6) best = Math.max(best, 0.95)
     if (p.includes(query) && query.length > 6) best = Math.max(best, 0.85)
-    const overlap = overlapScore(qWords, contentWords(phrase))
-    const reverse = overlapScore(contentWords(phrase), qWords)
+    const overlap = overlapScore(qWords, words)
+    const reverse = overlapScore(words, qWords)
     best = Math.max(best, overlap * 0.75 + reverse * 0.25)
   }
   return best
@@ -81,7 +116,7 @@ export default {
     if (forget) {
       const key = normalise(forget[1])
       const hit = taught.find((e) => e.q.some((p) => normalise(p) === key)) ??
-        taught.find((e) => scoreEntry(key, e) > 0.7)
+        taught.find((e) => scoreEntry(key, e, queryWords(key)) > 0.7)
       if (!hit) return { score: 0.98, text: t.notFound(forget[1].trim()) }
       return { score: 0.99, text: t.forgot(hit.q[0]), effect: { type: 'forget', id: hit.id } }
     }
@@ -94,8 +129,9 @@ export default {
 
     /* ---------------------------------------------------------- look-up */
     let best = null
+    const qWords = queryWords(query)
     for (const entry of [...taught, ...BUILTIN]) {
-      const score = scoreEntry(query, entry) + (entry.source === 'taught' ? 0.05 : 0)
+      const score = scoreEntry(query, entry, qWords) + (entry.source === 'taught' ? 0.05 : 0)
       if (!best || score > best.score) best = { entry, score }
     }
     if (!best || best.score < 0.62) return null

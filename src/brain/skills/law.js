@@ -11,11 +11,28 @@
 import { LAW_DISCLAIMER, LAWS } from '../data/law.js'
 import { canonicalise, contentWords, diceSimilarity, normalise, overlapScore } from '../nlp.js'
 
-/** Every phrase that should reach an entry. */
+/**
+ * Every phrase that should reach an entry, with its content words.
+ *
+ * The words were being derived from the same fixed phrases on every
+ * comparison against every question; they belong here, worked out once.
+ */
 const ENTRIES = LAWS.map((law) => ({
   ...law,
-  phrases: [law.name, ...law.aliases].map(normalise),
+  phrases: [law.name, ...law.aliases].map((p) => {
+    const norm = normalise(p)
+    return { norm, words: contentWords(norm) }
+  }),
 }))
+
+/**
+ * How much of the question the comparisons see. A law's name is a few words;
+ * measuring it against a pasted essay scores near zero however long the essay
+ * is, and building the essay's bigram map per law to discover that is the
+ * whole cost. Neither bound changes a question of ordinary length.
+ */
+const DICE_CHARS = 160
+const QUERY_WORDS = 40
 
 /** "ra 9262", "r.a. 9262", "republic act no. 9262" all give "9262". */
 function raNumber(text) {
@@ -23,17 +40,16 @@ function raNumber(text) {
   return m ? m[1] : null
 }
 
-function scoreEntry(query, entry) {
-  const words = contentWords(query)
+function scoreEntry(query, entry, words, short) {
   let best = 0
-  for (const phrase of entry.phrases) {
+  for (const { norm: phrase, words: pWords } of entry.phrases) {
     if (!phrase) continue
     if (query === phrase) return 1
     if (query.includes(phrase) && phrase.length > 5) best = Math.max(best, 0.95)
     best = Math.max(
       best,
-      overlapScore(words, contentWords(phrase)) * 0.85,
-      diceSimilarity(query, phrase) * 0.8,
+      overlapScore(words, pWords) * 0.85,
+      diceSimilarity(short, phrase) * 0.8,
     )
   }
   return best
@@ -64,13 +80,13 @@ export default {
     /* ------------------------------------------------------- by RA number */
     const number = raNumber(raw)
     if (number) {
-      const hit = ENTRIES.find((law) => law.phrases.some((p) => p.includes(`ra ${number}`)))
+      const hit = ENTRIES.find((law) => law.phrases.some((p) => p.norm.includes(`ra ${number}`)))
       if (hit) return { score: 0.97, subject: hit.name, text: render(hit) }
       return {
         score: 0.6,
         text:
           `I don't have Republic Act ${number} written into me. The laws I do know are:\n\n` +
-          ENTRIES.filter((l) => /ra \d/.test(l.phrases.join(' ')))
+          ENTRIES.filter((l) => l.phrases.some((p) => /ra \d/.test(p.norm)))
             .map((l) => `- ${l.name}`)
             .join('\n') +
           `\n\n${LAW_DISCLAIMER}`,
@@ -79,8 +95,10 @@ export default {
 
     /* ----------------------------------------------------------- by topic */
     let best = null
+    const qWords = contentWords(query).slice(0, QUERY_WORDS)
+    const short = query.slice(0, DICE_CHARS)
     for (const law of ENTRIES) {
-      const score = scoreEntry(query, law)
+      const score = scoreEntry(query, law, qWords, short)
       if (!best || score > best.score) best = { law, score }
     }
     if (!best || best.score < 0.62) return null

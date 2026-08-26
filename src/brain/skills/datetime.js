@@ -216,6 +216,31 @@ export default {
       }
     }
 
+    /**
+     * "When is Christmas" — the same table, asked the other way round.
+     *
+     * The occasions were only reachable behind a countdown phrasing, so
+     * "how many days until Christmas" worked while "when is Christmas" and
+     * "what day is Christmas" both fell through to "I don't know that one" —
+     * for a date this app can work out exactly, offline, forever.
+     */
+    const asksWhen =
+      /\b(when is|when(?:'s| s) |what day is|what date is|anong araw|ano nga adlaw|kailan|san-o|san o)\b/.test(s)
+    if (asksWhen) {
+      for (const occ of OCCASIONS) {
+        if (occ.names.some((n) => s.includes(n))) {
+          const when = nextOccurrence(occ, now)
+          const away = daysBetween(now, when)
+          return {
+            score: 0.96,
+            text:
+              `**${occ.label}** falls on **${formatDate(when)}**` +
+              (away === 0 ? ' — that is today.' : ` — ${fmtNumber(away)} day${away === 1 ? '' : 's'} away.`),
+          }
+        }
+      }
+    }
+
     // Between two explicit dates.
     const twoDates = s.match(
       /(\d{4}-\d{1,2}-\d{1,2}|\d{1,2}\/\d{1,2}\/\d{2,4})\D+(\d{4}-\d{1,2}-\d{1,2}|\d{1,2}\/\d{1,2}\/\d{2,4})/,

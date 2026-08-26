@@ -60,10 +60,18 @@ export default {
       return { score: 0.95, text: `**${pick([t.heads, t.tails])}**` }
     }
 
+    /**
+     * `2d6` notation, and also the way people actually type it.
+     *
+     * Only the notation was matched before, so "roll a dice" — much the
+     * commonest phrasing — fell through to "I don't know that one", while
+     * "roll a d6" worked. A plain roll is a d6, and "roll 2 dice" is 2d6.
+     */
     const dice = s.match(/\b(?:roll\s*)?(\d{0,2})\s*d\s*(\d{1,3})\b/)
-    if (dice && /\b(roll|dice|die|d\d)\b/.test(s)) {
-      const count = Math.min(20, Math.max(1, +(dice[1] || 1)))
-      const sides = Math.min(1000, Math.max(2, +dice[2]))
+    const plain = !dice && s.match(/\b(?:roll|throw)\s*(?:a|an|the)?\s*(\d{0,2})\s*(?:dice|die|dices)\b/)
+    if (dice || plain) {
+      const count = Math.min(20, Math.max(1, +((dice ? dice[1] : plain[1]) || 1)))
+      const sides = dice ? Math.min(1000, Math.max(2, +dice[2])) : 6
       const rolls = Array.from({ length: count }, () => randomInt(sides) + 1)
       const total = rolls.reduce((a, b) => a + b, 0)
       return {
